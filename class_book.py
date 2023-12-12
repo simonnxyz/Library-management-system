@@ -56,3 +56,24 @@ class Book:
     @property
     def reservations(self):
         return self._reservations
+
+    def dict_info(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "author": self.author,
+            "release_year": self.release_year,
+            "genre": self.genre,
+            "loan_history": self.loan_history,
+            "current_owner": self.current_owner,
+            "extensions": self.extensions,
+            "reservations": self.reservations
+        }
+
+    def __str__(self):
+        return ('ID: ' + str(self.id) +
+                ', Title: ' + self.title +
+                ', Author: ' + self.author +
+                ', Release year: ' + self.release_year +
+                ', Genre: ' + self.genre
+                )
