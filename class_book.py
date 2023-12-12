@@ -87,7 +87,8 @@ class Book:
         }
 
     def __str__(self):
-        return ('ID: ' + str(self.id) +
+        return (
+                'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
                 ', Author: ' + self.author +
                 ', Release year: ' + self.release_year +

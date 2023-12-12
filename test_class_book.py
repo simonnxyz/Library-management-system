@@ -9,6 +9,15 @@ from errors import (
 )
 
 
+def test_generate_book_id(monkeypatch):
+    def return_id(range1, range2):
+        return 1111
+    monkeypatch.setattr('generate_id.randint', return_id)
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    assert book.id == 1111
+
+
 def test_book():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
@@ -25,17 +34,17 @@ def test_book():
 
 def test_book_empty_title():
     with pytest.raises(EmptyTitleError):
-        Book(generate_book_id(), '', 'George Orwell', '1949', 'Dystopian fiction')
+        Book(generate_book_id(), '', 'George Orwell', '1949', 'Dystopian f.')
 
 
 def test_book_no_author():
     with pytest.raises(NoAuthorError):
-        Book(generate_book_id(), '1984', '', '1949', 'Dystopian fiction')
+        Book(generate_book_id(), '1984', '', '1949', 'Dystopian f.')
 
 
 def test_book_no_release_year():
     with pytest.raises(NoReleaseYearError):
-        Book(generate_book_id(), '1984', 'George Orwell', '', 'Dystopian fiction')
+        Book(generate_book_id(), '1984', 'George Orwell', '', 'Dystopian f.')
 
 
 def test_book_no_genre():
@@ -43,7 +52,7 @@ def test_book_no_genre():
         Book(generate_book_id(), '1984', 'George Orwell', '1949', '')
 
 
-def test_book_dict_info():
+def test_book_dict():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
     assert book.__dict__() == {
@@ -57,3 +66,13 @@ def test_book_dict_info():
             "extensions": 0,
             "reservations": []
         }
+
+
+def test_book_str():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    assert str(book) == (
+                'ID: ' + str(id) + ', '
+                'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction'
+                )
