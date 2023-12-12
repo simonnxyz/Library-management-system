@@ -12,3 +12,11 @@ class NoReleaseYearError(Exception):
 
 class NoGenreError(Exception):
     pass
+
+
+class EmptyNameError(Exception):
+    pass
+
+
+class ShortPasswordError(Exception):
+    pass
