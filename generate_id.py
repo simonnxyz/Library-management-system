@@ -3,7 +3,7 @@ from class_book import Book
 from json_methods import read_json
 
 
-def create_book_id():
+def generate_book_id():
     books = read_json('books.json')
     while True:
         random_id = randint(1000, 9999)

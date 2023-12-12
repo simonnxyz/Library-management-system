@@ -1,3 +1,11 @@
+from errors import (
+    EmptyTitleError,
+    NoAuthorError,
+    NoReleaseYearError,
+    NoGenreError,
+)
+
+
 class Book:
     def __init__(
             self,
@@ -11,6 +19,14 @@ class Book:
             extensions=3,
             reservations=[],
             ):
+        if not title:
+            raise EmptyTitleError('The title cannot be empty')
+        if not author:
+            raise NoAuthorError('Author name is required')
+        if not release_year:
+            raise NoReleaseYearError('Release year is required')
+        if not genre:
+            raise NoGenreError('Genre information is required')
         self._id = id
         self._title = str(title)
         self._author = str(author)
