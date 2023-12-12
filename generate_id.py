@@ -1,5 +1,6 @@
 from random import randint
 from class_book import Book
+from class_user import User
 from json_methods import read_json
 
 
@@ -11,6 +12,20 @@ def generate_book_id():
         for book_info in books:
             book = Book(**book_info)
             all_ids.append(book.id)
+        if random_id not in all_ids:
+            return random_id
+        else:
+            continue
+
+
+def generate_user_id():
+    users = read_json('users.json')
+    while True:
+        random_id = randint(2000, 9999)
+        all_ids = []
+        for user_info in users:
+            user = User(**user_info)
+            all_ids.append(user.id)
         if random_id not in all_ids:
             return random_id
         else:
