@@ -2,7 +2,7 @@ import json
 
 
 def read_json(file):
-    with open(file) as file_handle:
+    with open(file, 'r') as file_handle:
         return json.load(file_handle)
 
 
