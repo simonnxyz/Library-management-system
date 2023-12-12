@@ -42,7 +42,8 @@ class User:
         if not self.borrowed_books:
             return info
         else:
-            return f'You have borrowed: {self.borrowed_books}'
+            history = ', '.join(str(id) for id in self.borrowed_books)
+            return f'You have borrowed: {history}'
 
     def borrow_book(self):
         pass

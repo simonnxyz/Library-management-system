@@ -33,3 +33,21 @@ def test_user_empty_name():
 def test_user_short_password():
     with pytest.raises(ShortPasswordError):
         User(generate_user_id(), 'Jan Kowalski', 'haslo')
+
+
+def test_user_get_history():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123', [1234, 5678])
+    assert user.borrowed_books == [1234, 5678]
+    assert user.get_history() == 'You have borrowed: 1234, 5678'
+
+
+def test_user_dict():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    assert user.__dict__() == {
+            "id": id,
+            "name": 'Jan Kowalski',
+            "password": 'haslo123',
+            "borrowed_books": []
+        }
