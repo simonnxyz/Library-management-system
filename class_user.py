@@ -49,3 +49,11 @@ class User:
 
     def return_book(self):
         pass
+
+    def __dict__(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "password": self.password,
+            "borrowed_books": self.borrowed_books
+        }
