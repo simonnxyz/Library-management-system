@@ -16,7 +16,7 @@ class Book:
             genre: str,
             loan_history=[],
             current_owner=None,
-            extensions=3,
+            extensions=0,
             reservations=[],
             ):
         if not title:
@@ -73,7 +73,7 @@ class Book:
     def reservations(self):
         return self._reservations
 
-    def dict_info(self):
+    def __dict__(self):
         return {
             "id": self.id,
             "title": self.title,
