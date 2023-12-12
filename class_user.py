@@ -36,3 +36,16 @@ class User:
     @property
     def borrowed_books(self):
         return self._borrowed_books
+
+    def get_history(self):
+        info = 'You have not borrowed any books yet'
+        if not self.borrowed_books:
+            return info
+        else:
+            return f'You have borrowed: {self.borrowed_books}'
+
+    def borrow_book(self):
+        pass
+
+    def return_book(self):
+        pass
