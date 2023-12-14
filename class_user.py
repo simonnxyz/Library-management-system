@@ -11,6 +11,7 @@ class User:
             name: str,
             password: str,
             borrowed_books=[],
+            books_history=[],
             ):
         if not name:
             raise EmptyNameError('Your name cannot be empty')
@@ -20,6 +21,7 @@ class User:
         self._name = name
         self._password = password
         self._borrowed_books = borrowed_books
+        self._books_history = books_history
 
     @property
     def name(self):
@@ -37,13 +39,25 @@ class User:
     def borrowed_books(self):
         return self._borrowed_books
 
-    def get_history(self):
-        info = 'You have not borrowed any books yet'
+    @property
+    def books_history(self):
+        return self._books_history
+
+    def get_borrowed_books(self):
+        info = 'You do not have any books at the moment.'
         if not self.borrowed_books:
             return info
         else:
-            history = ', '.join(str(id) for id in self.borrowed_books)
-            return f'You have borrowed: {history}'
+            books = ', '.join(str(id) for id in self.borrowed_books)
+            return f'You have borrowed: {books}'
+
+    def get_history(self):
+        info = 'You have not borrowed any books yet.'
+        if not self.books_history:
+            return info
+        else:
+            history = ', '.join(str(id) for id in self.books_history)
+            return f'Your history: {history}'
 
     def borrow_book(self):
         pass
