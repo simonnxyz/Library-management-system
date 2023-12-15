@@ -30,6 +30,6 @@ class Library:
             ):
         id = generate_book_id()
         new_book = Book(id, title, author, release_year, genre)
-        self._books.append(new_book.__dict__)
+        self._books.append(new_book.__dict__())
         write_json('books.json', self.books)
         return f'The book ({id}) has been successfully added.'
