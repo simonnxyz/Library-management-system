@@ -73,3 +73,20 @@ class User:
             "borrowed_books": self.borrowed_books,
             "books_history": self.books_history,
         }
+
+
+class Librarian(User):
+    def __init__(
+            self,
+            id: int,
+            name: str,
+            password: str,
+            ):
+        super().__init__(id, name, password)
+
+    def __dict__(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "password": self.password,
+        }

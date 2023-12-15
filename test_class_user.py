@@ -47,7 +47,8 @@ def test_user_get_borrowed_books_empty():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     assert user.borrowed_books == []
-    assert user.get_borrowed_books() == 'You do not have any books at the moment.'
+    info = 'You do not have any books at the moment.'
+    assert user.get_borrowed_books() == info
 
 
 def test_user_get_hisotry():
