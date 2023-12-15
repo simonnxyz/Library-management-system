@@ -32,10 +32,10 @@ class Book:
         if not genre:
             raise NoGenreError('Genre information is required')
         self._id = id
-        self._title = str(title)
-        self._author = str(author)
+        self._title = title
+        self._author = author
         self._release_year = release_year
-        self._genre = str(genre)
+        self._genre = genre
         self._loan_history = loan_history or []
         self._current_owner = current_owner
         self._extensions = extensions
