@@ -75,7 +75,6 @@ class Library:
         write_json('users.json', self.users)
 
     def remove_user(self, user_id: int):
-        # dodac wyjatek z uzytkownikiem z wypozyczona ksiazka
         updated_users = []
         for user_info in self.users:
             if user_info["id"] != user_id:

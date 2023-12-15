@@ -1,8 +1,12 @@
 from class_library import Library
-from json_methods import read_json
+from json_methods import read_json, write_json
 from generate_id import generate_book_id, generate_user_id
 import pytest
-from errors import NoBookIDError, NoUserIDError
+from errors import (
+    NoBookIDError,
+    NoUserIDError,
+    UserWithBooksError,
+)
 
 
 def test_create_library():
@@ -129,3 +133,18 @@ def test_library_remove_missing_user():
     library = Library()
     with pytest.raises(NoUserIDError):
         library.remove_user(2222)
+
+
+def test_remove_user_with_books():
+    user = [{
+            "id": 2222,
+            "name": 'Jan Kowalski',
+            "password": 'haslo123',
+            "borrowed_books": [1234],
+            "borrowing_history": []
+            }]
+    write_json('users.json', user)
+    library = Library()
+    with pytest.raises(UserWithBooksError):
+        library.remove_user(2222)
+    write_json('users.json', [])
