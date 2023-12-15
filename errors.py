@@ -20,3 +20,8 @@ class EmptyNameError(Exception):
 
 class ShortPasswordError(Exception):
     pass
+
+
+class NoBookIDError(Exception):
+    def __init__(self, book_id):
+        super().__init__(f'Book ID {book_id} not found in the list of books')

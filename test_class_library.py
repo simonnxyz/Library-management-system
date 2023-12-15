@@ -35,3 +35,22 @@ def test_library_add_new_book(monkeypatch):
             "extensions": 0,
             "reservations": []
         }]
+    library.remove_book(1111)
+
+
+def test_remove_book(monkeypatch):
+    def return_id(range1, range2, object=[]):
+        return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    generated_id = generate_book_id()
+    assert generated_id == 1111
+    info = library.add_new_book(
+        '1984',
+        'George Orwell',
+        1949,
+        'Dystopian fiction'
+        )
+    info = library.remove_book(1111)
+    assert info == 'The book (1111) has been successfully removed.'
+    assert library.books == []
