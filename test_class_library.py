@@ -2,7 +2,7 @@ from class_library import Library
 from json_methods import read_json
 from generate_id import generate_book_id, generate_user_id
 import pytest
-from errors import NoBookIDError
+from errors import NoBookIDError, NoUserIDError
 
 
 def test_create_library():
@@ -116,4 +116,16 @@ def test_library_add_user(monkeypatch):
 
 
 def test_library_remove_user(monkeypatch):
-    pass
+    def return_id(range1, range2, object=[]): return 2222
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_user_id() == 2222
+    library.add_new_user('Jan Kowalski', 'haslo123')
+    library.remove_user(2222)
+    assert library.users == []
+
+
+def test_library_remove_missing_user():
+    library = Library()
+    with pytest.raises(NoUserIDError):
+        library.remove_user(2222)
