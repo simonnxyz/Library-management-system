@@ -1,6 +1,6 @@
 from class_library import Library
-from json_methods import read_json, write_json
-from generate_id import generate_book_id
+from json_methods import read_json
+from generate_id import generate_book_id, generate_user_id
 import pytest
 from errors import NoBookIDError
 
@@ -35,7 +35,7 @@ def test_library_add_new_book(monkeypatch):
             "extensions": 0,
             "reservations": []
         }]
-    write_json('books.json', [])
+    library.remove_book(1111)
 
 
 def test_library_remove_book(monkeypatch):
@@ -93,7 +93,27 @@ def test_library_add_copy_of_book(monkeypatch):
     library.remove_book(2222)
 
 
-def test_add_copy_of_missing_book():
+def test_library_add_copy_of_missing_book():
     library = Library()
     with pytest.raises(NoBookIDError):
         library.add_copy_of_book(1111)
+
+
+def test_library_add_user(monkeypatch):
+    def return_id(range1, range2, object=[]): return 2222
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_user_id() == 2222
+    library.add_new_user('Jan Kowalski', 'haslo123')
+    assert library.users == [{
+            "id": 2222,
+            "name": 'Jan Kowalski',
+            "password": 'haslo123',
+            "borrowed_books": [],
+            "borrowing_history": []
+        }]
+    library.remove_user(2222)
+
+
+def test_library_remove_user(monkeypatch):
+    pass
