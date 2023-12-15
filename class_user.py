@@ -88,7 +88,7 @@ class Librarian(User):
         super().__init__(id, name, password)
 
     def __str__(self):
-        return f'Welcome, {self.name} (Librarian)! Your ID is {self.id}'
+        return f'Welcome, {self.name}! (Librarian) Your ID is {self.id}'
 
     def __dict__(self):
         return {
