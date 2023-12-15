@@ -7,6 +7,7 @@ from errors import (
 class User:
     """
     User class representing a library reader.
+    ID range: 2000 - 9999.
     """
     def __init__(
             self: str,
@@ -96,6 +97,7 @@ class User:
 class Librarian(User):
     """
     Librarian class representing a library employee.
+    ID range: 1000 - 1999.
     """
     def __init__(
             self,

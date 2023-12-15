@@ -4,43 +4,24 @@ from class_user import User, Librarian
 from json_methods import read_json
 
 
-def generate_book_id():
-    books = read_json('books.json')
+def generate_id(min_range, max_range, objects):
     while True:
-        random_id = randint(1000, 9999)
-        all_ids = []
-        for book_info in books:
-            book = Book(**book_info)
-            all_ids.append(book.id)
+        random_id = randint(min_range, max_range)
+        all_ids = [object.id for object in objects]
         if random_id not in all_ids:
             return random_id
-        else:
-            continue
+
+
+def generate_book_id():
+    books = read_json('books.json')
+    return generate_id(1000, 9999, [Book(**book_info) for book_info in books])
 
 
 def generate_user_id():
     users = read_json('users.json')
-    while True:
-        random_id = randint(2000, 9999)
-        all_ids = []
-        for user_info in users:
-            user = User(**user_info)
-            all_ids.append(user.id)
-        if random_id not in all_ids:
-            return random_id
-        else:
-            continue
+    return generate_id(2000, 9999, [User(**user_info) for user_info in users])
 
 
 def generate_librarian_id():
-    librarians = read_json('librarians.json')
-    while True:
-        random_id = randint(1000, 1999)
-        all_ids = []
-        for librarian_info in librarians:
-            librarian = Librarian(**librarian_info)
-            all_ids.append(librarian.id)
-        if random_id not in all_ids:
-            return random_id
-        else:
-            continue
+    libs = read_json('librarians.json')
+    return generate_id(1000, 1999, [Librarian(**lib_info) for lib_info in libs])
