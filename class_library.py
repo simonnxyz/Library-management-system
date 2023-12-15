@@ -49,7 +49,7 @@ class Library:
     def add_copy_of_book(self, book_id: int):
         book_copy = None
         for book_info in self.books:
-            if book_info["if"] == book_id:
+            if book_info["id"] == book_id:
                 book_copy = book_info
         if not book_copy:
             raise NoBookIDError(book_id)
