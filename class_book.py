@@ -7,17 +7,21 @@ from errors import (
 
 
 class Book:
+    """
+    Book class representing a book in the library.
+    ID range: 1000 - 9999.
+    """
     def __init__(
             self,
             id: int,
             title: str,
             author: str,
-            release_year: str,
+            release_year: int,
             genre: str,
-            loan_history=[],
+            loan_history=None,
             current_owner=None,
             extensions=0,
-            reservations=[],
+            reservations=None,
             ):
         if not title:
             raise EmptyTitleError('The title cannot be empty')
@@ -30,12 +34,12 @@ class Book:
         self._id = id
         self._title = str(title)
         self._author = str(author)
-        self._release_year = str(release_year)
+        self._release_year = release_year
         self._genre = str(genre)
-        self._loan_history = loan_history
+        self._loan_history = loan_history or []
         self._current_owner = current_owner
         self._extensions = extensions
-        self._reservations = reservations
+        self._reservations = reservations or []
 
     @property
     def id(self):
@@ -73,7 +77,13 @@ class Book:
     def reservations(self):
         return self._reservations
 
+    def set_extensions(self, new_extensions):
+        self._extensions = new_extensions
+
     def __dict__(self):
+        """
+        Returns a dictionary representation of the book's attributes.
+        """
         return {
             "id": self.id,
             "title": self.title,
@@ -87,10 +97,13 @@ class Book:
         }
 
     def __str__(self):
+        """
+        Return a string representation of the book's basic information.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
                 ', Author: ' + self.author +
-                ', Release year: ' + self.release_year +
+                ', Release year: ' + str(self.release_year) +
                 ', Genre: ' + self.genre
                 )

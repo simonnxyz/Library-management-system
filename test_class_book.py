@@ -14,17 +14,17 @@ def test_generate_book_id(monkeypatch):
         return 1111
     monkeypatch.setattr('generate_id.randint', return_id)
     id = generate_book_id()
-    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.id == 1111
 
 
 def test_book():
     id = generate_book_id()
-    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.id == id
     assert book.title == '1984'
     assert book.author == 'George Orwell'
-    assert book.release_year == '1949'
+    assert book.release_year == 1949
     assert book.genre == 'Dystopian fiction'
     assert book.loan_history == []
     assert book.current_owner is None
@@ -34,12 +34,12 @@ def test_book():
 
 def test_book_empty_title():
     with pytest.raises(EmptyTitleError):
-        Book(generate_book_id(), '', 'George Orwell', '1949', 'Dystopian f.')
+        Book(generate_book_id(), '', 'George Orwell', 1949, 'Dystopian f.')
 
 
 def test_book_no_author():
     with pytest.raises(NoAuthorError):
-        Book(generate_book_id(), '1984', '', '1949', 'Dystopian f.')
+        Book(generate_book_id(), '1984', '', 1949, 'Dystopian f.')
 
 
 def test_book_no_release_year():
@@ -49,17 +49,25 @@ def test_book_no_release_year():
 
 def test_book_no_genre():
     with pytest.raises(NoGenreError):
-        Book(generate_book_id(), '1984', 'George Orwell', '1949', '')
+        Book(generate_book_id(), '1984', 'George Orwell', 1949, '')
+
+
+def test_book_set_reservations():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.extensions == 0
+    book.set_extensions(3)
+    assert book.extensions == 3
 
 
 def test_book_dict():
     id = generate_book_id()
-    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.__dict__() == {
             "id": id,
             "title": '1984',
             "author": 'George Orwell',
-            "release_year": "1949",
+            "release_year": 1949,
             "genre": "Dystopian fiction",
             "loan_history": [],
             "current_owner": None,
@@ -70,7 +78,7 @@ def test_book_dict():
 
 def test_book_str():
     id = generate_book_id()
-    book = Book(id, '1984', 'George Orwell', '1949', 'Dystopian fiction')
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert str(book) == (
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
