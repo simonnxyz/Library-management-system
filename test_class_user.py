@@ -65,6 +65,13 @@ def test_user_get_hisotry_empty():
     assert user.get_history() == 'You have not borrowed any books yet.'
 
 
+def test_user_login_info():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    info = f'Welcome to our library, Jan Kowalski! Your ID is {id}'
+    assert str(user) == info
+
+
 def test_user_dict():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')

@@ -65,6 +65,9 @@ class User:
     def return_book(self):
         pass
 
+    def __str__(self):
+        return f'Welcome to our library, {self.name}! Your ID is {self.id}'
+
     def __dict__(self):
         return {
             "id": self.id,
