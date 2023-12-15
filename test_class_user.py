@@ -23,6 +23,7 @@ def test_user():
     assert user.name == 'Jan Kowalski'
     assert user.password == 'haslo123'
     assert user.borrowed_books == []
+    assert user.books_history == []
 
 
 def test_user_empty_name():
@@ -70,5 +71,6 @@ def test_user_dict():
             "id": id,
             "name": 'Jan Kowalski',
             "password": 'haslo123',
-            "borrowed_books": []
+            "borrowed_books": [],
+            "books_history": []
         }

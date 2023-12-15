@@ -70,5 +70,6 @@ class User:
             "id": self.id,
             "name": self.name,
             "password": self.password,
-            "borrowed_books": self.borrowed_books
+            "borrowed_books": self.borrowed_books,
+            "books_history": self.books_history,
         }
