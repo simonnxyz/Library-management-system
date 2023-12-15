@@ -5,6 +5,8 @@ from class_user import User
 from errors import (
     NoBookIDError,
     NoUserIDError,
+    OwnedBookError,
+    UserWithBooksError,
 )
 
 
@@ -39,12 +41,13 @@ class Library:
         write_json('books.json', self.books)
         return f'The book ({id}) has been successfully added.'
 
-    def remove_book(self, book_id: int,):
-        # dodac wyjatek z zarezerwowana ksiazka
+    def remove_book(self, book_id: int):
         updated_books = []
         for book_info in self.books:
             if book_info["id"] != book_id:
                 updated_books.append(book_info)
+            elif book_info["id"] == book_id and book_info["current_owner"]:
+                raise OwnedBookError('Cannot remove borrowed book')
         if updated_books == self.books:
             raise NoBookIDError(book_id)
         self._books = updated_books
@@ -77,6 +80,8 @@ class Library:
         for user_info in self.users:
             if user_info["id"] != user_id:
                 updated_users.append(user_info)
+            elif user_info["id"] == user_id and user_info["borrowed_books"]:
+                raise UserWithBooksError('Cannot remove user with books')
         if updated_users == self.users:
             raise NoUserIDError(user_id)
         self._users = updated_users

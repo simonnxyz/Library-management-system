@@ -30,3 +30,11 @@ class NoBookIDError(Exception):
 class NoUserIDError(Exception):
     def __init__(self, user_id):
         super().__init__(f'User ID {user_id} not found in the list of users')
+
+
+class OwnedBookError(Exception):
+    pass
+
+
+class UserWithBooksError(Exception):
+    pass
