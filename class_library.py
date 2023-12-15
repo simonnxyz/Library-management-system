@@ -2,7 +2,10 @@ from json_methods import read_json, write_json
 from generate_id import generate_book_id, generate_user_id
 from class_book import Book
 from class_user import User
-from errors import NoBookIDError
+from errors import (
+    NoBookIDError,
+    NoUserIDError,
+)
 
 
 class Library:
@@ -37,6 +40,7 @@ class Library:
         return f'The book ({id}) has been successfully added.'
 
     def remove_book(self, book_id: int,):
+        # dodac wyjatek z zarezerwowana ksiazka
         updated_books = []
         for book_info in self.books:
             if book_info["id"] != book_id:
@@ -67,4 +71,13 @@ class Library:
         self._users.append(new_user.__dict__())
         write_json('users.json', self.users)
 
-    
+    def remove_user(self, user_id: int):
+        # dodac wyjatek z uzytkownikiem z wypozyczona ksiazka
+        updated_users = []
+        for user_info in self.users:
+            if user_info["id"] != user_id:
+                updated_users.append(user_info)
+        if updated_users == self.users:
+            raise NoUserIDError(user_id)
+        self._users = updated_users
+        write_json('users.json', self.users)

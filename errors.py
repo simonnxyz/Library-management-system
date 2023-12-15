@@ -25,3 +25,8 @@ class ShortPasswordError(Exception):
 class NoBookIDError(Exception):
     def __init__(self, book_id):
         super().__init__(f'Book ID {book_id} not found in the list of books')
+
+
+class NoUserIDError(Exception):
+    def __init__(self, user_id):
+        super().__init__(f'User ID {user_id} not found in the list of users')
