@@ -23,7 +23,7 @@ def test_user():
     assert user.name == 'Jan Kowalski'
     assert user.password == 'haslo123'
     assert user.borrowed_books == []
-    assert user.books_history == []
+    assert user.borrowing_history == []
 
 
 def test_user_empty_name():
@@ -54,14 +54,14 @@ def test_user_get_borrowed_books_empty():
 def test_user_get_hisotry():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123', [], [1234, 5678])
-    assert user.books_history == [1234, 5678]
+    assert user.borrowing_history == [1234, 5678]
     assert user.get_history() == 'Your history: 1234, 5678'
 
 
 def test_user_get_hisotry_empty():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123', [], [])
-    assert user.books_history == []
+    assert user.borrowing_history == []
     assert user.get_history() == 'You have not borrowed any books yet.'
 
 
@@ -80,5 +80,5 @@ def test_user_dict():
             "name": 'Jan Kowalski',
             "password": 'haslo123',
             "borrowed_books": [],
-            "books_history": []
+            "borrowing_history": []
         }

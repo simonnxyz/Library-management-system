@@ -5,13 +5,16 @@ from errors import (
 
 
 class User:
+    """
+    User class representing a library reader.
+    """
     def __init__(
             self: str,
-            id: str,
+            id: int,
             name: str,
             password: str,
-            borrowed_books=[],
-            books_history=[],
+            borrowed_books=None,
+            borrowing_history=None,
             ):
         if not name:
             raise EmptyNameError('Your name cannot be empty')
@@ -20,8 +23,8 @@ class User:
         self._id = id
         self._name = name
         self._password = password
-        self._borrowed_books = borrowed_books
-        self._books_history = books_history
+        self._borrowed_books = borrowed_books or []
+        self._borrowing_history = borrowing_history or []
 
     @property
     def name(self):
@@ -40,10 +43,13 @@ class User:
         return self._borrowed_books
 
     @property
-    def books_history(self):
-        return self._books_history
+    def borrowing_history(self):
+        return self._borrowing_history
 
     def get_borrowed_books(self):
+        """
+        Returns the list of book IDs currently borrowed by the user.
+        """
         info = 'You do not have any books at the moment.'
         if not self.borrowed_books:
             return info
@@ -52,11 +58,14 @@ class User:
             return f'You have borrowed: {books}'
 
     def get_history(self):
+        """
+        Returns the list of book IDs that the user has borrowed in the past.
+        """
         info = 'You have not borrowed any books yet.'
-        if not self.books_history:
+        if not self.borrowing_history:
             return info
         else:
-            history = ', '.join(str(id) for id in self.books_history)
+            history = ', '.join(str(id) for id in self.borrowing_history)
             return f'Your history: {history}'
 
     def borrow_book(self):
@@ -66,19 +75,28 @@ class User:
         pass
 
     def __str__(self):
+        """
+        Returns a welcome message with the user's name and ID.
+        """
         return f'Welcome to our library, {self.name}! Your ID is {self.id}'
 
     def __dict__(self):
+        """
+        Returns a dictionary representation of the user's attributes.
+        """
         return {
             "id": self.id,
             "name": self.name,
             "password": self.password,
             "borrowed_books": self.borrowed_books,
-            "books_history": self.books_history,
+            "borrowing_history": self.borrowing_history,
         }
 
 
 class Librarian(User):
+    """
+    Librarian class representing a library employee.
+    """
     def __init__(
             self,
             id: int,
@@ -88,9 +106,15 @@ class Librarian(User):
         super().__init__(id, name, password)
 
     def __str__(self):
+        """
+        Returns a welcome message with the librarians's name and ID.
+        """
         return f'Welcome, {self.name}! (Librarian) Your ID is {self.id}'
 
     def __dict__(self):
+        """
+        Returns a dictionary representation of the librarians's attributes.
+        """
         return {
             "id": self.id,
             "name": self.name,
