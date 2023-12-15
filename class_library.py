@@ -1,6 +1,7 @@
 from json_methods import read_json, write_json
-from generate_id import generate_book_id
+from generate_id import generate_book_id, generate_user_id
 from class_book import Book
+from class_user import User
 from errors import NoBookIDError
 
 
@@ -59,3 +60,11 @@ class Library:
         genre = book_copy["genre"]
         self.add_new_book(title, author, release_year, genre)
         return f'The copy of book ({book_id}) has been successfully added.'
+
+    def add_new_user(self, name: str, password: str):
+        id = generate_user_id()
+        new_user = User(id, name, password)
+        self._users.append(new_user.__dict__())
+        write_json('users.json', self.users)
+
+    
