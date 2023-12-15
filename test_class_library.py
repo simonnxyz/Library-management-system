@@ -91,3 +91,9 @@ def test_library_add_copy_of_book(monkeypatch):
         }]
     library.remove_book(1111)
     library.remove_book(2222)
+
+
+def test_add_copy_of_missing_book():
+    library = Library()
+    with pytest.raises(NoBookIDError):
+        library.add_copy_of_book(1111)
