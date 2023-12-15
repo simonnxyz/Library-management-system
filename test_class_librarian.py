@@ -41,7 +41,7 @@ def test_librarian_login_info():
     assert str(librarian) == info
 
 
-def test_user_dict():
+def test_librarian_dict():
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     assert librarian.__dict__() == {

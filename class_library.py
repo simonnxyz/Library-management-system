@@ -5,7 +5,7 @@ from class_user import User
 from errors import (
     NoBookIDError,
     NoUserIDError,
-    OwnedBookError,
+    BorrowedBookError,
     UserWithBooksError,
 )
 
@@ -47,7 +47,7 @@ class Library:
             if book_info["id"] != book_id:
                 updated_books.append(book_info)
             elif book_info["id"] == book_id and book_info["current_owner"]:
-                raise OwnedBookError('Cannot remove borrowed book')
+                raise BorrowedBookError('Cannot remove borrowed book')
         if updated_books == self.books:
             raise NoBookIDError(book_id)
         self._books = updated_books

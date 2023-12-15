@@ -32,7 +32,7 @@ class NoUserIDError(Exception):
         super().__init__(f'User ID {user_id} not found in the list of users')
 
 
-class OwnedBookError(Exception):
+class BorrowedBookError(Exception):
     pass
 
 

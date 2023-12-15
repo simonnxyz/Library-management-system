@@ -6,6 +6,7 @@ from errors import (
     NoBookIDError,
     NoUserIDError,
     UserWithBooksError,
+    BorrowedBookError,
 )
 
 
@@ -53,10 +54,29 @@ def test_library_remove_book(monkeypatch):
     assert library.books == []
 
 
-def test_remove_missing_book():
+def test_library_remove_missing_book():
     library = Library()
     with pytest.raises(NoBookIDError):
         library.remove_book(1111)
+
+
+def test_library_remove_borrowed_book():
+    book = [{
+            "id": 1111,
+            "title": '1984',
+            "author": 'George Orwell',
+            "release_year": 1949,
+            "genre": "Dystopian fiction",
+            "loan_history": [],
+            "current_owner": 1234,
+            "extensions": 0,
+            "reservations": []
+            }]
+    write_json('books.json', book)
+    library = Library()
+    with pytest.raises(BorrowedBookError):
+        library.remove_book(1111)
+    write_json('books.json', [])
 
 
 def test_library_add_copy_of_book(monkeypatch):
@@ -135,7 +155,7 @@ def test_library_remove_missing_user():
         library.remove_user(2222)
 
 
-def test_remove_user_with_books():
+def test_library_remove_user_with_books():
     user = [{
             "id": 2222,
             "name": 'Jan Kowalski',
