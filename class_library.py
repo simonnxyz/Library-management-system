@@ -1,4 +1,6 @@
 from json_methods import read_json, write_json
+from generate_id import generate_book_id
+from class_book import Book
 
 
 class Library:
@@ -18,3 +20,16 @@ class Library:
     @property
     def librarians(self):
         return self._librarians
+
+    def add_new_book(
+            self,
+            title: str,
+            author: str,
+            release_year: int,
+            genre: str,
+            ):
+        id = generate_book_id()
+        new_book = Book(id, title, author, release_year, genre)
+        self._books.append(new_book.__dict__)
+        write_json('books.json', self.books)
+        return f'The book ({id}) has been successfully added.'
