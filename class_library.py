@@ -1,7 +1,11 @@
 from json_methods import read_json, write_json
-from generate_id import generate_book_id, generate_user_id
+from generate_id import (
+    generate_book_id,
+    generate_user_id,
+    generate_librarian_id
+)
 from class_book import Book
-from class_user import User
+from class_user import User, Librarian
 from errors import (
     NoBookIDError,
     NoUserIDError,
@@ -11,6 +15,7 @@ from errors import (
     GenresNotFoundError,
     UnavailableGenreError,
     NoKeywordError,
+    NoLibrarianIDError,
 )
 
 
@@ -120,3 +125,20 @@ class Library:
             raise NoUserIDError(user_id)
         self._users = updated_users
         write_json('users.json', self.users)
+
+    def add_new_librarian(self, name: str, password: str):
+        id = generate_librarian_id()
+        new_librarian = Librarian(id, name, password)
+        self._librarians.append(new_librarian.__dict__())
+        write_json('librarians.json', self.librarians)
+
+    def remove_librarian(self, librarian_id: int):
+        updated_librarians = []
+        for librarian_info in self.librarians:
+            id = librarian_info["id"]
+            if id != librarian_id:
+                updated_librarians.append(librarian_info)
+        if updated_librarians == self.librarians:
+            raise NoLibrarianIDError(librarian_id)
+        self._librarians = updated_librarians
+        write_json('librarians.json', self.librarians)

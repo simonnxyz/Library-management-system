@@ -66,3 +66,8 @@ class UnavailableGenreError(Exception):
 class GenresNotFoundError(Exception):
     def __str__(self):
         return 'No genres found in the list of books.'
+
+
+class NoLibrarianIDError(Exception):
+    def __init__(self, id):
+        super().__init__(f'Librarian ID {id} not found in the list of users.')
