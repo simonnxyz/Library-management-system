@@ -18,6 +18,8 @@ from errors import (
     NoLibrarianIDError,
     UnavailableAuthorError,
     AuthorsNotFoundError,
+    YearsNotFoundError,
+    UnavailableYearError,
 )
 
 
@@ -127,6 +129,25 @@ class Library:
         searches = []
         for book_info in self.books:
             if chosen_author == book_info["author"]:
+                book = Book(**book_info)
+                searches.append(str(book))
+        return '\n'.join(searches)
+
+    def available_years(self):
+        years = []
+        for book_info in self.books:
+            if book_info["release_year"] not in years:
+                years.append(book_info["release_year"])
+        if not years:
+            raise YearsNotFoundError
+        return years
+
+    def search_book_by_year(self, chosen_year):
+        if chosen_year not in self.available_years():
+            raise UnavailableYearError
+        searches = []
+        for book_info in self.books:
+            if chosen_year == book_info["release_year"]:
                 book = Book(**book_info)
                 searches.append(str(book))
         return '\n'.join(searches)

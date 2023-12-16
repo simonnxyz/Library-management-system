@@ -81,3 +81,13 @@ class UnavailableAuthorError(Exception):
 class AuthorsNotFoundError(Exception):
     def __str__(self):
         return 'No authors found in the list of books.'
+
+
+class UnavailableYearError(Exception):
+    def __str__(self):
+        return 'Chosen release year is not available in our library.'
+
+
+class YearsNotFoundError(Exception):
+    def __str__(self):
+        return 'No release years found in the list of books.'
