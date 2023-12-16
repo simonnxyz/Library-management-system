@@ -10,8 +10,7 @@ from errors import (
 
 
 def test_generate_book_id(monkeypatch):
-    def return_id(range1, range2):
-        return 1111
+    def return_id(range1, range2): return 1111
     monkeypatch.setattr('generate_id.randint', return_id)
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')

@@ -8,8 +8,7 @@ from errors import (
 
 
 def test_generate_librarian_id(monkeypatch):
-    def return_id(range1, range2):
-        return 1111
+    def return_id(range1, range2): return 1111
     monkeypatch.setattr('generate_id.randint', return_id)
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')

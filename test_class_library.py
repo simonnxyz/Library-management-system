@@ -7,6 +7,8 @@ from errors import (
     NoUserIDError,
     UserWithBooksError,
     BorrowedBookError,
+    NoKeywordError,
+    KeywordNotFoundError,
 )
 
 
@@ -22,13 +24,7 @@ def test_library_add_new_book(monkeypatch):
     monkeypatch.setattr('generate_id.generate_id', return_id)
     library = Library()
     assert generate_book_id() == 1111
-    info = library.add_new_book(
-        '1984',
-        'George Orwell',
-        1949,
-        'Dystopian fiction'
-        )
-    assert info == 'The book (1111) has been successfully added.'
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert library.books == [{
             "id": 1111,
             "title": '1984',
@@ -40,6 +36,16 @@ def test_library_add_new_book(monkeypatch):
             "extensions": 0,
             "reservations": []
         }]
+    library.remove_book(1111)
+
+
+def test_library_add_new_book_message(monkeypatch):
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_book_id() == 1111
+    msg = library.add_new_book( '1984', 'George Orwell', 1949, 'Dystopian')
+    assert msg == 'The book (1111) has been successfully added.'
     library.remove_book(1111)
 
 
@@ -168,3 +174,22 @@ def test_library_remove_user_with_books():
     with pytest.raises(UserWithBooksError):
         library.remove_user(2222)
     write_json('users.json', [])
+
+
+def test_library_search_book_by_keyword(monkeypatch):
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_book_id() == 1111
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    result = library.search_book_by_keyword('George')
+    assert result == (
+                'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction'
+                )
+    result = library.search_book_by_keyword(1984)
+    assert result == (
+                'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction'
+                )
+    library.remove_book(1111)
