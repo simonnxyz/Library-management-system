@@ -72,11 +72,19 @@ class Library:
     def search_book_by_keyword(self, keyword):
         searches = []
         for book_info in self.books:
-            book = Book(**book_info)
             if keyword in book_info.values():
+                book = Book(**book_info)
                 searches.append(str(book))
         if not searches:
             raise KeywordNotFoundError
+        return '\n'.join(searches)
+
+    def search_book_by_genre(self, choosen_genre):
+        searches = []
+        for book_info in self.books:
+            if choosen_genre == book_info["genre"]:
+                book = Book(**book_info)
+                searches.append(str(book))
         return '\n'.join(searches)
 
     def add_new_user(self, name: str, password: str):
