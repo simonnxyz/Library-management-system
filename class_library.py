@@ -20,6 +20,7 @@ from errors import (
     AuthorsNotFoundError,
     YearsNotFoundError,
     UnavailableYearError,
+    NoBooksError,
 )
 
 
@@ -188,6 +189,8 @@ class Library:
         write_json('librarians.json', self.librarians)
 
     def get_books_stats(self):
+        if not self.books:
+            raise NoBooksError
         stats = ['Title - loans']
         for book_info in self.books:
             book = Book(**book_info)

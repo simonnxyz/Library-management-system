@@ -91,3 +91,8 @@ class UnavailableYearError(Exception):
 class YearsNotFoundError(Exception):
     def __str__(self):
         return 'No release years found in the list of books.'
+
+
+class NoBooksError(Exception):
+    def __str__(self):
+        return 'Currently our library has no books.'

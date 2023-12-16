@@ -20,6 +20,7 @@ from errors import (
     AuthorsNotFoundError,
     YearsNotFoundError,
     UnavailableYearError,
+    NoBooksError,
 )
 
 
@@ -473,3 +474,9 @@ def test_library_get_books_stats():
     msg = 'Title - loans\n' + '1984 - 2\n' + 'The Plague - 1'
     assert library.get_books_stats() == msg
     write_json('books.json', [])
+
+
+def test_get_books_stats_empty():
+    library = Library()
+    with pytest.raises(NoBooksError):
+        library.get_books_stats()
