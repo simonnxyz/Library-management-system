@@ -21,6 +21,7 @@ from errors import (
     YearsNotFoundError,
     UnavailableYearError,
     NoBooksError,
+    NoUsersError,
 )
 
 
@@ -476,7 +477,35 @@ def test_library_get_books_stats():
     write_json('books.json', [])
 
 
-def test_get_books_stats_empty():
+def test_library_get_books_stats_empty():
     library = Library()
     with pytest.raises(NoBooksError):
         library.get_books_stats()
+
+
+def test_library_get_users_stats():
+    users = [{
+            "id": 2222,
+            "name": 'Jan Kowalski',
+            "password": 'haslo123',
+            "borrowed_books": [],
+            "borrowing_history": [1111, 2222]
+            },
+            {
+            "id": 3333,
+            "name": 'Adam Nowak',
+            "password": 'haslo456',
+            "borrowed_books": [],
+            "borrowing_history": [3333]
+            }]
+    write_json('users.json', users)
+    library = Library()
+    msg = 'Name - loans\n' + 'Jan Kowalski - 2\n' + 'Adam Nowak - 1'
+    assert library.get_users_stats() == msg
+    write_json('users.json', [])
+
+
+def test_library_get_users_stats_empty():
+    library = Library()
+    with pytest.raises(NoUsersError):
+        library.get_users_stats()
