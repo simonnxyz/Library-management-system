@@ -193,3 +193,20 @@ def test_library_search_book_by_keyword(monkeypatch):
                 'Release year: 1949, Genre: Dystopian fiction'
                 )
     library.remove_book(1111)
+
+
+def test_library_search_book_by_missing_keyword():
+    library = Library()
+    with pytest.raises(NoKeywordError):
+        library.search_book_by_keyword('')
+
+
+def test_library_search_book_by_keyword_not_found(monkeypatch):
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_book_id() == 1111
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    with pytest.raises(KeywordNotFoundError):
+        library.search_book_by_keyword('harry potter')
+    library.remove_book(1111)
