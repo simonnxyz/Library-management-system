@@ -442,3 +442,34 @@ def test_library_search_by_wrong_year():
     with pytest.raises(UnavailableYearError):
         library.search_book_by_year(1999)
     write_json('books.json', [])
+
+
+def test_library_get_books_stats():
+    books = [
+        {
+            "id": 1111,
+            "title": '1984',
+            "author": 'George Orwell',
+            "release_year": 1949,
+            "genre": "Dystopian fiction",
+            "loan_history": [2222, 3333],
+            "current_owner": None,
+            "extensions": 0,
+            "reservations": []
+        },
+        {
+            "id": 2222,
+            "title": 'The Plague',
+            "author": 'Albert Camus',
+            "release_year": 1947,
+            "genre": "Philosophical novel",
+            "loan_history": [4444],
+            "current_owner": None,
+            "extensions": 0,
+            "reservations": []
+        }]
+    write_json('books.json', books)
+    library = Library()
+    msg = 'Title - loans\n' + '1984 - 2\n' + 'The Plague - 1'
+    assert library.get_books_stats() == msg
+    write_json('books.json', [])
