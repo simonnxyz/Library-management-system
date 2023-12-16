@@ -9,6 +9,8 @@ from errors import (
     BorrowedBookError,
     NoKeywordError,
     KeywordNotFoundError,
+    GenresNotFoundError,
+    UnavailableGenreError,
 )
 
 
@@ -44,7 +46,7 @@ def test_library_add_new_book_message(monkeypatch):
     monkeypatch.setattr('generate_id.generate_id', return_id)
     library = Library()
     assert generate_book_id() == 1111
-    msg = library.add_new_book( '1984', 'George Orwell', 1949, 'Dystopian')
+    msg = library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian')
     assert msg == 'The book (1111) has been successfully added.'
     library.remove_book(1111)
 
@@ -227,4 +229,54 @@ def test_library_available_genres():
         'Dystopian fiction',
         'Philosophical novel'
         ]
+    write_json('books.json', [])
+
+
+def test_library_available_genres_empty():
+    library = Library()
+    with pytest.raises(GenresNotFoundError):
+        library.available_genres()
+
+
+def test_library_search_by_gerne(monkeypatch):
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_genres() == [
+        'Philosophical novel',
+        'Dystopian fiction'
+        ]
+    result = library.search_book_by_genre('Dystopian fiction')
+    assert result == (
+                'ID: ' + '1111' + ', '
+                'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
+                )
+    write_json('books.json', [])
+
+
+def test_library_search_by_wrong_genre():
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_genres() == [
+        'Philosophical novel',
+        'Dystopian fiction'
+        ]
+    with pytest.raises(UnavailableGenreError):
+        library.search_book_by_genre('Science fiction')
     write_json('books.json', [])
