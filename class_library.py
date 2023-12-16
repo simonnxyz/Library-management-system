@@ -21,6 +21,7 @@ from errors import (
     YearsNotFoundError,
     UnavailableYearError,
     NoBooksError,
+    NoUsersError,
 )
 
 
@@ -195,4 +196,13 @@ class Library:
         for book_info in self.books:
             book = Book(**book_info)
             stats.append(f'{book.title} - {len(book.loan_history)}')
+        return '\n'.join(stats)
+
+    def get_users_stats(self):
+        if not self.users:
+            raise NoUsersError
+        stats = ['Name - loans']
+        for user_info in self.users:
+            user = User(**user_info)
+            stats.append(f'{user.name} - {len(user.borrowing_history)}')
         return '\n'.join(stats)

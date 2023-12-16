@@ -96,3 +96,8 @@ class YearsNotFoundError(Exception):
 class NoBooksError(Exception):
     def __str__(self):
         return 'Currently our library has no books.'
+
+
+class NoUsersError(Exception):
+    def __str__(self):
+        return 'Currently our library has no users.'
