@@ -126,7 +126,7 @@ class Library:
             raise UnavailableAuthorError
         searches = []
         for book_info in self.books:
-            if chosen_author == book_info["aurhor"]:
+            if chosen_author == book_info["author"]:
                 book = Book(**book_info)
                 searches.append(str(book))
         return '\n'.join(searches)

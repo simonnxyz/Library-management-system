@@ -16,6 +16,8 @@ from errors import (
     GenresNotFoundError,
     UnavailableGenreError,
     NoLibrarianIDError,
+    UnavailableAuthorError,
+    AuthorsNotFoundError,
 )
 
 
@@ -315,3 +317,69 @@ def test_library_remove_missing_librarian():
     library = Library()
     with pytest.raises(NoLibrarianIDError):
         library.remove_librarian(2222)
+
+
+def test_library_available_authors():
+    library = Library()
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    assert library.available_authors() == [
+        'George Orwell',
+        'Albert Camus'
+        ]
+    write_json('books.json', [])
+
+
+def test_library_available_authors_empty():
+    library = Library()
+    with pytest.raises(AuthorsNotFoundError):
+        library.available_authors()
+
+
+def test_library_search_by_author(monkeypatch):
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_authors() == [
+        'Albert Camus',
+        'George Orwell'
+        ]
+    result = library.search_book_by_author('George Orwell')
+    assert result == (
+                'ID: ' + '1111' + ', '
+                'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
+                )
+    write_json('books.json', [])
+
+
+def test_library_search_by_wrong_author():
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_authors() == [
+        'Albert Camus',
+        'George Orwell'
+        ]
+    with pytest.raises(UnavailableAuthorError):
+        library.search_book_by_author('Henryk Sienkiewicz')
+    write_json('books.json', [])
