@@ -82,9 +82,11 @@ class Library:
             raise NoKeywordError
         searches = []
         for book_info in self.books:
-            if keyword in book_info.values():
-                book = Book(**book_info)
-                searches.append(str(book))
+            values = list(book_info.values())
+            for value in values:
+                if str(keyword).lower() in str(value).lower():
+                    book = Book(**book_info)
+                    searches.append(str(book))
         if not searches:
             raise KeywordNotFoundError
         return '\n'.join(searches)
