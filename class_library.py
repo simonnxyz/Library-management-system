@@ -92,10 +92,10 @@ class Library:
         return '\n'.join(searches)
 
     def available_genres(self):
-        genres = set()
+        genres = []
         for book_info in self.books:
-            genre = book_info["genre"]
-            genres.add(genre)
+            if book_info["genre"] not in genres:
+                genres.append(book_info["genre"])
         if not genres:
             raise GenresNotFoundError
         return list(genres)
