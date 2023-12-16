@@ -53,9 +53,14 @@ class KeywordNotFoundError(Exception):
         return 'No books found matching the provided keyword.'
 
 
+class NoKeywordError(Exception):
+    def __str__(self):
+        return 'Keyword is required'
+
+
 class UnavailableGenreError(Exception):
     def __str__(self):
-        return 'Choosen genre is not available in our library.'
+        return 'Chosen genre is not available in our library.'
 
 
 class GenresNotFoundError(Exception):
