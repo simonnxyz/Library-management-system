@@ -8,6 +8,8 @@ from errors import (
     BorrowedBookError,
     UserWithBooksError,
     KeywordNotFoundError,
+    GenresNotFoundError,
+    UnavailableGenreError,
 )
 
 
@@ -70,6 +72,7 @@ class Library:
         return f'The copy of book ({book_id}) has been successfully added.'
 
     def search_book_by_keyword(self, keyword):
+        # if not keyword dodac
         searches = []
         for book_info in self.books:
             if keyword in book_info.values():
@@ -79,7 +82,18 @@ class Library:
             raise KeywordNotFoundError
         return '\n'.join(searches)
 
+    def available_genres(self):
+        genres = []
+        for book_info in self.books:
+            genre = book_info["genre"]
+            if genre not in genres:
+                genres.append(genre)
+        if not genres:
+            raise GenresNotFoundError
+
     def search_book_by_genre(self, choosen_genre):
+        if choosen_genre not in self.available_genres:
+            raise UnavailableGenreError
         searches = []
         for book_info in self.books:
             if choosen_genre == book_info["genre"]:
