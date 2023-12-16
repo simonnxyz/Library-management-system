@@ -81,5 +81,6 @@ def test_book_str():
     assert str(book) == (
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction'
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
                 )

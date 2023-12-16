@@ -185,12 +185,14 @@ def test_library_search_book_by_keyword(monkeypatch):
     result = library.search_book_by_keyword('George')
     assert result == (
                 'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction'
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
                 )
     result = library.search_book_by_keyword(1984)
     assert result == (
                 'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction'
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
                 )
     library.remove_book(1111)
 

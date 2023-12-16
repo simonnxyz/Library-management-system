@@ -105,5 +105,6 @@ class Book:
                 ', Title: ' + self.title +
                 ', Author: ' + self.author +
                 ', Release year: ' + str(self.release_year) +
-                ', Genre: ' + self.genre
+                ', Genre: ' + self.genre +
+                ', Owner: ' + str(self.current_owner)
                 )
