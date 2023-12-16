@@ -18,6 +18,8 @@ from errors import (
     NoLibrarianIDError,
     UnavailableAuthorError,
     AuthorsNotFoundError,
+    YearsNotFoundError,
+    UnavailableYearError,
 )
 
 
@@ -382,4 +384,61 @@ def test_library_search_by_wrong_author():
         ]
     with pytest.raises(UnavailableAuthorError):
         library.search_book_by_author('Henryk Sienkiewicz')
+    write_json('books.json', [])
+
+
+def test_library_available_years():
+    library = Library()
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    assert library.available_years() == [1949, 1947]
+    write_json('books.json', [])
+
+
+def test_library_available_years_empty():
+    library = Library()
+    with pytest.raises(YearsNotFoundError):
+        library.available_years()
+
+
+def test_library_search_by_year(monkeypatch):
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_years() == [1947, 1949]
+    result = library.search_book_by_year(1949)
+    assert result == (
+                'ID: ' + '1111' + ', '
+                'Title: 1984, Author: George Orwell, ' +
+                'Release year: 1949, Genre: Dystopian fiction, ' +
+                'Owner: None'
+                )
+    write_json('books.json', [])
+
+
+def test_library_search_by_wrong_year():
+    library = Library()
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert library.available_years() == [1947, 1949]
+    with pytest.raises(UnavailableYearError):
+        library.search_book_by_year(1999)
     write_json('books.json', [])
