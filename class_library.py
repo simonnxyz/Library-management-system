@@ -16,6 +16,8 @@ from errors import (
     UnavailableGenreError,
     NoKeywordError,
     NoLibrarianIDError,
+    UnavailableAuthorError,
+    AuthorsNotFoundError,
 )
 
 
@@ -98,7 +100,7 @@ class Library:
                 genres.append(book_info["genre"])
         if not genres:
             raise GenresNotFoundError
-        return list(genres)
+        return genres
 
     def search_book_by_genre(self, chosen_genre):
         if chosen_genre not in self.available_genres():
@@ -106,6 +108,25 @@ class Library:
         searches = []
         for book_info in self.books:
             if chosen_genre == book_info["genre"]:
+                book = Book(**book_info)
+                searches.append(str(book))
+        return '\n'.join(searches)
+
+    def available_authors(self):
+        authors = []
+        for book_info in self.books:
+            if book_info["author"] not in authors:
+                authors.append(book_info["author"])
+        if not authors:
+            raise AuthorsNotFoundError
+        return authors
+
+    def search_book_by_author(self, chosen_author):
+        if chosen_author not in self.available_authors():
+            raise UnavailableAuthorError
+        searches = []
+        for book_info in self.books:
+            if chosen_author == book_info["aurhor"]:
                 book = Book(**book_info)
                 searches.append(str(book))
         return '\n'.join(searches)

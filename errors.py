@@ -71,3 +71,13 @@ class GenresNotFoundError(Exception):
 class NoLibrarianIDError(Exception):
     def __init__(self, id):
         super().__init__(f'Librarian ID {id} not found in the list of users.')
+
+
+class UnavailableAuthorError(Exception):
+    def __str__(self):
+        return 'Chosen author is not available in our library.'
+
+
+class AuthorsNotFoundError(Exception):
+    def __str__(self):
+        return 'No authors found in the list of books.'
