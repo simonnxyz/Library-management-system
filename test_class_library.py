@@ -1,6 +1,10 @@
 from class_library import Library
 from json_methods import read_json, write_json
-from generate_id import generate_book_id, generate_user_id
+from generate_id import (
+    generate_book_id,
+    generate_user_id,
+    generate_librarian_id
+)
 import pytest
 from errors import (
     NoBookIDError,
@@ -11,6 +15,7 @@ from errors import (
     KeywordNotFoundError,
     GenresNotFoundError,
     UnavailableGenreError,
+    NoLibrarianIDError,
 )
 
 
@@ -280,3 +285,33 @@ def test_library_search_by_wrong_genre():
     with pytest.raises(UnavailableGenreError):
         library.search_book_by_genre('Science fiction')
     write_json('books.json', [])
+
+
+def test_library_add_librarian(monkeypatch):
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_librarian_id() == 1111
+    library.add_new_librarian('Adam Nowak', 'admin123')
+    assert library.librarians == [{
+            "id": 1111,
+            "name": 'Adam Nowak',
+            "password": 'admin123',
+        }]
+    library.remove_librarian(1111)
+
+
+def test_library_remove_librarian(monkeypatch):
+    def return_id(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library = Library()
+    assert generate_librarian_id() == 1111
+    library.add_new_librarian('Adam Nowak', 'admin123')
+    library.remove_librarian(1111)
+    assert library.librarians == []
+
+
+def test_library_remove_missing_librarian():
+    library = Library()
+    with pytest.raises(NoLibrarianIDError):
+        library.remove_librarian(2222)
