@@ -142,3 +142,10 @@ class Library:
             raise NoLibrarianIDError(librarian_id)
         self._librarians = updated_librarians
         write_json('librarians.json', self.librarians)
+
+    def get_books_stats(self):
+        stats = ['Title - loans']
+        for book_info in self.books:
+            book = Book(**book_info)
+            stats.append(f'{book.title} - {len(book.loan_history)}')
+        return '\n'.join(stats)
