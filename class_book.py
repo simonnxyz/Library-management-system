@@ -24,13 +24,13 @@ class Book:
             reservations=None,
             ):
         if not title:
-            raise EmptyTitleError('The title cannot be empty')
+            raise EmptyTitleError
         if not author:
-            raise NoAuthorError('Author name is required')
+            raise NoAuthorError
         if not release_year:
-            raise NoReleaseYearError('Release year is required')
+            raise NoReleaseYearError
         if not genre:
-            raise NoGenreError('Genre information is required')
+            raise NoGenreError
         self._id = id
         self._title = title
         self._author = author

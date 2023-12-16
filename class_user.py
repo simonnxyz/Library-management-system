@@ -18,9 +18,9 @@ class User:
             borrowing_history=None,
             ):
         if not name:
-            raise EmptyNameError('Your name cannot be empty')
+            raise EmptyNameError
         if len(password) < 6:
-            raise ShortPasswordError('Minimum password length is 6 characters')
+            raise ShortPasswordError
         self._id = id
         self._name = name
         self._password = password

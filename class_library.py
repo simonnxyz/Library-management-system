@@ -7,6 +7,7 @@ from errors import (
     NoUserIDError,
     BorrowedBookError,
     UserWithBooksError,
+    KeywordNotFoundError,
 )
 
 
@@ -47,7 +48,7 @@ class Library:
             if book_info["id"] != book_id:
                 updated_books.append(book_info)
             elif book_info["id"] == book_id and book_info["current_owner"]:
-                raise BorrowedBookError('Cannot remove borrowed book')
+                raise BorrowedBookError
         if updated_books == self.books:
             raise NoBookIDError(book_id)
         self._books = updated_books
@@ -68,6 +69,16 @@ class Library:
         self.add_new_book(title, author, release_year, genre)
         return f'The copy of book ({book_id}) has been successfully added.'
 
+    def search_book_by_keyword(self, keyword):
+        searches = []
+        for book_info in self.books:
+            book = Book(**book_info)
+            if keyword in book_info.values():
+                searches.append(str(book))
+        if not searches:
+            raise KeywordNotFoundError
+        return '\n'.join(searches)
+
     def add_new_user(self, name: str, password: str):
         id = generate_user_id()
         new_user = User(id, name, password)
@@ -80,7 +91,7 @@ class Library:
             if user_info["id"] != user_id:
                 updated_users.append(user_info)
             elif user_info["id"] == user_id and user_info["borrowed_books"]:
-                raise UserWithBooksError('Cannot remove user with books')
+                raise UserWithBooksError
         if updated_users == self.users:
             raise NoUserIDError(user_id)
         self._users = updated_users

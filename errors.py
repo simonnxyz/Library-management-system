@@ -1,25 +1,31 @@
 class EmptyTitleError(Exception):
-    pass
+    def __str__(self):
+        return 'The title cannot be empty'
 
 
 class NoAuthorError(Exception):
-    pass
+    def __str__(self):
+        return 'Author name is required'
 
 
 class NoReleaseYearError(Exception):
-    pass
+    def __str__(self):
+        return 'Release year is required'
 
 
 class NoGenreError(Exception):
-    pass
+    def __str__(self):
+        return 'Genre information is required'
 
 
 class EmptyNameError(Exception):
-    pass
+    def __str__(self):
+        return 'Your name cannot be empty'
 
 
 class ShortPasswordError(Exception):
-    pass
+    def __str__(self):
+        return 'Minimum password length is 6 characters'
 
 
 class NoBookIDError(Exception):
@@ -33,8 +39,15 @@ class NoUserIDError(Exception):
 
 
 class BorrowedBookError(Exception):
-    pass
+    def __str__(self):
+        return 'Cannot remove borrowed book'
 
 
 class UserWithBooksError(Exception):
-    pass
+    def __str__(self):
+        return 'Cannot remove user with books'
+
+
+class KeywordNotFoundError(Exception):
+    def __str__(self):
+        return 'No books found matching the provided keyword.'
