@@ -212,3 +212,19 @@ def test_library_search_book_by_keyword_not_found(monkeypatch):
     with pytest.raises(KeywordNotFoundError):
         library.search_book_by_keyword('harry potter')
     library.remove_book(1111)
+
+
+def test_library_available_genres():
+    library = Library()
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(
+        'The Plague',
+        'Albert Camus',
+        1947,
+        'Philosophical novel'
+        )
+    assert library.available_genres() == [
+        'Dystopian fiction',
+        'Philosophical novel'
+        ]
+    write_json('books.json', [])
