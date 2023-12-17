@@ -1,6 +1,7 @@
 from class_book import Book
 from generate_id import generate_book_id
 import pytest
+from datetime import date, timedelta
 from errors import (
     EmptyTitleError,
     NoAuthorError,
@@ -148,3 +149,28 @@ def test_book_remove_first_reservation():
     assert book.reservations == [2222, 3333]
     book.remove_first_reservation()
     assert book.reservations == [3333]
+
+
+def test_book_history_append():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.loan_history == []
+    book.history_append(2222)
+    assert book.loan_history == [2222]
+
+
+def test_book_set_return_date():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.return_date is None
+    book.set_return_date()
+    assert book.return_date == date.today()
+
+
+def test_book_extend_return_date():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    book.set_return_date()
+    assert book.return_date == date.today()
+    book.extend_return_date()
+    assert book.return_date == date.today() + timedelta(days=30)

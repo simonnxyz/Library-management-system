@@ -106,15 +106,12 @@ class Book:
         return removed
 
     def history_append(self, loan):
-        # dodac testy
         self._loan_history.append(loan)
 
     def set_return_date(self):
-        # dodac testy
         self._return_date = date.today()
 
     def extend_return_date(self):
-        # dodac testy
         self._return_date += timedelta(days=30)
 
     def __dict__(self):
