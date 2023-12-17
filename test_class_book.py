@@ -29,6 +29,7 @@ def test_book():
     assert book.current_owner is None
     assert book.extensions == 0
     assert book.reservations == []
+    assert book.return_date is None
 
 
 def test_book_empty_title():
@@ -71,7 +72,8 @@ def test_book_dict():
             "loan_history": [],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         }
 
 
@@ -82,5 +84,5 @@ def test_book_str():
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )

@@ -85,6 +85,7 @@ class Book:
         return self._return_date
 
     def set_extensions(self, new_extensions):
+        # dodac testy
         self._extensions = new_extensions
 
     def set_owner(self, new_owner):
@@ -105,9 +106,11 @@ class Book:
         self._loan_history.append(loan)
 
     def set_return_date(self):
+        # dodac testy
         self._return_date = date.today()
 
     def extend_return_date(self):
+        # dodac testy
         self._return_date += timedelta(days=30)
 
     def __dict__(self):
