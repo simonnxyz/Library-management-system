@@ -101,3 +101,8 @@ class NoBooksError(Exception):
 class NoUsersError(Exception):
     def __str__(self):
         return 'Currently our library has no users.'
+
+
+class UsersBookError(Exception):
+    def __str__(self):
+        return 'You are the current owner'

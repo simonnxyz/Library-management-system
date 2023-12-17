@@ -1,7 +1,13 @@
 from errors import (
     EmptyNameError,
     ShortPasswordError,
+    NoBookIDError,
+    BorrowedBookError,
+    UsersBookError,
 )
+from class_book import Book
+from json_methods import read_json, write_json
+from datetime import timedelta
 
 
 class User:
@@ -47,6 +53,15 @@ class User:
     def borrowing_history(self):
         return self._borrowing_history
 
+    def history_append(self, book_id):
+        self._borrowing_history.append(book_id)
+
+    def borrowed_append(self, book_id):
+        self._borrowed_books.append(book_id)
+
+    def borrowed_remove(self, book_id):
+        self._borrowed_books.remove(book_id)
+
     def get_borrowed_books(self):
         """
         Returns the list of book IDs currently borrowed by the user.
@@ -69,8 +84,24 @@ class User:
             history = ', '.join(str(id) for id in self.borrowing_history)
             return f'Your history: {history}'
 
-    def borrow_book(self):
-        pass
+    def borrow_book(self, book_id):
+        books = read_json('books.json')
+        for book_info in read_json('books.json'):
+            if book_info["id"] == book_id:
+                book = Book(**book_info)
+                if book.id in self.borrowed_books:
+                    raise UsersBookError
+                if book.current_owner:
+                    raise BorrowedBookError('')
+                book.set_owner(self.id)
+                book.set_extensions(3)
+                book.history_append(self.id)
+                self.history_append(book_id)
+                self.borrowed_append(book_id)
+                book_info = book.__dict__()
+        if books == read_json('books.json'):
+            raise NoBookIDError(book_id)
+        write_json('books.json', books)
 
     def return_book(self):
         pass

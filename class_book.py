@@ -6,6 +6,7 @@ from errors import (
 )
 
 
+
 class Book:
     """
     Book class representing a book in the library.
@@ -93,7 +94,7 @@ class Book:
         removed = self._reservations.pop(0)
         return removed
 
-    def loan_history_append(self, loan):
+    def history_append(self, loan):
         # dodac testy
         self._loan_history.append(loan)
 
