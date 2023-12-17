@@ -5,6 +5,7 @@ from generate_id import (
     generate_user_id,
     generate_librarian_id
 )
+import datetime
 import pytest
 from errors import (
     NoBookIDError,
@@ -47,7 +48,8 @@ def test_library_add_new_book(monkeypatch):
             "loan_history": [],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         }]
     library.remove_book(1111)
 
@@ -89,7 +91,8 @@ def test_library_remove_borrowed_book():
             "loan_history": [],
             "current_owner": 1234,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": datetime.date(2024, 1, 16)
             }]
     write_json('books.json', book)
     library = Library()
