@@ -80,6 +80,23 @@ class Book:
     def set_extensions(self, new_extensions):
         self._extensions = new_extensions
 
+    def set_owner(self, new_owner):
+        # dodac testy
+        self._current_owner = new_owner
+
+    def add_reservation(self, reservation):
+        # dodac testy
+        self._reservations.append(reservation)
+
+    def remove_first_reservation(self):
+        # dodac testy
+        removed = self._reservations.pop(0)
+        return removed
+
+    def loan_history_append(self, loan):
+        # dodac testy
+        self._loan_history.append(loan)
+
     def __dict__(self):
         """
         Returns a dictionary representation of the book's attributes.
