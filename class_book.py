@@ -3,6 +3,7 @@ from errors import (
     NoAuthorError,
     NoReleaseYearError,
     NoGenreError,
+    NegativeExtensions,
 )
 from datetime import date, timedelta
 
@@ -85,8 +86,14 @@ class Book:
         return self._return_date
 
     def set_extensions(self, new_extensions):
-        # dodac testy
+        if new_extensions < 0:
+            raise NegativeExtensions
         self._extensions = new_extensions
+
+    def remove_extension(self):
+        if self.extensions < 1:
+            raise NegativeExtensions
+        self._extensions -= 1
 
     def set_owner(self, new_owner):
         # dodac testy

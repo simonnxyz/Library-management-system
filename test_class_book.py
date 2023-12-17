@@ -6,6 +6,7 @@ from errors import (
     NoAuthorError,
     NoReleaseYearError,
     NoGenreError,
+    NegativeExtensions,
 )
 
 
@@ -86,3 +87,44 @@ def test_book_str():
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None'
                 )
+
+
+def test_book_set_extensions():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.extensions == 0
+    book.set_extensions(3)
+    assert book.extensions == 3
+
+
+def test_book_set_negative_extensions():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.extensions == 0
+    with pytest.raises(NegativeExtensions):
+        book.set_extensions(-1)
+
+
+def test_remove_extension():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    book.set_extensions(3)
+    assert book.extensions == 3
+    book.remove_extension()
+    assert book.extensions == 2
+
+
+def test_remove_extension_negative():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.extensions == 0
+    with pytest.raises(NegativeExtensions):
+        book.remove_extension()
+
+
+def test_book_set_owner():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.current_owner is None
+    book.set_owner(2222)
+    assert book.current_owner == 2222

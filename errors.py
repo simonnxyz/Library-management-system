@@ -106,3 +106,7 @@ class NoUsersError(Exception):
 class UsersBookError(Exception):
     def __str__(self):
         return 'You are the current owner'
+
+
+class NegativeExtensions(Exception):
+    pass
