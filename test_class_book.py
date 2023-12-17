@@ -128,3 +128,23 @@ def test_book_set_owner():
     assert book.current_owner is None
     book.set_owner(2222)
     assert book.current_owner == 2222
+
+
+def test_book_add_reservation():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.reservations == []
+    book.add_reservation(2222)
+    assert book.reservations == [2222]
+    book.add_reservation(3333)
+    assert book.reservations == [2222, 3333]
+
+
+def test_book_remove_first_reservation():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    book.add_reservation(2222)
+    book.add_reservation(3333)
+    assert book.reservations == [2222, 3333]
+    book.remove_first_reservation()
+    assert book.reservations == [3333]

@@ -96,15 +96,12 @@ class Book:
         self._extensions -= 1
 
     def set_owner(self, new_owner):
-        # dodac testy
         self._current_owner = new_owner
 
     def add_reservation(self, reservation):
-        # dodac testy
         self._reservations.append(reservation)
 
     def remove_first_reservation(self):
-        # dodac testy
         removed = self._reservations.pop(0)
         return removed
 
