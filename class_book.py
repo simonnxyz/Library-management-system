@@ -5,7 +5,7 @@ from errors import (
     NoGenreError,
     NegativeExtensions,
 )
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 class Book:
@@ -43,6 +43,8 @@ class Book:
         self._current_owner = current_owner
         self._extensions = extensions
         self._reservations = reservations or []
+        if return_date:
+            return_date = datetime.strptime(return_date, '%Y-%m-%d')
         self._return_date = return_date
 
     @property

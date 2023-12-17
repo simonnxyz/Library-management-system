@@ -8,4 +8,4 @@ def read_json(file):
 
 def write_json(file, dump_list):
     with open(file, 'w') as file_handle:
-        json.dump(dump_list, file_handle, indent=4)
+        json.dump(dump_list, file_handle, indent=4, default=str)

@@ -88,9 +88,9 @@ def test_library_remove_borrowed_book():
             "author": 'George Orwell',
             "release_year": 1949,
             "genre": "Dystopian fiction",
-            "loan_history": [],
+            "loan_history": [1234],
             "current_owner": 1234,
-            "extensions": 0,
+            "extensions": 3,
             "reservations": [],
             "return_date": datetime.date(2024, 1, 16)
             }]
@@ -122,7 +122,8 @@ def test_library_add_copy_of_book(monkeypatch):
             "loan_history": [],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         },
         {
             "id": 2222,
@@ -133,7 +134,8 @@ def test_library_add_copy_of_book(monkeypatch):
             "loan_history": [],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         }]
     library.remove_book(1111)
     library.remove_book(2222)
@@ -202,13 +204,13 @@ def test_library_search_book_by_keyword(monkeypatch):
     assert result == (
                 'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )
     result = library.search_book_by_keyword(1984)
     assert result == (
                 'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )
     library.remove_book(1111)
 
@@ -273,7 +275,7 @@ def test_library_search_by_gerne(monkeypatch):
                 'ID: ' + '1111' + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )
     write_json('books.json', [])
 
@@ -369,7 +371,7 @@ def test_library_search_by_author(monkeypatch):
                 'ID: ' + '1111' + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )
     write_json('books.json', [])
 
@@ -429,7 +431,7 @@ def test_library_search_by_year(monkeypatch):
                 'ID: ' + '1111' + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None'
+                'Owner: None, ' + 'Return date: None'
                 )
     write_json('books.json', [])
 
@@ -460,7 +462,8 @@ def test_library_get_books_stats():
             "loan_history": [2222, 3333],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         },
         {
             "id": 2222,
@@ -471,7 +474,8 @@ def test_library_get_books_stats():
             "loan_history": [4444],
             "current_owner": None,
             "extensions": 0,
-            "reservations": []
+            "reservations": [],
+            "return_date": None
         }]
     write_json('books.json', books)
     library = Library()
