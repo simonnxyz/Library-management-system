@@ -4,7 +4,7 @@ from errors import (
     NoReleaseYearError,
     NoGenreError,
 )
-
+from datetime import date, timedelta
 
 
 class Book:
@@ -23,6 +23,7 @@ class Book:
             current_owner=None,
             extensions=0,
             reservations=None,
+            return_date=None,
             ):
         if not title:
             raise EmptyTitleError
@@ -41,6 +42,7 @@ class Book:
         self._current_owner = current_owner
         self._extensions = extensions
         self._reservations = reservations or []
+        self._return_date = return_date
 
     @property
     def id(self):
@@ -78,6 +80,10 @@ class Book:
     def reservations(self):
         return self._reservations
 
+    @property
+    def return_date(self):
+        return self._return_date
+
     def set_extensions(self, new_extensions):
         self._extensions = new_extensions
 
@@ -98,6 +104,12 @@ class Book:
         # dodac testy
         self._loan_history.append(loan)
 
+    def set_return_date(self):
+        self._return_date = date.today()
+
+    def extend_return_date(self):
+        self._return_date += timedelta(days=30)
+
     def __dict__(self):
         """
         Returns a dictionary representation of the book's attributes.
@@ -111,7 +123,8 @@ class Book:
             "loan_history": self.loan_history,
             "current_owner": self.current_owner,
             "extensions": self.extensions,
-            "reservations": self.reservations
+            "reservations": self.reservations,
+            "return_date": self.return_date
         }
 
     def __str__(self):
@@ -124,5 +137,6 @@ class Book:
                 ', Author: ' + self.author +
                 ', Release year: ' + str(self.release_year) +
                 ', Genre: ' + self.genre +
-                ', Owner: ' + str(self.current_owner)
+                ', Owner: ' + str(self.current_owner) +
+                ', Return date: ' + str(self.return_date)
                 )
