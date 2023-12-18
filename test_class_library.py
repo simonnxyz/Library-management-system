@@ -1,5 +1,6 @@
 from class_library import Library
 from class_book import Book
+from class_user import User
 from json_methods import read_json, write_json
 from generate_id import (
     generate_book_id,
@@ -95,19 +96,16 @@ def test_library_remove_borrowed_book():
 
 
 def test_library_add_copy_of_book(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    def return_id2(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id2)
-    assert generate_book_id() == 2222
-    info = library.add_copy_of_book(1111)
-    assert info == 'The copy of book (1111) has been successfully added.'
+    library.add_new_book(book)
+    id2 = generate_book_id()
+    info = library.add_copy_of_book(id, id2)
+    assert info == f'The copy of book ({id}) has been successfully added.'
     assert library.books == [
         {
-            "id": 1111,
+            "id": id,
             "title": '1984',
             "author": 'George Orwell',
             "release_year": 1949,
@@ -119,7 +117,7 @@ def test_library_add_copy_of_book(monkeypatch):
             "return_date": None
         },
         {
-            "id": 2222,
+            "id": id2,
             "title": '1984',
             "author": 'George Orwell',
             "release_year": 1949,
@@ -130,39 +128,37 @@ def test_library_add_copy_of_book(monkeypatch):
             "reservations": [],
             "return_date": None
         }]
-    library.remove_book(1111)
-    library.remove_book(2222)
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_add_copy_of_missing_book():
     library = Library()
     with pytest.raises(NoBookIDError):
-        library.add_copy_of_book(1111)
+        library.add_copy_of_book(1111, 2222)
 
 
 def test_library_add_user(monkeypatch):
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
-    assert generate_user_id() == 2222
-    library.add_new_user('Jan Kowalski', 'haslo123')
+    library.add_new_user(user)
     assert library.users == [{
-            "id": 2222,
+            "id": id,
             "name": 'Jan Kowalski',
             "password": 'haslo123',
             "borrowed_books": [],
             "borrowing_history": []
         }]
-    library.remove_user(2222)
+    library.remove_user(id)
 
 
 def test_library_remove_user(monkeypatch):
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
-    assert generate_user_id() == 2222
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    library.remove_user(2222)
+    library.add_new_user(user)
+    library.remove_user(id)
     assert library.users == []
 
 
@@ -173,17 +169,12 @@ def test_library_remove_missing_user():
 
 
 def test_library_remove_user_with_books():
-    user = [{
-            "id": 2222,
-            "name": 'Jan Kowalski',
-            "password": 'haslo123',
-            "borrowed_books": [1234],
-            "borrowing_history": []
-            }]
-    write_json('users.json', user)
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123', borrowed_books=[1234])
     library = Library()
+    library.add_new_user(user)
     with pytest.raises(UserWithBooksError):
-        library.remove_user(2222)
+        library.remove_user(id)
     write_json('users.json', [])
 
 

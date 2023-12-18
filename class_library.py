@@ -1,9 +1,4 @@
 from json_methods import read_json, write_json
-from generate_id import (
-    generate_book_id,
-    generate_user_id,
-    generate_librarian_id
-)
 from class_book import Book
 from class_user import User, Librarian
 from errors import (
@@ -66,7 +61,7 @@ class Library:
         write_json('books.json', self.books)
         return f'The book ({book_id}) has been successfully removed.'
 
-    def add_copy_of_book(self, book_id: int):
+    def add_copy_of_book(self, book_id: int, new_id: int):
         book_copy = None
         for book_info in self.books:
             if book_info["id"] == book_id:
@@ -77,7 +72,8 @@ class Library:
         author = book_copy["author"]
         release_year = book_copy["release_year"]
         genre = book_copy["genre"]
-        self.add_new_book(title, author, release_year, genre)
+        book = Book(new_id, title, author, release_year, genre)
+        self.add_new_book(book)
         return f'The copy of book ({book_id}) has been successfully added.'
 
     def search_book_by_keyword(self, keyword):
