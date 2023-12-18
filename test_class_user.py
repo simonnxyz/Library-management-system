@@ -1,7 +1,7 @@
 from class_user import User
 from class_book import Book
 from class_library import Library
-from generate_id import generate_user_id, generate_book_id
+from generate_id import generate_user_id
 from json_methods import read_json, write_json
 import pytest
 from errors import (
@@ -10,6 +10,9 @@ from errors import (
     UsersBookError,
     BorrowedBookError,
     NoBookIDError,
+    NotUsersBookError,
+    ReservedBookError,
+    NotEnoughExtensionsError,
 )
 
 
@@ -222,3 +225,52 @@ def test_user_use_extension(monkeypatch):
     }]
     write_json('users.json', [])
     write_json('books.json', [])
+
+
+def test_user_use_extension_not_owned_book(monkeypatch):
+    library = Library()
+    def return_id(range1, range2, object=[]): return 2222
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    library.add_new_user('Jan Kowalski', 'haslo123')
+    users = read_json('users.json')
+    for user_info in users:
+        if user_info["id"] == 2222:
+            user = User(**user_info)
+    with pytest.raises(NotUsersBookError):
+        user.use_extension(1111)
+    write_json('users.json', [])
+
+
+def test_user_use_extension_reserved_book():
+    library = Library()
+    user_info = {
+        "id": 2222,
+        "name": "Jan Kowalski",
+        "password": "haslo123",
+        "borrowed_books": [1111],
+        "borrowing_history": [1111]
+    }
+    write_json('users.json', [user_info])
+    book = {
+        "id": 1111,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [2222],
+        "current_owner": 2222,
+        "extensions": 3,
+        "reservations": [3333],
+        "return_date": "2024-04-15"
+    }
+    write_json('books.json', [book])
+    library.update_data()
+    user = User(**user_info)
+    with pytest.raises(ReservedBookError):
+        user.use_extension(1111)
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_use_extension_not_enough(monkeypatch):
+    pass
