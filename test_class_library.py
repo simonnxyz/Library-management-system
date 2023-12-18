@@ -1,4 +1,5 @@
 from class_library import Library
+from class_book import Book
 from json_methods import read_json, write_json
 from generate_id import (
     generate_book_id,
@@ -33,14 +34,13 @@ def test_create_library():
     assert library.librarians == read_json('librarians.json')
 
 
-def test_library_add_new_book(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+def test_library_add_new_book():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
     assert library.books == [{
-            "id": 1111,
+            "id": id,
             "title": '1984',
             "author": 'George Orwell',
             "release_year": 1949,
@@ -51,27 +51,25 @@ def test_library_add_new_book(monkeypatch):
             "reservations": [],
             "return_date": None
         }]
-    library.remove_book(1111)
+    library.remove_book(id)
 
 
 def test_library_add_new_book_message(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    msg = library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian')
-    assert msg == 'The book (1111) has been successfully added.'
-    library.remove_book(1111)
+    msg = library.add_new_book(book)
+    assert msg == f'The book ({id}) has been successfully added.'
+    library.remove_book(id)
 
 
-def test_library_remove_book(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+def test_library_remove_book():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    info = library.remove_book(1111)
-    assert info == 'The book (1111) has been successfully removed.'
+    library.add_new_book(book)
+    info = library.remove_book(id)
+    assert info == f'The book ({id}) has been successfully removed.'
     assert library.books == []
 
 
@@ -82,22 +80,17 @@ def test_library_remove_missing_book():
 
 
 def test_library_remove_borrowed_book():
-    book = [{
-            "id": 1111,
-            "title": '1984',
-            "author": 'George Orwell',
-            "release_year": 1949,
-            "genre": "Dystopian fiction",
-            "loan_history": [1234],
-            "current_owner": 1234,
-            "extensions": 3,
-            "reservations": [],
-            "return_date": datetime.date(2024, 1, 16)
-            }]
-    write_json('books.json', book)
+    id = generate_book_id()
+    book = Book(id,
+                '1984',
+                'George Orwell',
+                1949,
+                'Dystopian fiction',
+                current_owner=2222)
     library = Library()
+    library.add_new_book(book)
     with pytest.raises(BorrowedBookError):
-        library.remove_book(1111)
+        library.remove_book(id)
     write_json('books.json', [])
 
 

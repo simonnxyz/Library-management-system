@@ -48,18 +48,10 @@ class Library:
         self._users = read_json('users.json')
         self._librarians = read_json('librarians.json')
 
-    def add_new_book(
-            self,
-            title: str,
-            author: str,
-            release_year: int,
-            genre: str,
-            ):
-        id = generate_book_id()
-        new_book = Book(id, title, author, release_year, genre)
+    def add_new_book(self, new_book: Book):
         self._books.append(new_book.__dict__())
         write_json('books.json', self.books)
-        return f'The book ({id}) has been successfully added.'
+        return f'The book ({new_book.id}) has been successfully added.'
 
     def remove_book(self, book_id: int):
         updated_books = []
@@ -159,9 +151,7 @@ class Library:
                 searches.append(str(book))
         return '\n'.join(searches)
 
-    def add_new_user(self, name: str, password: str):
-        id = generate_user_id()
-        new_user = User(id, name, password)
+    def add_new_user(self, new_user: User):
         self._users.append(new_user.__dict__())
         write_json('users.json', self.users)
 
@@ -177,9 +167,7 @@ class Library:
         self._users = updated_users
         write_json('users.json', self.users)
 
-    def add_new_librarian(self, name: str, password: str):
-        id = generate_librarian_id()
-        new_librarian = Librarian(id, name, password)
+    def add_new_librarian(self, new_librarian: Librarian):
         self._librarians.append(new_librarian.__dict__())
         write_json('librarians.json', self.librarians)
 
