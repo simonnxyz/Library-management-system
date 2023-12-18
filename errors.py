@@ -105,8 +105,23 @@ class NoUsersError(Exception):
 
 class UsersBookError(Exception):
     def __str__(self):
-        return 'You are the current owner'
+        return 'You are the current owner.'
 
 
 class NegativeExtensionsError(Exception):
     pass
+
+
+class NotUsersBookError(Exception):
+    def __str__(self):
+        return 'You are not the current owner.'
+
+
+class NotEnoughExtensionsError(Exception):
+    def __str__(self):
+        return 'You have run out of extensions.'
+
+
+class ReservedBookError(Exception):
+    def __str__(self):
+        return 'You cannot use the extension, the book has been reserved.'

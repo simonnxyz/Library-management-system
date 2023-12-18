@@ -4,6 +4,9 @@ from errors import (
     NoBookIDError,
     BorrowedBookError,
     UsersBookError,
+    NotUsersBookError,
+    NotEnoughExtensionsError,
+    ReservedBookError,
 )
 from class_book import Book
 from json_methods import read_json, write_json
@@ -111,6 +114,27 @@ class User:
                 user_info["borrowed_books"] = self.borrowed_books
                 user_info["borrowing_history"] = self.borrowing_history
         write_json('users.json', users)
+        write_json('books.json', updated_books)
+
+    def use_extension(self, book_id):
+        if book_id not in self.borrowed_books:
+            raise NotUsersBookError
+        books = read_json('books.json')
+        updated_books = []
+        for book_info in books:
+            if book_info["id"] == book_id:
+                book = Book(**book_info)
+                if book.reservations:
+                    raise ReservedBookError
+                if book.extensions < 1:
+                    raise NotEnoughExtensionsError
+                book.remove_extension()
+                book.extend_return_date()
+                updated_books.append(book.__dict__())
+            else:
+                updated_books.append(book_info)
+        if updated_books == read_json('books.json'):
+            raise NoBookIDError(book_id)
         write_json('books.json', updated_books)
 
     def return_book(self):
