@@ -43,6 +43,11 @@ class Library:
     def librarians(self):
         return self._librarians
 
+    def update_data(self):
+        self._books = read_json('books.json')
+        self._users = read_json('users.json')
+        self._librarians = read_json('librarians.json')
+
     def add_new_book(
             self,
             title: str,

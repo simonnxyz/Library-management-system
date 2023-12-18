@@ -2,7 +2,7 @@ from class_user import User
 from class_book import Book
 from class_library import Library
 from generate_id import generate_user_id, generate_book_id
-from json_methods import read_json
+from json_methods import read_json, write_json
 import pytest
 from errors import (
     EmptyNameError,
@@ -104,3 +104,25 @@ def test_user_borrow_book(monkeypatch):
         if user_info["id"] == 2222:
             user = User(**user_info)
     user.borrow_book(1111)
+    library.update_data()
+    assert library.books == [{
+        "id": 1111,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [2222],
+        "current_owner": 2222,
+        "extensions": 3,
+        "reservations": [],
+        "return_date": "2024-01-17"
+    }]
+    assert library.users == [{
+        "id": 2222,
+        "name": "Jan Kowalski",
+        "password": "haslo123",
+        "borrowed_books": [1111],
+        "borrowing_history": [1111]
+    }]
+    write_json('users.json', [])
+    write_json('books.json', [])
