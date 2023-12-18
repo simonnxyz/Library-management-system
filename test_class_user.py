@@ -126,3 +126,25 @@ def test_user_borrow_book(monkeypatch):
     }]
     write_json('users.json', [])
     write_json('books.json', [])
+
+
+def test_user_borrow_own_book(monkeypatch):
+    library = Library()
+    def return_id(range1, range2, object=[]): return 2222
+    monkeypatch.setattr('generate_id.generate_id', return_id)
+    assert generate_user_id() == 2222
+    library.add_new_user('Jan Kowalski', 'haslo123')
+    def return_id2(range1, range2, object=[]): return 1111
+    monkeypatch.setattr('generate_id.generate_id', return_id2)
+    assert generate_book_id() == 1111
+    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    users = read_json('users.json')
+    for user_info in users:
+        if user_info["id"] == 2222:
+            user = User(**user_info)
+    user.borrow_book(1111)
+    with pytest.raises(UsersBookError):
+        user.borrow_book(1111)
+    library.update_data()
+    write_json('users.json', [])
+    write_json('books.json', [])
