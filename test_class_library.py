@@ -55,7 +55,7 @@ def test_library_add_new_book():
     library.remove_book(id)
 
 
-def test_library_add_new_book_message(monkeypatch):
+def test_library_add_new_book_message():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
@@ -95,7 +95,7 @@ def test_library_remove_borrowed_book():
     write_json('books.json', [])
 
 
-def test_library_add_copy_of_book(monkeypatch):
+def test_library_add_copy_of_book():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
@@ -138,7 +138,7 @@ def test_library_add_copy_of_missing_book():
         library.add_copy_of_book(1111, 2222)
 
 
-def test_library_add_user(monkeypatch):
+def test_library_add_user():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
@@ -153,7 +153,7 @@ def test_library_add_user(monkeypatch):
     library.remove_user(id)
 
 
-def test_library_remove_user(monkeypatch):
+def test_library_remove_user():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
@@ -178,25 +178,21 @@ def test_library_remove_user_with_books():
     write_json('users.json', [])
 
 
-def test_library_search_book_by_keyword(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+def test_library_search_book_by_keyword():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
     result = library.search_book_by_keyword('George')
-    assert result == (
-                'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
-                )
+    info = (
+            f'ID: {id}, ' + 'Title: 1984, Author: George Orwell, ' +
+            'Release year: 1949, Genre: Dystopian fiction, ' +
+            'Owner: None, ' + 'Return date: None'
+    )
+    assert result == info
     result = library.search_book_by_keyword(1984)
-    assert result == (
-                'ID: 1111, ' + 'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
-                )
-    library.remove_book(1111)
+    assert result == info
+    library.remove_book(id)
 
 
 def test_library_search_book_by_missing_keyword():
@@ -206,30 +202,29 @@ def test_library_search_book_by_missing_keyword():
 
 
 def test_library_search_book_by_keyword_not_found(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    assert generate_book_id() == 1111
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
     with pytest.raises(KeywordNotFoundError):
         library.search_book_by_keyword('harry potter')
-    library.remove_book(1111)
+    library.remove_book(id)
 
 
 def test_library_available_genres():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
+    library.add_new_book(book)
+    library.add_new_book(book2)
     assert library.available_genres() == [
         'Dystopian fiction',
         'Philosophical novel'
         ]
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_available_genres_empty():
@@ -239,47 +234,44 @@ def test_library_available_genres_empty():
 
 
 def test_library_search_by_gerne(monkeypatch):
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_genres() == [
         'Philosophical novel',
         'Dystopian fiction'
         ]
     result = library.search_book_by_genre('Dystopian fiction')
     assert result == (
-                'ID: ' + '1111' + ', '
+                'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None'
                 )
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_search_by_wrong_genre():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_genres() == [
         'Philosophical novel',
         'Dystopian fiction'
         ]
     with pytest.raises(UnavailableGenreError):
         library.search_book_by_genre('Science fiction')
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_add_librarian(monkeypatch):
