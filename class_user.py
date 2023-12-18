@@ -86,6 +86,7 @@ class User:
 
     def borrow_book(self, book_id):
         books = read_json('books.json')
+        updated_books = []
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
@@ -99,10 +100,18 @@ class User:
                 book.history_append(self.id)
                 self.history_append(book_id)
                 self.borrowed_append(book_id)
-                book_info = book.__dict__()
-        if books == read_json('books.json'):
+                updated_books.append(book.__dict__())
+            else:
+                updated_books.append(book_info)
+        if updated_books == read_json('books.json'):
             raise NoBookIDError(book_id)
-        write_json('books.json', books)
+        users = read_json('users.json')
+        for user_info in users:
+            if user_info["id"] == self.id:
+                user_info["borrowed_books"] = self.borrowed_books
+                user_info["borrowing_history"] = self.borrowing_history
+        write_json('users.json', users)
+        write_json('books.json', updated_books)
 
     def return_book(self):
         pass
