@@ -1,6 +1,6 @@
 from class_library import Library
 from class_book import Book
-from class_user import User
+from class_user import User, Librarian
 from json_methods import read_json, write_json
 from generate_id import (
     generate_book_id,
@@ -275,26 +275,24 @@ def test_library_search_by_wrong_genre():
 
 
 def test_library_add_librarian(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_librarian_id()
+    librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
-    assert generate_librarian_id() == 1111
-    library.add_new_librarian('Adam Nowak', 'admin123')
+    library.add_new_librarian(librarian)
     assert library.librarians == [{
-            "id": 1111,
+            "id": id,
             "name": 'Adam Nowak',
             "password": 'admin123',
         }]
-    library.remove_librarian(1111)
+    library.remove_librarian(id)
 
 
 def test_library_remove_librarian(monkeypatch):
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
+    id = generate_librarian_id()
+    librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
-    assert generate_librarian_id() == 1111
-    library.add_new_librarian('Adam Nowak', 'admin123')
-    library.remove_librarian(1111)
+    library.add_new_librarian(librarian)
+    library.remove_librarian(id)
     assert library.librarians == []
 
 
@@ -305,19 +303,19 @@ def test_library_remove_missing_librarian():
 
 
 def test_library_available_authors():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_authors() == [
-        'George Orwell',
-        'Albert Camus'
+        'A. Camus',
+        'George Orwell'
         ]
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_available_authors_empty():
@@ -327,47 +325,44 @@ def test_library_available_authors_empty():
 
 
 def test_library_search_by_author(monkeypatch):
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_authors() == [
-        'Albert Camus',
+        'A. Camus',
         'George Orwell'
         ]
     result = library.search_book_by_author('George Orwell')
     assert result == (
-                'ID: ' + '1111' + ', '
+                'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None'
                 )
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_search_by_wrong_author():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_authors() == [
-        'Albert Camus',
+        'A. Camus',
         'George Orwell'
         ]
     with pytest.raises(UnavailableAuthorError):
         library.search_book_by_author('Henryk Sienkiewicz')
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_available_years():
