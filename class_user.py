@@ -7,10 +7,10 @@ from errors import (
     NotUsersBookError,
     NotEnoughExtensionsError,
     ReservedBookError,
+    NoBookOwnerError,
 )
 from class_book import Book
 from json_methods import read_json, write_json
-from datetime import timedelta
 
 
 class User:
@@ -89,8 +89,7 @@ class User:
 
     def borrow_book(self, book_id):
         books = read_json('books.json')
-        updated_books = []
-        for book_info in books:
+        for index, book_info in enumerate(books):
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.id in self.borrowed_books:
@@ -103,25 +102,24 @@ class User:
                 book.history_append(self.id)
                 self.history_append(book_id)
                 self.borrowed_append(book_id)
-                updated_books.append(book.__dict__())
-            else:
-                updated_books.append(book_info)
-        if updated_books == read_json('books.json'):
+                books[index].update(book.__dict__())
+                break
+        if books == read_json('books.json'):
             raise NoBookIDError(book_id)
         users = read_json('users.json')
         for user_info in users:
             if user_info["id"] == self.id:
                 user_info["borrowed_books"] = self.borrowed_books
                 user_info["borrowing_history"] = self.borrowing_history
+                break
         write_json('users.json', users)
-        write_json('books.json', updated_books)
+        write_json('books.json', books)
 
     def use_extension(self, book_id):
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
-        updated_books = []
-        for book_info in books:
+        for index, book_info in enumerate(books):
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.reservations:
@@ -130,12 +128,26 @@ class User:
                     raise NotEnoughExtensionsError
                 book.remove_extension()
                 book.extend_return_date()
-                updated_books.append(book.__dict__())
-            else:
-                updated_books.append(book_info)
-        if updated_books == read_json('books.json'):
+                books[index].update(book.__dict__())
+        if books == read_json('books.json'):
             raise NoBookIDError(book_id)
-        write_json('books.json', updated_books)
+        write_json('books.json', books)
+
+    def reserve_book(self, book_id):
+        books = read_json('books.json')
+        for index, book_info in enumerate(books):
+            if book_info["id"] == book_id:
+                book = Book(**book_info)
+                if not book.current_owner:
+                    raise NoBookOwnerError
+                book.add_reservation(self.id)
+                books[index].update(book.__dict__())
+        if books == read_json('books.json'):
+            raise NoBookIDError(book_id)
+        write_json('books.json', books)
+
+    def cancel_reservation(self, book_id):
+        pass
 
     def return_book(self):
         pass

@@ -125,3 +125,8 @@ class NotEnoughExtensionsError(Exception):
 class ReservedBookError(Exception):
     def __str__(self):
         return 'You cannot use the extension, the book has been reserved.'
+
+
+class NoBookOwnerError(Exception):
+    def __str__(self):
+        return 'You do not need to reserve this book. It has no owner'
