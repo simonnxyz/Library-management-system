@@ -7,7 +7,7 @@ from errors import (
     NoAuthorError,
     NoReleaseYearError,
     NoGenreError,
-    NegativeExtensions,
+    NegativeExtensionsError,
 )
 
 
@@ -102,7 +102,7 @@ def test_book_set_negative_extensions():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.extensions == 0
-    with pytest.raises(NegativeExtensions):
+    with pytest.raises(NegativeExtensionsError):
         book.set_extensions(-1)
 
 
@@ -119,7 +119,7 @@ def test_remove_extension_negative():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.extensions == 0
-    with pytest.raises(NegativeExtensions):
+    with pytest.raises(NegativeExtensionsError):
         book.remove_extension()
 
 
@@ -164,13 +164,13 @@ def test_book_set_return_date():
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.return_date is None
     book.set_return_date()
-    assert book.return_date == date.today()
+    assert book.return_date == date.today() + timedelta(days=30)
 
 
 def test_book_extend_return_date():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     book.set_return_date()
-    assert book.return_date == date.today()
-    book.extend_return_date()
     assert book.return_date == date.today() + timedelta(days=30)
+    book.extend_return_date()
+    assert book.return_date == date.today() + 2 * timedelta(days=30)

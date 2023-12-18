@@ -86,7 +86,7 @@ class User:
 
     def borrow_book(self, book_id):
         books = read_json('books.json')
-        for book_info in read_json('books.json'):
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.id in self.borrowed_books:
@@ -95,6 +95,7 @@ class User:
                     raise BorrowedBookError('')
                 book.set_owner(self.id)
                 book.set_extensions(3)
+                book.set_return_date()
                 book.history_append(self.id)
                 self.history_append(book_id)
                 self.borrowed_append(book_id)

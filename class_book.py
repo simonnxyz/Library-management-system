@@ -3,7 +3,7 @@ from errors import (
     NoAuthorError,
     NoReleaseYearError,
     NoGenreError,
-    NegativeExtensions,
+    NegativeExtensionsError,
 )
 from datetime import date, timedelta, datetime
 
@@ -44,7 +44,7 @@ class Book:
         self._extensions = extensions
         self._reservations = reservations or []
         if return_date:
-            return_date = datetime.strptime(return_date, '%Y-%m-%d')
+            return_date = datetime.strptime(return_date, '%Y-%m-%d').date()
         self._return_date = return_date
 
     @property
@@ -89,12 +89,12 @@ class Book:
 
     def set_extensions(self, new_extensions):
         if new_extensions < 0:
-            raise NegativeExtensions
+            raise NegativeExtensionsError
         self._extensions = new_extensions
 
     def remove_extension(self):
         if self.extensions < 1:
-            raise NegativeExtensions
+            raise NegativeExtensionsError
         self._extensions -= 1
 
     def set_owner(self, new_owner):
@@ -111,14 +111,15 @@ class Book:
         self._loan_history.append(loan)
 
     def set_return_date(self):
-        self._return_date = date.today()
+        self._return_date = date.today() + timedelta(days=30)
 
     def extend_return_date(self):
         self._return_date += timedelta(days=30)
 
     def __dict__(self):
         """
-        Returns a dictionary representation of the book's attributes.
+        Returns a dictionary representation
+        of the book's attributes (without _).
         """
         return {
             "id": self.id,

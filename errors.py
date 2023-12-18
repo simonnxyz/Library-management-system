@@ -108,5 +108,5 @@ class UsersBookError(Exception):
         return 'You are the current owner'
 
 
-class NegativeExtensions(Exception):
+class NegativeExtensionsError(Exception):
     pass
