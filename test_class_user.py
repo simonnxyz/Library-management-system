@@ -1,9 +1,10 @@
 from class_user import User
 from class_book import Book
 from class_library import Library
-from generate_id import generate_user_id
+from generate_id import generate_user_id, generate_book_id
 from json_methods import read_json, write_json
 import pytest
+from datetime import date, timedelta
 from errors import (
     EmptyNameError,
     ShortPasswordError,
@@ -92,99 +93,79 @@ def test_user_dict():
         }
 
 
-def test_user_borrow_book(monkeypatch):
+def test_user_borrow_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    def return_id2(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id2)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user = User(**user_info)
-    user.borrow_book(1111)
-    books = read_json('books.json')
-    for book_info in books:
-        if book_info["id"] == 1111:
-            book = Book(**book_info)
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
     library.update_data()
+    return_date = date.today() + timedelta(days=30)
     assert library.books == [{
-        "id": 1111,
+        "id": id2,
         "title": "1984",
         "author": "George Orwell",
         "release_year": 1949,
         "genre": "Dystopian fiction",
-        "loan_history": [2222],
-        "current_owner": 2222,
+        "loan_history": [id],
+        "current_owner": id,
         "extensions": 3,
         "reservations": [],
-        "return_date": str(book.return_date)
+        "return_date": str(return_date)
     }]
     assert library.users == [{
-        "id": 2222,
+        "id": id,
         "name": "Jan Kowalski",
         "password": "haslo123",
-        "borrowed_books": [1111],
-        "borrowing_history": [1111]
+        "borrowed_books": [id2],
+        "borrowing_history": [id2]
     }]
     write_json('users.json', [])
     write_json('books.json', [])
 
 
-def test_user_borrow_own_book(monkeypatch):
+def test_user_borrow_own_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    def return_id2(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id2)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user = User(**user_info)
-    user.borrow_book(1111)
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
+    library.update_data()
     with pytest.raises(UsersBookError):
-        user.borrow_book(1111)
+        user.borrow_book(id2)
     write_json('users.json', [])
     write_json('books.json', [])
 
 
 def test_user_borrow_borrowed_book(monkeypatch):
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    def return_id2(range1, range2, object=[]): return 3333
-    monkeypatch.setattr('generate_id.generate_id', return_id2)
-    library.add_new_user('Adam Nowak', 'haslo321')
-    def return_id3(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id3)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user1 = User(**user_info)
-        elif user_info["id"] == 3333:
-            user2 = User(**user_info)
-    user1.borrow_book(1111)
+    library.add_new_user(user)
+    library.add_new_user(user2)
+    id3 = generate_book_id()
+    book = Book(id3, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    user.borrow_book(id3)
     with pytest.raises(BorrowedBookError):
-        user2.borrow_book(1111)
+        user2.borrow_book(id3)
     write_json('users.json', [])
     write_json('books.json', [])
 
 
 def test_borrow_book_wrong_id(monkeypatch):
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user = User(**user_info)
+    library.add_new_user(user)
     with pytest.raises(NoBookIDError):
         user.borrow_book(1111)
     write_json('users.json', [])
