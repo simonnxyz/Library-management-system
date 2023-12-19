@@ -366,16 +366,16 @@ def test_library_search_by_wrong_author():
 
 
 def test_library_available_years():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-    assert library.available_years() == [1949, 1947]
-    write_json('books.json', [])
+    library.add_new_book(book2)
+    library.add_new_book(book)
+    assert library.available_years() == [1947, 1949]
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_available_years_empty():
@@ -385,74 +385,62 @@ def test_library_available_years_empty():
 
 
 def test_library_search_by_year(monkeypatch):
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-
-    def return_id(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_years() == [1947, 1949]
     result = library.search_book_by_year(1949)
     assert result == (
-                'ID: ' + '1111' + ', '
+                'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None'
                 )
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_search_by_wrong_year():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
     library = Library()
-    library.add_new_book(
-        'The Plague',
-        'Albert Camus',
-        1947,
-        'Philosophical novel'
-        )
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book2)
+    library.add_new_book(book)
     assert library.available_years() == [1947, 1949]
     with pytest.raises(UnavailableYearError):
         library.search_book_by_year(1999)
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_get_books_stats():
-    books = [
-        {
-            "id": 1111,
-            "title": '1984',
-            "author": 'George Orwell',
-            "release_year": 1949,
-            "genre": "Dystopian fiction",
-            "loan_history": [2222, 3333],
-            "current_owner": None,
-            "extensions": 0,
-            "reservations": [],
-            "return_date": None
-        },
-        {
-            "id": 2222,
-            "title": 'The Plague',
-            "author": 'Albert Camus',
-            "release_year": 1947,
-            "genre": "Philosophical novel",
-            "loan_history": [4444],
-            "current_owner": None,
-            "extensions": 0,
-            "reservations": [],
-            "return_date": None
-        }]
-    write_json('books.json', books)
+    id = generate_book_id()
+    book = Book(id,
+                '1984',
+                'George Orwell',
+                1949,
+                'Dystopian fiction',
+                loan_history=[2222, 3333])
+    id2 = generate_book_id()
+    book2 = Book(
+        id2,
+        'The Plague',
+        'A. Camus', 1947,
+        'Philosophical novel',
+        loan_history=[4444])
     library = Library()
-    msg = 'Title - loans\n' + '1984 - 2\n' + 'The Plague - 1'
+    library.add_new_book(book2)
+    library.add_new_book(book)
+    msg = 'Title - loans\n' + 'The Plague - 1\n' + '1984 - 2'
     assert library.get_books_stats() == msg
-    write_json('books.json', [])
+    library.remove_book(id)
+    library.remove_book(id2)
 
 
 def test_library_get_books_stats_empty():
@@ -462,25 +450,17 @@ def test_library_get_books_stats_empty():
 
 
 def test_library_get_users_stats():
-    users = [{
-            "id": 2222,
-            "name": 'Jan Kowalski',
-            "password": 'haslo123',
-            "borrowed_books": [],
-            "borrowing_history": [1111, 2222]
-            },
-            {
-            "id": 3333,
-            "name": 'Adam Nowak',
-            "password": 'haslo456',
-            "borrowed_books": [],
-            "borrowing_history": [3333]
-            }]
-    write_json('users.json', users)
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123', borrowing_history=[1111, 2222])
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123', borrowing_history=[3333])
     library = Library()
+    library.add_new_user(user)
+    library.add_new_user(user2)
     msg = 'Name - loans\n' + 'Jan Kowalski - 2\n' + 'Adam Nowak - 1'
     assert library.get_users_stats() == msg
-    write_json('users.json', [])
+    library.remove_user(id)
+    library.remove_user(id2)
 
 
 def test_library_get_users_stats_empty():
