@@ -162,8 +162,21 @@ class User:
             raise NoBookIDError(book_id)
         write_json('books.json', books)
 
-    def return_book(self):
-        pass
+    def return_book(self, book_id):
+        if book_id not in self.borrowed_books:
+            raise NotUsersBookError
+        books = read_json('books.json')
+        for index, book_info in enumerate(books):
+            if book_info["id"] == book_id:
+                book = Book(**book_info)
+                if book.reservations:
+                    removed = book.remove_first_reservation()
+                    book.set_owner(removed)
+                    book.set_extensions(3)
+                    book.history_append(removed)
+                    for user_info in read_json('users.json'):
+                        if user_info["id"] == removed:
+                            pass
 
     def __str__(self):
         """
