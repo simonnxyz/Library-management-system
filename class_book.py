@@ -103,6 +103,9 @@ class Book:
     def add_reservation(self, reservation):
         self._reservations.append(reservation)
 
+    def remove_reservation(self, reservation):
+        self._reservations.remove(reservation)
+
     def remove_first_reservation(self):
         removed = self._reservations.pop(0)
         return removed

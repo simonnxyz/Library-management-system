@@ -130,3 +130,7 @@ class ReservedBookError(Exception):
 class NoBookOwnerError(Exception):
     def __str__(self):
         return 'You do not need to reserve this book. It has no owner'
+
+
+class NotReservedError(Exception):
+    pass

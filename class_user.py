@@ -8,6 +8,7 @@ from errors import (
     NotEnoughExtensionsError,
     ReservedBookError,
     NoBookOwnerError,
+    NotReservedError,
 )
 from class_book import Book
 from json_methods import read_json, write_json
@@ -147,7 +148,17 @@ class User:
         write_json('books.json', books)
 
     def cancel_reservation(self, book_id):
-        pass
+        books = read_json('books.json')
+        for index, book_info in enumerate(books):
+            if book_info["id"] == book_id:
+                book = Book(**book_info)
+                if self.id not in book.reservations:
+                    raise NotReservedError
+                book.remove_reservation(self.id)
+                books[index].update(book.__dict__())
+        if books == read_json('books.json'):
+            raise NoBookIDError(book_id)
+        write_json('books.json', books)
 
     def return_book(self):
         pass
