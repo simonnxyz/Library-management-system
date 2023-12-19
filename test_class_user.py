@@ -15,6 +15,7 @@ from errors import (
     ReservedBookError,
     NotEnoughExtensionsError,
     NoBookOwnerError,
+    NotReservedError,
 )
 
 
@@ -341,4 +342,68 @@ def test_user_reserve_not_borrowed_book():
 
 
 def test_user_reserve_book_wrong_id():
-    pass
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    with pytest.raises(NoBookIDError):
+        user.reserve_book(1111)
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_cancel_reservation():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_user(user2)
+    id3 = generate_book_id()
+    book = Book(id3, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    user.borrow_book(id3)
+    user2.reserve_book(id3)
+    user2.cancel_reservation(id3)
+    library.update_data()
+    return_date = date.today() + timedelta(days=30)
+    assert library.books == [{
+        "id": id3,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [id],
+        "current_owner": id,
+        "extensions": 3,
+        "reservations": [],
+        "return_date": str(return_date)
+    }]
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_cancel_missing_reservation():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    with pytest.raises(NotReservedError):
+        user.cancel_reservation(id2)
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_cancel_reservation_wrong_id():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    with pytest.raises(NoBookIDError):
+        user.cancel_reservation(1111)
+    write_json('users.json', [])
+    write_json('books.json', [])
