@@ -139,6 +139,8 @@ class User:
         for index, book_info in enumerate(books):
             if book_info["id"] == book_id:
                 book = Book(**book_info)
+                if book.current_owner == self.id:
+                    raise UsersBookError
                 if not book.current_owner:
                     raise NoBookOwnerError
                 book.add_reservation(self.id)
