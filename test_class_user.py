@@ -238,48 +238,42 @@ def test_user_use_extension_reserved_book():
 
 
 def test_user_use_extension_not_enough(monkeypatch):
+    id = generate_user_id()
+    id2 = generate_book_id()
+    user = User(id,
+                'Jan Kowalski',
+                'haslo123',
+                borrowed_books=[id2],
+                borrowing_history=[id2])
     library = Library()
-    user_info = {
-        "id": 2222,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [1111],
-        "borrowing_history": [1111]
-    }
-    write_json('users.json', [user_info])
-    book = {
-        "id": 1111,
-        "title": "1984",
-        "author": "George Orwell",
-        "release_year": 1949,
-        "genre": "Dystopian fiction",
-        "loan_history": [2222],
-        "current_owner": 2222,
-        "extensions": 0,
-        "reservations": [],
-        "return_date": "2024-04-15"
-    }
-    write_json('books.json', [book])
+    library.add_new_user(user)
+    book = Book(id2,
+                '1984',
+                'George Orwell',
+                1949,
+                'Dystopian fiction',
+                loan_history=[2222],
+                current_owner=2222,
+                extensions=0,
+                return_date="2024-04-15")
+    library.add_new_book(book)
     library.update_data()
-    user = User(**user_info)
     with pytest.raises(NotEnoughExtensionsError):
-        user.use_extension(1111)
+        user.use_extension(id2)
     write_json('users.json', [])
     write_json('books.json', [])
 
 
 def test_user_use_extension_wrong_id():
+    id = generate_user_id()
+    id2 = generate_book_id()
+    user = User(id,
+                'Jan Kowalski',
+                'haslo123',
+                borrowed_books=[id2],
+                borrowing_history=[id2])
     library = Library()
-    user_info = {
-        "id": 2222,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [1111],
-        "borrowing_history": [1111]
-    }
-    write_json('users.json', [user_info])
-    library.update_data()
-    user = User(**user_info)
+    library.add_new_user(user)
     with pytest.raises(NoBookIDError):
-        user.use_extension(1111)
+        user.use_extension(id2)
     write_json('users.json', [])
