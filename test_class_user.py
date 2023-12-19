@@ -143,7 +143,7 @@ def test_user_borrow_own_book():
     write_json('books.json', [])
 
 
-def test_user_borrow_borrowed_book(monkeypatch):
+def test_user_borrow_borrowed_book():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     id2 = generate_user_id()
@@ -161,7 +161,7 @@ def test_user_borrow_borrowed_book(monkeypatch):
     write_json('books.json', [])
 
 
-def test_borrow_book_wrong_id(monkeypatch):
+def test_borrow_book_wrong_id():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
@@ -171,84 +171,68 @@ def test_borrow_book_wrong_id(monkeypatch):
     write_json('users.json', [])
 
 
-def test_user_use_extension(monkeypatch):
+def test_user_use_extension():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    def return_id2(range1, range2, object=[]): return 1111
-    monkeypatch.setattr('generate_id.generate_id', return_id2)
-    library.add_new_book('1984', 'George Orwell', 1949, 'Dystopian fiction')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user = User(**user_info)
-    user.borrow_book(1111)
+    library.add_new_user(user)
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    user.borrow_book(id2)
     library.update_data()
-    user.use_extension(1111)
+    user.use_extension(id2)
     library.update_data()
-    books = read_json('books.json')
-    for book_info in books:
-        if book_info["id"] == 1111:
-            book = Book(**book_info)
-    library.update_data()
+    return_date = date.today() + 2 * timedelta(days=30)
     assert library.books == [{
-        "id": 1111,
+        "id": id2,
         "title": "1984",
         "author": "George Orwell",
         "release_year": 1949,
         "genre": "Dystopian fiction",
-        "loan_history": [2222],
-        "current_owner": 2222,
+        "loan_history": [id],
+        "current_owner": id,
         "extensions": 2,
         "reservations": [],
-        "return_date": str(book.return_date)
+        "return_date": str(return_date)
     }]
     write_json('users.json', [])
     write_json('books.json', [])
 
 
-def test_user_use_extension_not_owned_book(monkeypatch):
+def test_user_use_extension_not_owned_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
-    def return_id(range1, range2, object=[]): return 2222
-    monkeypatch.setattr('generate_id.generate_id', return_id)
-    library.add_new_user('Jan Kowalski', 'haslo123')
-    users = read_json('users.json')
-    for user_info in users:
-        if user_info["id"] == 2222:
-            user = User(**user_info)
+    library.add_new_user(user)
     with pytest.raises(NotUsersBookError):
         user.use_extension(1111)
-    write_json('users.json', [])
+    library.remove_user(id)
 
 
 def test_user_use_extension_reserved_book():
+    id = generate_user_id()
+    id2 = generate_book_id()
+    user = User(id,
+                'Jan Kowalski',
+                'haslo123',
+                borrowed_books=[id2],
+                borrowing_history=[id2])
     library = Library()
-    user_info = {
-        "id": 2222,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [1111],
-        "borrowing_history": [1111]
-    }
-    write_json('users.json', [user_info])
-    book = {
-        "id": 1111,
-        "title": "1984",
-        "author": "George Orwell",
-        "release_year": 1949,
-        "genre": "Dystopian fiction",
-        "loan_history": [2222],
-        "current_owner": 2222,
-        "extensions": 3,
-        "reservations": [3333],
-        "return_date": "2024-04-15"
-    }
-    write_json('books.json', [book])
+    library.add_new_user(user)
+    book = Book(id2,
+                '1984',
+                'George Orwell',
+                1949,
+                'Dystopian fiction',
+                loan_history=[2222],
+                current_owner=2222,
+                reservations=[3333],
+                return_date="2024-04-15")
+    library.add_new_book(book)
     library.update_data()
-    user = User(**user_info)
     with pytest.raises(ReservedBookError):
-        user.use_extension(1111)
+        user.use_extension(id2)
     write_json('users.json', [])
     write_json('books.json', [])
 
