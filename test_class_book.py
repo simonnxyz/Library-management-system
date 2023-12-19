@@ -141,6 +141,16 @@ def test_book_add_reservation():
     assert book.reservations == [2222, 3333]
 
 
+def test_book_remove_reservation():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.reservations == []
+    book.add_reservation(2222)
+    assert book.reservations == [2222]
+    book.remove_reservation(2222)
+    assert book.reservations == []
+
+
 def test_book_remove_first_reservation():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')

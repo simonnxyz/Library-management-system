@@ -2,7 +2,7 @@ from class_user import User
 from class_book import Book
 from class_library import Library
 from generate_id import generate_user_id, generate_book_id
-from json_methods import read_json, write_json
+from json_methods import write_json
 import pytest
 from datetime import date, timedelta
 from errors import (
