@@ -25,6 +25,7 @@ class User:
             name: str,
             password: str,
             borrowed_books=None,
+            reservations=None,
             borrowing_history=None,
             ):
         if not name:
@@ -35,6 +36,7 @@ class User:
         self._name = name
         self._password = password
         self._borrowed_books = borrowed_books or []
+        self._reservations = reservations or []
         self._borrowing_history = borrowing_history or []
 
     @property
@@ -54,6 +56,10 @@ class User:
         return self._borrowed_books
 
     @property
+    def reservations(self):
+        return self._reservations
+
+    @property
     def borrowing_history(self):
         return self._borrowing_history
 
@@ -65,6 +71,12 @@ class User:
 
     def borrowed_remove(self, book_id):
         self._borrowed_books.remove(book_id)
+
+    def reservations_append(self, book_id):
+        self._reservations.append(book_id)
+
+    def reservations_remove(self, book_id):
+        self._reservations.remove(book_id)
 
     def get_borrowed_books(self):
         """
