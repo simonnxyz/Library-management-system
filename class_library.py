@@ -154,9 +154,11 @@ class Library:
     def remove_user(self, user_id: int):
         updated_users = []
         for user_info in self.users:
+            borrowed = user_info["borrowed_books"]
+            reserved = user_info["reservations"]
             if user_info["id"] != user_id:
                 updated_users.append(user_info)
-            elif user_info["id"] == user_id and user_info["borrowed_books"]:
+            elif user_info["id"] == user_id and (borrowed or reserved):
                 raise UserWithBooksError
         if updated_users == self.users:
             raise NoUserIDError(user_id)
