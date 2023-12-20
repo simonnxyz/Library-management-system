@@ -132,7 +132,6 @@ class User:
             raise NoBookIDError(book_id)
         self.history_append(book_id)
         self.borrowed_append(book_id)
-        self.dict_update()
         write_json('books.json', books)
 
     def use_extension(self, book_id):
@@ -164,7 +163,6 @@ class User:
                     raise NoBookOwnerError
                 book.add_reservation(self.id)
                 self.reservations_append(book.id)
-                self.dict_update()
                 books[index].update(book.__dict__())
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
@@ -178,6 +176,7 @@ class User:
                 if self.id not in book.reservations:
                     raise NotReservedError
                 book.remove_reservation(self.id)
+                self.reservations_remove(book.id)
                 books[index].update(book.__dict__())
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)

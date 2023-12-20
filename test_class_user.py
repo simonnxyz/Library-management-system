@@ -134,6 +134,24 @@ def test_user_reservations_remove():
     assert user.reservations == []
 
 
+def test_user_dict_update():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    user.history_append(1111)
+    library.update_data()
+    assert library.users == [{
+            "id": id,
+            "name": 'Jan Kowalski',
+            "password": 'haslo123',
+            "borrowed_books": [],
+            "reservations": [],
+            "borrowing_history": [1111]
+        }]
+    library.remove_user(id)
+
+
 def test_user_borrow_book():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
