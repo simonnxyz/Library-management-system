@@ -192,12 +192,20 @@ def test_book_history_append():
     assert book.loan_history == [2222]
 
 
-def test_book_set_return_date():
+def test_book_set_return_dates_default():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.return_date is None
     book.set_return_date()
     assert book.return_date == date.today() + timedelta(days=30)
+
+
+def test_book_set_return_dates_none():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.return_date is None
+    book.set_return_date(None)
+    assert book.return_date is None
 
 
 def test_book_extend_return_date():

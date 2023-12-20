@@ -129,8 +129,8 @@ class Book:
         self._loan_history.append(loan)
         self.dict_update()
 
-    def set_return_date(self):
-        self._return_date = date.today() + timedelta(days=30)
+    def set_return_date(self, default=date.today() + timedelta(days=30)):
+        self._return_date = (default if default else None)
         self.dict_update()
 
     def extend_return_date(self):
