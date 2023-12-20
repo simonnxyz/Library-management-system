@@ -97,6 +97,43 @@ def test_user_dict():
         }
 
 
+def test_user_history_append():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.history_append(1111)
+    assert user.borrowing_history == [1111]
+
+
+def test_user_borrowed_append():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.borrowed_append(1111)
+    assert user.borrowed_books == [1111]
+
+
+def test_user_borrowed_remove():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.borrowed_append(1111)
+    user.borrowed_remove(1111)
+    assert user.borrowing_history == []
+
+
+def test_user_reservations_append():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.reservations_append(1111)
+    assert user.reservations == [1111]
+
+
+def test_user_reservations_remove():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.reservations_append(1111)
+    user.reservations_remove(1111)
+    assert user.reservations == []
+
+
 def test_user_borrow_book():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')

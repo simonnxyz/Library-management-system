@@ -89,11 +89,7 @@ class User:
 
     def reservations_remove(self, book_id):
         self._reservations.remove(book_id)
-        users = read_json("users.json")
-        for index, user_info in enumerate(users):
-            if user_info["id"] == self.id:
-                user_info[index].update(self.__dict__())
-        write_json('users.json', users)
+        self.dict_update()
 
     def get_borrowed_books(self):
         """
