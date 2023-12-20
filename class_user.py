@@ -115,7 +115,7 @@ class User:
 
     def borrow_book(self, book_id):
         books = read_json('books.json')
-        for index, book_info in enumerate(books):
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.id in self.borrowed_books:
@@ -126,19 +126,17 @@ class User:
                 book.set_extensions(3)
                 book.set_return_date()
                 book.history_append(self.id)
-                books[index].update(book.__dict__())
+                self.history_append(book_id)
+                self.borrowed_append(book_id)
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
-        self.history_append(book_id)
-        self.borrowed_append(book_id)
-        write_json('books.json', books)
 
     def use_extension(self, book_id):
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
-        for index, book_info in enumerate(books):
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.reservations:
@@ -147,14 +145,13 @@ class User:
                     raise NotEnoughExtensionsError
                 book.remove_extension()
                 book.extend_return_date()
-                books[index].update(book.__dict__())
+                break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
-        write_json('books.json', books)
 
     def reserve_book(self, book_id):
         books = read_json('books.json')
-        for index, book_info in enumerate(books):
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.current_owner == self.id:
@@ -163,40 +160,41 @@ class User:
                     raise NoBookOwnerError
                 book.add_reservation(self.id)
                 self.reservations_append(book.id)
-                books[index].update(book.__dict__())
+                break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
-        write_json('books.json', books)
 
     def cancel_reservation(self, book_id):
         books = read_json('books.json')
-        for index, book_info in enumerate(books):
+        users = read_json('users.json')
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if self.id not in book.reservations:
                     raise NotReservedError
-                book.remove_reservation(self.id)
                 self.reservations_remove(book.id)
-                books[index].update(book.__dict__())
-        if books == read_json('books.json'):
+                book.remove_reservation(self.id)
+        if users == read_json('users.json'):
             raise NoBookIDError(book_id)
-        write_json('books.json', books)
 
     def return_book(self, book_id):
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
-        for index, book_info in enumerate(books):
+        for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 if book.reservations:
                     removed = book.remove_first_reservation()
-                    book.set_owner(removed)
-                    book.set_extensions(3)
-                    book.history_append(removed)
                     for user_info in read_json('users.json'):
                         if user_info["id"] == removed:
-                            pass
+                            rm_user = User(**user_info)
+                            rm_user.borrow_book(book_id)
+                book.set_owner(None)
+                book.set_extensions(0)
+                book.set_return_date(None)
+        if books == read_json('books.json'):
+            raise NoBookIDError(book_id)
 
     def __str__(self):
         """
