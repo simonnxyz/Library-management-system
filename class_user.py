@@ -184,15 +184,16 @@ class User:
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
+                book.set_owner(None)
+                book.set_extensions(0)
+                book.set_return_date(None)
                 if book.reservations:
                     removed = book.remove_first_reservation()
                     for user_info in read_json('users.json'):
                         if user_info["id"] == removed:
                             rm_user = User(**user_info)
                             rm_user.borrow_book(book_id)
-                book.set_owner(None)
-                book.set_extensions(0)
-                book.set_return_date(None)
+                            rm_user.reservations_remove(book_id)
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
         self.borrowed_remove(book_id)
