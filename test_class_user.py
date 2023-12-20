@@ -476,7 +476,6 @@ def test_user_return_book():
     library.add_new_user(user)
     library.add_new_book(book)
     user.borrow_book(id2)
-    library.update_data()
     user.return_book(id2)
     library.update_data()
     assert library.books == [{
@@ -498,6 +497,80 @@ def test_user_return_book():
         "borrowed_books": [],
         "reservations": [],
         "borrowing_history": [id2]
+    }]
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_return_not_borrowed_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    with pytest.raises(NotUsersBookError):
+        user.return_book(1111)
+    library.remove_user(id)
+
+
+def test_user_return_missing_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
+    library.update_data()
+    with pytest.raises(NotUsersBookError):
+        user.return_book(11111)
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_return_reserved_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_user(user2)
+    id3 = generate_book_id()
+    book = Book(id3, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    user.borrow_book(id3)
+    user2.reserve_book(id3)
+    user.return_book(id3)
+    library.update_data()
+    return_date = date.today() + timedelta(days=30)
+    assert library.books == [{
+        "id": id3,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [id, id2],
+        "current_owner": id2,
+        "extensions": 3,
+        "reservations": [],
+        "return_date": str(return_date)
+    }]
+    assert library.users == [{
+        "id": id,
+        "name": "Jan Kowalski",
+        "password": "haslo123",
+        "borrowed_books": [],
+        "reservations": [],
+        "borrowing_history": [id3]
+    },
+    {
+        "id": id2,
+        "name": "Adam Nowak",
+        "password": "haslo123",
+        "borrowed_books": [id3],
+        "reservations": [],
+        "borrowing_history": [id3]
     }]
     write_json('users.json', [])
     write_json('books.json', [])
