@@ -6,6 +6,7 @@ from errors import (
     NegativeExtensionsError,
 )
 from datetime import date, timedelta, datetime
+from json_methods import read_json, write_json
 
 
 class Book:
@@ -87,37 +88,54 @@ class Book:
     def return_date(self):
         return self._return_date
 
+    def dict_update(self):
+        books = read_json("books.json")
+        for index, book_info in enumerate(books):
+            if book_info["id"] == self.id:
+                books[index].update(self.__dict__())
+                break
+        write_json('books.json', books)
+
     def set_extensions(self, new_extensions):
         if new_extensions < 0:
             raise NegativeExtensionsError
         self._extensions = new_extensions
+        self.dict_update()
 
     def remove_extension(self):
         if self.extensions < 1:
             raise NegativeExtensionsError
         self._extensions -= 1
+        self.dict_update()
 
     def set_owner(self, new_owner):
         self._current_owner = new_owner
+        self.dict_update()
 
     def add_reservation(self, reservation):
         self._reservations.append(reservation)
+        self.dict_update()
 
     def remove_reservation(self, reservation):
         self._reservations.remove(reservation)
+        self.dict_update()
 
     def remove_first_reservation(self):
         removed = self._reservations.pop(0)
+        self.dict_update()
         return removed
 
     def history_append(self, loan):
         self._loan_history.append(loan)
+        self.dict_update()
 
     def set_return_date(self):
         self._return_date = date.today() + timedelta(days=30)
+        self.dict_update()
 
     def extend_return_date(self):
         self._return_date += timedelta(days=30)
+        self.dict_update()
 
     def __dict__(self):
         """

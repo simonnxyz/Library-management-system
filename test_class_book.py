@@ -1,6 +1,7 @@
 from class_book import Book
 from generate_id import generate_book_id
 import pytest
+from class_library import Library
 from datetime import date, timedelta
 from errors import (
     EmptyTitleError,
@@ -88,6 +89,28 @@ def test_book_str():
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None'
                 )
+
+
+def test_book_dict_update():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library = Library()
+    library.add_new_book(book)
+    book.history_append(1111)
+    library.update_data()
+    assert library.books == [{
+            "id": id,
+            "title": '1984',
+            "author": 'George Orwell',
+            "release_year": 1949,
+            "genre": "Dystopian fiction",
+            "loan_history": [1111],
+            "current_owner": None,
+            "extensions": 0,
+            "reservations": [],
+            "return_date": None
+        }]
+    library.remove_book(id)
 
 
 def test_book_set_extensions():
