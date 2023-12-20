@@ -34,6 +34,7 @@ def test_user():
     assert user.name == 'Jan Kowalski'
     assert user.password == 'haslo123'
     assert user.borrowed_books == []
+    assert user.reservations == []
     assert user.borrowing_history == []
 
 
@@ -64,14 +65,14 @@ def test_user_get_borrowed_books_empty():
 
 def test_user_get_hisotry():
     id = generate_user_id()
-    user = User(id, 'Jan Kowalski', 'haslo123', [], [1234, 5678])
+    user = User(id, 'Jan Kowalski', 'haslo123', borrowing_history=[1234, 5678])
     assert user.borrowing_history == [1234, 5678]
     assert user.get_history() == 'Your history: 1234, 5678'
 
 
 def test_user_get_hisotry_empty():
     id = generate_user_id()
-    user = User(id, 'Jan Kowalski', 'haslo123', [], [])
+    user = User(id, 'Jan Kowalski', 'haslo123')
     assert user.borrowing_history == []
     assert user.get_history() == 'You have not borrowed any books yet.'
 
@@ -91,6 +92,7 @@ def test_user_dict():
             "name": 'Jan Kowalski',
             "password": 'haslo123',
             "borrowed_books": [],
+            "reservations": [],
             "borrowing_history": []
         }
 
@@ -123,6 +125,7 @@ def test_user_borrow_book():
         "name": "Jan Kowalski",
         "password": "haslo123",
         "borrowed_books": [id2],
+        "reservations": [],
         "borrowing_history": [id2]
     }]
     write_json('users.json', [])

@@ -7,7 +7,6 @@ from generate_id import (
     generate_user_id,
     generate_librarian_id
 )
-import datetime
 import pytest
 from errors import (
     NoBookIDError,
@@ -148,6 +147,7 @@ def test_library_add_user():
             "name": 'Jan Kowalski',
             "password": 'haslo123',
             "borrowed_books": [],
+            "reservations": [],
             "borrowing_history": []
         }]
     library.remove_user(id)
