@@ -465,3 +465,39 @@ def test_user_cancel_reservation_wrong_id():
         user.cancel_reservation(1111)
     write_json('users.json', [])
     write_json('books.json', [])
+
+
+def test_user_return_book():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
+    library.update_data()
+    user.return_book(id2)
+    library.update_data()
+    assert library.books == [{
+        "id": id2,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [id],
+        "current_owner": None,
+        "extensions": 0,
+        "reservations": [],
+        "return_date": None
+    }]
+    assert library.users == [{
+        "id": id,
+        "name": "Jan Kowalski",
+        "password": "haslo123",
+        "borrowed_books": [],
+        "reservations": [],
+        "borrowing_history": [id2]
+    }]
+    write_json('users.json', [])
+    write_json('books.json', [])

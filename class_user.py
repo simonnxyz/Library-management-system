@@ -126,11 +126,11 @@ class User:
                 book.set_extensions(3)
                 book.set_return_date()
                 book.history_append(self.id)
-                self.history_append(book_id)
-                self.borrowed_append(book_id)
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
+        self.history_append(book_id)
+        self.borrowed_append(book_id)
 
     def use_extension(self, book_id):
         if book_id not in self.borrowed_books:
@@ -159,10 +159,10 @@ class User:
                 if not book.current_owner:
                     raise NoBookOwnerError
                 book.add_reservation(self.id)
-                self.reservations_append(book.id)
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
+        self.reservations_append(book.id)
 
     def cancel_reservation(self, book_id):
         books = read_json('books.json')
@@ -172,8 +172,8 @@ class User:
                 book = Book(**book_info)
                 if self.id not in book.reservations:
                     raise NotReservedError
-                self.reservations_remove(book.id)
                 book.remove_reservation(self.id)
+                self.reservations_remove(book.id)
         if users == read_json('users.json'):
             raise NoBookIDError(book_id)
 
@@ -195,6 +195,7 @@ class User:
                 book.set_return_date(None)
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
+        self.borrowed_remove(book_id)
 
     def __str__(self):
         """
