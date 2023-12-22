@@ -63,6 +63,12 @@ class User:
     def borrowing_history(self):
         return self._borrowing_history
 
+    def change_password(self, new_password):
+        if len(new_password) < 6:
+            raise ShortPasswordError
+        self._password = new_password
+        self.dict_update()
+
     def dict_update(self):
         users = read_json("users.json")
         for index, user_info in enumerate(users):

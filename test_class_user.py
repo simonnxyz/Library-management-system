@@ -134,6 +134,22 @@ def test_user_reservations_remove():
     assert user.reservations == []
 
 
+def test_user_change_password():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    assert user.password == 'haslo123'
+    user.change_password('haslo321')
+    assert user.password == 'haslo321'
+
+
+def test_user_change_password_short():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    assert user.password == 'haslo123'
+    with pytest.raises(ShortPasswordError):
+        user.change_password('haslo')
+
+
 def test_user_dict_update():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')

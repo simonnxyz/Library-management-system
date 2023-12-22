@@ -91,10 +91,7 @@ class Library:
         return '\n'.join(searches)
 
     def available_genres(self):
-        genres = []
-        for book_info in self.books:
-            if book_info["genre"] not in genres:
-                genres.append(book_info["genre"])
+        genres = [book_info["genre"] for book_info in self.books]
         if not genres:
             raise GenresNotFoundError
         return genres
@@ -110,10 +107,7 @@ class Library:
         return '\n'.join(searches)
 
     def available_authors(self):
-        authors = []
-        for book_info in self.books:
-            if book_info["author"] not in authors:
-                authors.append(book_info["author"])
+        authors = [book_info["author"] for book_info in self.books]
         if not authors:
             raise AuthorsNotFoundError
         return authors
@@ -129,10 +123,7 @@ class Library:
         return '\n'.join(searches)
 
     def available_years(self):
-        years = []
-        for book_info in self.books:
-            if book_info["release_year"] not in years:
-                years.append(book_info["release_year"])
+        years = [book_info["release_year"] for book_info in self.books]
         if not years:
             raise YearsNotFoundError
         return years
