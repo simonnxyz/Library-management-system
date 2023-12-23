@@ -208,16 +208,11 @@ def test_user_borrow_book():
         "reservations": [],
         "return_date": str(return_date)
     }]
-    assert library.users == [{
-        "id": id,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [id2],
-        "reservations": [],
-        "borrowing_history": [id2]
-    }]
-    write_json('users.json', [])
-    write_json('books.json', [])
+    assert library.users == [user.__dict__()]
+    user.return_book(id2)
+    library.update_data()
+    library.remove_user(id)
+    library.remove_book(id2)
 
 
 def test_user_borrow_own_book():
@@ -232,8 +227,10 @@ def test_user_borrow_own_book():
     library.update_data()
     with pytest.raises(UsersBookError):
         user.borrow_book(id2)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    user.return_book(id2)
+    library.update_data()
+    library.remove_user(id)
+    library.remove_book(id2)
 
 
 def test_user_borrow_borrowed_book():
@@ -250,8 +247,11 @@ def test_user_borrow_borrowed_book():
     user.borrow_book(id3)
     with pytest.raises(BorrowedBookError):
         user2.borrow_book(id3)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    user.return_book(id3)
+    library.update_data()
+    library.remove_user(id)
+    library.remove_user(id2)
+    library.remove_book(id3)
 
 
 def test_borrow_book_wrong_id():
@@ -261,7 +261,7 @@ def test_borrow_book_wrong_id():
     library.add_new_user(user)
     with pytest.raises(NoBookIDError):
         user.borrow_book(1111)
-    write_json('users.json', [])
+    library.remove_user(id)
 
 
 def test_user_use_extension():
