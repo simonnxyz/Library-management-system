@@ -24,13 +24,28 @@ def test_generate_book_id(monkeypatch):
     assert generate_book_id() == 1111
 
 
+def test_generate_book_id_range():
+    id = generate_book_id()
+    assert 1000 <= id <= 9999
+
+
 def test_generate_user_id(monkeypatch):
     def return_id(range1, range2): return 2222
     monkeypatch.setattr('generate_id.randint', return_id)
     assert generate_user_id() == 2222
 
 
+def test_generate_user_id_range():
+    id = generate_user_id()
+    assert 2000 <= id <= 9999
+
+
 def test_generate_librarian_id(monkeypatch):
     def return_id(range1, range2): return 1234
     monkeypatch.setattr('generate_id.randint', return_id)
     assert generate_librarian_id() == 1234
+
+
+def test_generate_librarian_id_range():
+    id = generate_librarian_id()
+    assert 1000 <= id <= 1999
