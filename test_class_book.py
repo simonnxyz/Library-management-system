@@ -98,18 +98,7 @@ def test_book_dict_update():
     library.add_new_book(book)
     book.history_append(1111)
     library.update_data()
-    assert library.books == [{
-            "id": id,
-            "title": '1984',
-            "author": 'George Orwell',
-            "release_year": 1949,
-            "genre": "Dystopian fiction",
-            "loan_history": [1111],
-            "current_owner": None,
-            "extensions": 0,
-            "reservations": [],
-            "return_date": None
-        }]
+    assert library.books == [book.__dict__()]
     library.remove_book(id)
 
 
@@ -160,6 +149,14 @@ def test_book_add_reservation():
     assert book.reservations == []
     book.add_reservation(2222)
     assert book.reservations == [2222]
+
+
+def test_book_add_more_reservations():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.reservations == []
+    book.add_reservation(2222)
+    assert book.reservations == [2222]
     book.add_reservation(3333)
     assert book.reservations == [2222, 3333]
 
@@ -190,6 +187,15 @@ def test_book_history_append():
     assert book.loan_history == []
     book.history_append(2222)
     assert book.loan_history == [2222]
+
+
+def test_book_history_append_more():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.loan_history == []
+    book.history_append(2222)
+    book.history_append(3333)
+    assert book.loan_history == [2222, 3333]
 
 
 def test_book_set_return_dates_default():
