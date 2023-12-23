@@ -104,11 +104,27 @@ def test_user_history_append():
     assert user.borrowing_history == [1111]
 
 
+def test_user_history_append_more_books():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.history_append(1111)
+    user.history_append(2222)
+    assert user.borrowing_history == [1111, 2222]
+
+
 def test_user_borrowed_append():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     user.borrowed_append(1111)
     assert user.borrowed_books == [1111]
+
+
+def test_user_borrowed_append_more_books():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.borrowed_append(1111)
+    user.borrowed_append(2222)
+    assert user.borrowed_books == [1111, 2222]
 
 
 def test_user_borrowed_remove():
@@ -124,6 +140,14 @@ def test_user_reservations_append():
     user = User(id, 'Jan Kowalski', 'haslo123')
     user.reservations_append(1111)
     assert user.reservations == [1111]
+
+
+def test_user_reservations_append_more_books():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    user.reservations_append(1111)
+    user.reservations_append(2222)
+    assert user.reservations == [1111, 2222]
 
 
 def test_user_reservations_remove():
@@ -157,14 +181,7 @@ def test_user_dict_update():
     library.add_new_user(user)
     user.history_append(1111)
     library.update_data()
-    assert library.users == [{
-            "id": id,
-            "name": 'Jan Kowalski',
-            "password": 'haslo123',
-            "borrowed_books": [],
-            "reservations": [],
-            "borrowing_history": [1111]
-        }]
+    assert library.users == [user.__dict__()]
     library.remove_user(id)
 
 
@@ -579,8 +596,8 @@ def test_user_return_reserved_book():
         "borrowed_books": [],
         "reservations": [],
         "borrowing_history": [id3]
-    },
-    {
+        },
+        {
         "id": id2,
         "name": "Adam Nowak",
         "password": "haslo123",
