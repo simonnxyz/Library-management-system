@@ -509,14 +509,7 @@ def test_user_return_book():
         "reservations": [],
         "return_date": None
     }]
-    assert library.users == [{
-        "id": id,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [],
-        "reservations": [],
-        "borrowing_history": [id2]
-    }]
+    assert library.users == [user.__dict__()]
     write_json('users.json', [])
     write_json('books.json', [])
 
@@ -575,21 +568,14 @@ def test_user_return_reserved_book():
         "reservations": [],
         "return_date": str(return_date)
     }]
-    assert library.users == [{
-        "id": id,
-        "name": "Jan Kowalski",
-        "password": "haslo123",
-        "borrowed_books": [],
-        "reservations": [],
-        "borrowing_history": [id3]
-        },
-        {
-        "id": id2,
-        "name": "Adam Nowak",
-        "password": "haslo123",
-        "borrowed_books": [id3],
-        "reservations": [],
-        "borrowing_history": [id3]
-    }]
+    assert library.users == [
+        user.__dict__(), {
+            "id": id2,
+            "name": "Adam Nowak",
+            "password": "haslo123",
+            "borrowed_books": [id3],
+            "reservations": [],
+            "borrowing_history": [id3]
+        }]
     write_json('users.json', [])
     write_json('books.json', [])
