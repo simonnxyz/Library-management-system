@@ -256,7 +256,7 @@ def test_library_search_by_wrong_genre():
     library.remove_book(id2)
 
 
-def test_library_add_librarian(monkeypatch):
+def test_library_add_librarian():
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
@@ -265,7 +265,7 @@ def test_library_add_librarian(monkeypatch):
     library.remove_librarian(id)
 
 
-def test_library_remove_librarian(monkeypatch):
+def test_library_remove_librarian():
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
@@ -302,7 +302,7 @@ def test_library_available_authors_empty():
         library.available_authors()
 
 
-def test_library_search_by_author(monkeypatch):
+def test_library_search_by_author():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     id2 = generate_book_id()
@@ -362,7 +362,7 @@ def test_library_available_years_empty():
         library.available_years()
 
 
-def test_library_search_by_year(monkeypatch):
+def test_library_search_by_year():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     id2 = generate_book_id()
@@ -445,3 +445,24 @@ def test_library_get_users_stats_empty():
     library = Library()
     with pytest.raises(NoUsersError):
         library.get_users_stats()
+
+
+def test_library_login_user_check():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    user_login = library.login_role_check(id)
+    assert user.__dict__() == user_login.__dict__()
+    library.remove_user(id)
+
+
+def test_library_login_librarian_check():
+    # dokonczyc
+    id = generate_librarian_id()
+    librarian = Librarian(id, 'Adam Nowak', 'admin123')
+    library = Library()
+    library.add_new_librarian(librarian)
+    librarian_login = library.login_role_check(id)
+    assert librarian.__dict__() == librarian_login.__dict__()
+    library.remove_librarian(id)

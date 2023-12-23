@@ -38,6 +38,14 @@ class Library:
     def librarians(self):
         return self._librarians
 
+    def login_role_check(self, id):
+        for user_info in self.users:
+            if user_info["id"] == id:
+                return User(**user_info)
+        for librarian_info in self.librarians:
+            if librarian_info["id"] == id:
+                return Librarian(**librarian_info)
+
     def update_data(self):
         self._books = read_json('books.json')
         self._users = read_json('users.json')
