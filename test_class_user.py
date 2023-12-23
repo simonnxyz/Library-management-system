@@ -7,6 +7,7 @@ import pytest
 from datetime import date, timedelta
 from errors import (
     EmptyNameError,
+    EmptyPasswordError,
     ShortPasswordError,
     UsersBookError,
     BorrowedBookError,
@@ -41,6 +42,11 @@ def test_user():
 def test_user_empty_name():
     with pytest.raises(EmptyNameError):
         User(generate_user_id(), '', 'haslo123')
+
+
+def test_user_empty_password():
+    with pytest.raises(EmptyPasswordError):
+        User(generate_user_id(), 'Jan Kowalski', '')
 
 
 def test_user_short_password():

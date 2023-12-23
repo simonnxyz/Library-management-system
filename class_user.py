@@ -1,5 +1,6 @@
 from errors import (
     EmptyNameError,
+    EmptyPasswordError,
     ShortPasswordError,
     NoBookIDError,
     BorrowedBookError,
@@ -30,6 +31,8 @@ class User:
             ):
         if not name:
             raise EmptyNameError
+        if not password:
+            raise EmptyPasswordError
         if len(password) < 6:
             raise ShortPasswordError
         self._id = id

@@ -23,6 +23,11 @@ class EmptyNameError(Exception):
         return 'Your name cannot be empty.'
 
 
+class EmptyPasswordError(Exception):
+    def __str__(self):
+        return 'Your password cannot be empty.'
+
+
 class ShortPasswordError(Exception):
     def __str__(self):
         return 'Minimum password length is 6 characters.'

@@ -103,18 +103,7 @@ def test_library_add_copy_of_book():
     info = library.add_copy_of_book(id, id2)
     assert info == f'The copy of book ({id}) has been successfully added.'
     assert library.books == [
-        {
-            "id": id,
-            "title": '1984',
-            "author": 'George Orwell',
-            "release_year": 1949,
-            "genre": "Dystopian fiction",
-            "loan_history": [],
-            "current_owner": None,
-            "extensions": 0,
-            "reservations": [],
-            "return_date": None
-        },
+        book.__dict__(),
         {
             "id": id2,
             "title": '1984',
@@ -142,14 +131,7 @@ def test_library_add_user():
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
     library.add_new_user(user)
-    assert library.users == [{
-            "id": id,
-            "name": 'Jan Kowalski',
-            "password": 'haslo123',
-            "borrowed_books": [],
-            "reservations": [],
-            "borrowing_history": []
-        }]
+    assert library.users == [user.__dict__()]
     library.remove_user(id)
 
 
@@ -183,12 +165,12 @@ def test_library_search_book_by_keyword():
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
     library.add_new_book(book)
-    result = library.search_book_by_keyword('George')
     info = (
             f'ID: {id}, ' + 'Title: 1984, Author: George Orwell, ' +
             'Release year: 1949, Genre: Dystopian fiction, ' +
             'Owner: None, ' + 'Return date: None'
     )
+    result = library.search_book_by_keyword('George')
     assert result == info
     result = library.search_book_by_keyword(1984)
     assert result == info
@@ -201,7 +183,7 @@ def test_library_search_book_by_missing_keyword():
         library.search_book_by_keyword('')
 
 
-def test_library_search_book_by_keyword_not_found(monkeypatch):
+def test_library_search_book_by_keyword_not_found():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
@@ -233,7 +215,7 @@ def test_library_available_genres_empty():
         library.available_genres()
 
 
-def test_library_search_by_gerne(monkeypatch):
+def test_library_search_by_gerne():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     id2 = generate_book_id()
@@ -279,11 +261,7 @@ def test_library_add_librarian(monkeypatch):
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
     library.add_new_librarian(librarian)
-    assert library.librarians == [{
-            "id": id,
-            "name": 'Adam Nowak',
-            "password": 'admin123',
-        }]
+    assert library.librarians == [librarian.__dict__()]
     library.remove_librarian(id)
 
 
