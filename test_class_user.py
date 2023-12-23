@@ -273,7 +273,6 @@ def test_user_use_extension():
     book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library.add_new_book(book)
     user.borrow_book(id2)
-    library.update_data()
     user.use_extension(id2)
     library.update_data()
     return_date = date.today() + 2 * timedelta(days=30)
@@ -289,8 +288,10 @@ def test_user_use_extension():
         "reservations": [],
         "return_date": str(return_date)
     }]
-    write_json('users.json', [])
-    write_json('books.json', [])
+    user.return_book(id2)
+    library.update_data()
+    library.remove_user(id)
+    library.remove_book(id2)
 
 
 def test_user_use_extension_not_owned_book():
@@ -305,56 +306,41 @@ def test_user_use_extension_not_owned_book():
 
 def test_user_use_extension_reserved_book():
     id = generate_user_id()
-    id2 = generate_book_id()
-    user = User(id,
-                'Jan Kowalski',
-                'haslo123',
-                borrowed_books=[id2],
-                borrowing_history=[id2])
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123')
     library = Library()
     library.add_new_user(user)
-    book = Book(id2,
-                '1984',
-                'George Orwell',
-                1949,
-                'Dystopian fiction',
-                loan_history=[2222],
-                current_owner=2222,
-                reservations=[3333],
-                return_date="2024-04-15")
+    library.add_new_user(user2)
+    id3 = generate_book_id()
+    book = Book(id3, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library.add_new_book(book)
+    user.borrow_book(id3)
+    user2.reserve_book(id3)
     library.update_data()
     with pytest.raises(ReservedBookError):
-        user.use_extension(id2)
+        user.use_extension(id3)
     write_json('users.json', [])
     write_json('books.json', [])
 
 
-def test_user_use_extension_not_enough(monkeypatch):
+def test_user_use_extension_not_enough():
     id = generate_user_id()
-    id2 = generate_book_id()
-    user = User(id,
-                'Jan Kowalski',
-                'haslo123',
-                borrowed_books=[id2],
-                borrowing_history=[id2])
+    user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
     library.add_new_user(user)
-    book = Book(id2,
-                '1984',
-                'George Orwell',
-                1949,
-                'Dystopian fiction',
-                loan_history=[2222],
-                current_owner=2222,
-                extensions=0,
-                return_date="2024-04-15")
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library.add_new_book(book)
-    library.update_data()
+    user.borrow_book(id2)
+    user.use_extension(id2)
+    user.use_extension(id2)
+    user.use_extension(id2)
     with pytest.raises(NotEnoughExtensionsError):
         user.use_extension(id2)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    user.return_book(id2)
+    library.remove_book(id2)
+    library.remove_user(id)
 
 
 def test_user_use_extension_wrong_id():
