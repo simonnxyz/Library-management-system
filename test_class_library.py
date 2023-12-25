@@ -458,7 +458,6 @@ def test_library_login_user_check():
 
 
 def test_library_login_librarian_check():
-    # dokonczyc
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
