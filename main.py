@@ -53,6 +53,33 @@ def login():
             id = input('Enter your ID: ')
             password = getpass('Enter your password: ')
             check = library.login_role_check(id, password)
-            
+            if check:
+                if str(check.get("id")).startswith('1'):
+                    librarian = Librarian(**check)
+                    librarian_menu()
+                else:
+                    user = User(**check)
+                    user_menu()
+            else:
+                print("User with the given ID not found.")
+                raise WrongPasswordError
+        except WrongPasswordError as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer == 'y':
+                pass
+            else:
+                start_menu()
+                break
+
+
+def librarian_menu():
+    print('librarian')
+
+
+def user_menu():
+    print('user')
+
+
 if __name__ == "__main__":
     main()

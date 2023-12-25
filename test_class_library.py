@@ -132,7 +132,7 @@ def test_library_add_user():
     library = Library()
     library.add_new_user(user)
     assert library.users == [user.__dict__()]
-    library.remove_user(id)
+    # library.remove_user(id)
 
 
 def test_library_remove_user():
@@ -452,8 +452,8 @@ def test_library_login_user_check():
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
     library.add_new_user(user)
-    user_login = library.login_role_check(id)
-    assert user.__dict__() == user_login.__dict__()
+    user_login = library.login_role_check(id, user.password)
+    assert user.__dict__() == user_login
     library.remove_user(id)
 
 
@@ -462,6 +462,6 @@ def test_library_login_librarian_check():
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
     library.add_new_librarian(librarian)
-    librarian_login = library.login_role_check(id)
-    assert librarian.__dict__() == librarian_login.__dict__()
+    librarian_login = library.login_role_check(id, librarian.password)
+    assert librarian.__dict__() == librarian_login
     library.remove_librarian(id)

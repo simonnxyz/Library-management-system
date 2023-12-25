@@ -139,3 +139,7 @@ class NoBookOwnerError(Exception):
 
 class NotReservedError(Exception):
     pass
+
+
+class WrongPasswordError(Exception):
+    pass
