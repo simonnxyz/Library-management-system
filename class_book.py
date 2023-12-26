@@ -166,5 +166,6 @@ class Book:
                 ', Release year: ' + str(self.release_year) +
                 ', Genre: ' + self.genre +
                 ', Owner: ' + str(self.current_owner) +
-                ', Return date: ' + str(self.return_date)
+                ', Return date: ' + str(self.return_date) +
+                ', Reservations: ' + str(len(self.reservations))
                 )

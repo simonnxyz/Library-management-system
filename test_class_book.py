@@ -87,7 +87,7 @@ def test_book_str():
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
+                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
 
 

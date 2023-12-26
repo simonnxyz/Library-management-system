@@ -168,7 +168,7 @@ def test_library_search_book_by_keyword():
     info = (
             f'ID: {id}, ' + 'Title: 1984, Author: George Orwell, ' +
             'Release year: 1949, Genre: Dystopian fiction, ' +
-            'Owner: None, ' + 'Return date: None'
+            'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
     )
     result = library.search_book_by_keyword('George')
     assert result == info
@@ -232,7 +232,7 @@ def test_library_search_by_gerne():
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
+                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
     library.remove_book(id)
     library.remove_book(id2)
@@ -319,7 +319,7 @@ def test_library_search_by_author():
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
+                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
     library.remove_book(id)
     library.remove_book(id2)
@@ -376,7 +376,7 @@ def test_library_search_by_year():
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
                 'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None'
+                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
     library.remove_book(id)
     library.remove_book(id2)
