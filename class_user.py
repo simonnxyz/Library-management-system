@@ -134,6 +134,20 @@ class User:
             history = '\n'.join(books)
             return f'Your history:\n{history}'
 
+    def get_reservations(self):
+        info = 'You do not have any reservations at the moment.'
+        if not self.reservations:
+            return info
+        else:
+            books = []
+            for book_id in self.reservations:
+                for book_info in read_json('books.json'):
+                    if book_info["id"] == book_id:
+                        book = Book(**book_info)
+                        books.append(book.reservation_info())
+            reservations = '\n'.join(books)
+            return f'Your history:\n{reservations}'
+
     def borrow_book(self, book_id):
         books = read_json('books.json')
         for book_info in books:

@@ -155,6 +155,16 @@ class Book:
                 ', Author: ' + self.author
                 )
 
+    def reservation_info(self, id):
+        # dodac testy
+        return (
+                'ID: ' + str(self.id) +
+                ', Title: ' + self.title +
+                ', Author: ' + self.author +
+                ', Return date: ' + str(self.return_date) +
+                ', Position in queue: ' + str(self.reservations.index(id))
+                )
+
     def __dict__(self):
         """
         Returns a dictionary representation
