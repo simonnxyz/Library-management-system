@@ -102,25 +102,37 @@ class User:
 
     def get_borrowed_books(self):
         """
-        Returns the list of book IDs currently borrowed by the user.
+        Returns the list of books currently borrowed by the user.
         """
         info = 'You do not have any books at the moment.'
         if not self.borrowed_books:
             return info
         else:
-            books = ', '.join(str(id) for id in self.borrowed_books)
-            return f'You have borrowed: {books}'
+            books = []
+            for book_id in self.borrowed_books:
+                for book_info in read_json('books.json'):
+                    if book_info["id"] == book_id:
+                        book = Book(**book_info)
+                        books.append(book.borrow_info())
+            borrowed = '\n'.join(books)
+            return f'You have borrowed:\n{borrowed}'
 
     def get_history(self):
         """
-        Returns the list of book IDs that the user has borrowed in the past.
+        Returns the list of books that the user has borrowed in the past.
         """
         info = 'You have not borrowed any books yet.'
         if not self.borrowing_history:
             return info
         else:
-            history = ', '.join(str(id) for id in self.borrowing_history)
-            return f'Your history: {history}'
+            books = []
+            for book_id in self.borrowing_history:
+                for book_info in read_json('books.json'):
+                    if book_info["id"] == book_id:
+                        book = Book(**book_info)
+                        books.append(book.history_info())
+            history = '\n'.join(books)
+            return f'Your history:\n{history}'
 
     def borrow_book(self, book_id):
         books = read_json('books.json')

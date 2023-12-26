@@ -56,9 +56,28 @@ def test_user_short_password():
 
 def test_user_get_borrowed_books():
     id = generate_user_id()
-    user = User(id, 'Jan Kowalski', 'haslo123', [1234, 5678])
-    assert user.borrowed_books == [1234, 5678]
-    assert user.get_borrowed_books() == 'You have borrowed: 1234, 5678'
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
+    library.update_data()
+    return_date = date.today() + timedelta(days=30)
+    assert user.borrowed_books == [id2]
+    assert user.get_borrowed_books() == (
+                'You have borrowed:\n' +
+                'ID: ' + str(id2) +
+                ', Title: ' + '1984' +
+                ', Author: ' + 'George Orwell' +
+                ', Return date: ' + str(return_date) +
+                ', Reservations: 0'
+                )
+    user.return_book(id2)
+    library.update_data()
+    library.remove_book(id2)
+    library.remove_user(id)
 
 
 def test_user_get_borrowed_books_empty():
@@ -71,9 +90,24 @@ def test_user_get_borrowed_books_empty():
 
 def test_user_get_hisotry():
     id = generate_user_id()
-    user = User(id, 'Jan Kowalski', 'haslo123', borrowing_history=[1234, 5678])
-    assert user.borrowing_history == [1234, 5678]
-    assert user.get_history() == 'Your history: 1234, 5678'
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_book_id()
+    book = Book(id2, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_book(book)
+    user.borrow_book(id2)
+    user.return_book(id2)
+    assert user.borrowing_history == [id2]
+    assert user.get_history() == (
+                'Your history:\n' +
+                'ID: ' + str(id2) +
+                ', Title: ' + '1984' +
+                ', Author: ' + 'George Orwell'
+                )
+    library.update_data()
+    library.remove_book(id2)
+    library.remove_user(id)
 
 
 def test_user_get_hisotry_empty():

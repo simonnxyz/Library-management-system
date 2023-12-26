@@ -137,6 +137,24 @@ class Book:
         self._return_date += timedelta(days=30)
         self.dict_update()
 
+    def borrow_info(self):
+        # dodac testy
+        return (
+                'ID: ' + str(self.id) +
+                ', Title: ' + self.title +
+                ', Author: ' + self.author +
+                ', Return date: ' + str(self.return_date) +
+                ', Reservations: ' + str(len(self.reservations))
+                )
+
+    def history_info(self):
+        # dodac testy
+        return (
+                'ID: ' + str(self.id) +
+                ', Title: ' + self.title +
+                ', Author: ' + self.author
+                )
+
     def __dict__(self):
         """
         Returns a dictionary representation
