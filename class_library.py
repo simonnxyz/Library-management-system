@@ -201,3 +201,11 @@ class Library:
             user = User(**user_info)
             stats.append(f'{user.name} - {len(user.borrowing_history)}')
         return '\n'.join(stats)
+
+    def available_books_info(self):
+        # dodac testy
+        info = []
+        for book_info in self.books:
+            book = Book(**book_info)
+            info.append(str(book))
+        return '\n'.join(info)
