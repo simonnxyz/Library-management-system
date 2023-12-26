@@ -132,7 +132,7 @@ def test_library_add_user():
     library = Library()
     library.add_new_user(user)
     assert library.users == [user.__dict__()]
-    # library.remove_user(id)
+    library.remove_user(id)
 
 
 def test_library_remove_user():

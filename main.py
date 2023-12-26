@@ -18,19 +18,30 @@ librarian = None
 
 
 def main():
-    print('+' + '-'*27 + '+')
-    print('|  Welcome to the Library!  |')
+    print_with_box(' Welcome to the Library! ', 27)
     library_start()
 
 
+def print_with_box(message, length):
+    print(f'+{"-"*length}+')
+    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
+    print(f'+{"-"*length}+')
+
+
+def print_with_box_up(message, length):
+    print(f'+{"-"*length}+')
+    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
+
+
+def print_with_box_down(message, length):
+    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
+    print(f'+{"-"*length}+')
+
+
 def start_menu():
-    print('+' + '-'*27 + '+')
-    print('| 1 -> Log in' + ' '*15 + '|')
-    print('+' + '-'*27 + '+')
-    print('| 2 -> Create a new account |')
-    print('+' + '-'*27 + '+')
-    print('| 3 -> Exit' + ' '*17 + '|')
-    print('+' + '-'*27 + '+')
+    print_with_box_down('1 -> Log in', 27)
+    print_with_box_down('2 -> Create a new account', 27)
+    print_with_box_down('3 -> Exit', 27)
 
 
 def library_start():
@@ -41,20 +52,20 @@ def library_start():
                 choice = int(input('Enter your choice: '))
                 break
             except ValueError:
-                print('Invalid input. Please enter a number.')
+                print('Invalid input, please enter a number.')
         else:
-            print('You have exceeded the maximum number ' +
-                  'of attempts. Please try again later.')
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
             quit()
         if choice == 1:
             login()
         elif choice == 2:
             pass
         elif choice == 3:
-            print('+' + '-'*65 + '+')
-            print("| Thank you for using our Library. " +
-                  "We hope to see you again soon! |")
-            print('+' + '-'*65 + '+')
+            message = ("Thank you for using our Library. " +
+                       "We hope to see you again soon!")
+            print_with_box(message, len(message) + 2)
             quit()
         else:
             print('Wrong number, try again.')
@@ -79,19 +90,19 @@ def login():
         except (WrongPasswordError, WrongIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
-            if answer == 'y':
-                pass
-            else:
+            if answer != 'y':
                 start_menu()
                 break
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
-            if answer == 'y':
-                pass
-            else:
+            if answer != 'y':
                 start_menu()
                 break
+
+
+def create_account():
+    global user
 
 
 def librarian_menu():
