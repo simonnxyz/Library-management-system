@@ -13,6 +13,9 @@ from options_lists import (
     print_with_box_up,
     start_options,
     user_options,
+    filters_list,
+    user_book_options,
+    users_books_options,
     librarian_options,
 )
 from errors import (
@@ -39,25 +42,24 @@ def library_start():
         for _ in range(3):
             try:
                 choice = int(input('Enter your choice: '))
-                break
+                if choice == 1:
+                    login()
+                elif choice == 2:
+                    create_account()
+                elif choice == 3:
+                    message = ("Thank you for using our Library. " +
+                               "We hope to see you again soon!")
+                    print_with_box(message, len(message) + 2)
+                    quit()
+                else:
+                    raise ValueError
             except ValueError:
-                print('Invalid input, please enter a number.')
+                print('Invalid input, try again.')
         else:
             message = ('You have exceeded the maximum number ' +
                        'of attempts. Please try again later.')
             print_with_box(message, len(message) + 2)
             quit()
-        if choice == 1:
-            login()
-        elif choice == 2:
-            create_account()
-        elif choice == 3:
-            message = ("Thank you for using our Library. " +
-                       "We hope to see you again soon!")
-            print_with_box(message, len(message) + 2)
-            quit()
-        else:
-            print('Wrong number, try again.')
 
 
 def login():
@@ -71,9 +73,11 @@ def login():
                 if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
                     librarian_options()
+                    break
                 else:
                     user = User(**check)
-                    user_options()
+                    user_interface()
+                    break
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
@@ -98,13 +102,55 @@ def create_account():
             password = getpass('Enter your password: ')
             user = User(generate_user_id(), name, password)
             library.add_new_user(user)
-            user_options()
+            user_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
                 start_options()
                 break
+
+
+def user_interface():
+    while True:
+        user_options()
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    print(library.available_books_info())
+                    book_options_interface()
+                    break
+                elif choice == 2:
+                    search_interface()
+                elif choice == 3:
+                    search_interface()
+                elif choice == 4:
+                    search_interface()
+                elif choice == 5:
+                    start_options()
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
+        break
+
+
+
+
+
+def search_interface():
+    filters_list()
+
+
+def librarian_interface():
+    librarian_options()
 
 
 if __name__ == "__main__":
