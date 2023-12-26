@@ -14,23 +14,37 @@ def print_with_box_down(message, length):
     print(f'+{"-"*length}+')
 
 
-def start_list():
+def start_options():
     print_with_box('1 -> Log in', 27)
     print_with_box_down('2 -> Create a new account', 27)
     print_with_box_down('3 -> Exit', 27)
 
 
-def user_list():
-    print_with_box('1 -> Available books', 27)
-    print_with_box_down('3 -> Check your books', 27)
-    print_with_box_down('4 -> Check stats', 27)
-    print_with_box_down('6 -> Borrow a book', 27)
-    print_with_box_down('7 -> Return a book', 27)
-    print_with_box_down('8 -> Use extension', 27)
-    print_with_box_down('9 -> Reserve a book', 27)
-    print_with_box_down('10 -> Cancel reservation', 27)
-    print_with_box_down('11 -> Log out', 27)
+def user_options():
+    print_with_box('1 -> Available books', 23)
+    print_with_box_down('2 -> Search a book', 23)
+    print_with_box_down('3 -> Check your books', 23)
+    print_with_box_down('4 -> Check stats', 23)
+    print_with_box_down('5 -> Log out', 23)
 
 
-def librarian_list():
+def filters_list():
+    print_with_box('1 -> Keyword', 19)
+    print_with_box_down('2 -> Genre', 19)
+    print_with_box_down('3 -> Author', 19)
+    print_with_box_down('4 -> Release year', 19)
+    print_with_box_down('5 -> Go Back', 19)
+
+
+def user_book_options():
+    print_with_box('1 -> Borrow a book', 21)
+    print_with_box_down('2 -> Reserve a book', 21)
+    print_with_box_down('3 -> Go back', 21)
+
+
+def users_books_options():
+    pass
+
+
+def librarian_options():
     print('librarian')

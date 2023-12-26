@@ -11,9 +11,9 @@ from options_lists import (
     print_with_box,
     print_with_box_down,
     print_with_box_up,
-    start_list,
-    user_list,
-    librarian_list,
+    start_options,
+    user_options,
+    librarian_options,
 )
 from errors import (
     WrongPasswordError,
@@ -34,7 +34,7 @@ def main():
 
 
 def library_start():
-    start_list()
+    start_options()
     while True:
         for _ in range(3):
             try:
@@ -70,23 +70,23 @@ def login():
             if check:
                 if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
-                    librarian_list()
+                    librarian_options()
                 else:
                     user = User(**check)
-                    user_list()
+                    user_options()
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_list()
+                start_options()
                 break
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_list()
+                start_options()
                 break
 
 
@@ -98,12 +98,12 @@ def create_account():
             password = getpass('Enter your password: ')
             user = User(generate_user_id(), name, password)
             library.add_new_user(user)
-            user_list()
+            user_options()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_list()
+                start_options()
                 break
 
 
