@@ -7,9 +7,20 @@ from generate_id import (
     generate_user_id,
     generate_librarian_id
 )
+from options_lists import (
+    print_with_box,
+    print_with_box_down,
+    print_with_box_up,
+    start_list,
+    user_list,
+    librarian_list,
+)
 from errors import (
     WrongPasswordError,
     WrongIDError,
+    EmptyNameError,
+    EmptyPasswordError,
+    ShortPasswordError,
 )
 
 library = Library()
@@ -18,34 +29,12 @@ librarian = None
 
 
 def main():
-    print_with_box(' Welcome to the Library! ', 27)
+    print_with_box_up(' Welcome to the Library! ', 27)
     library_start()
 
 
-def print_with_box(message, length):
-    print(f'+{"-"*length}+')
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-    print(f'+{"-"*length}+')
-
-
-def print_with_box_up(message, length):
-    print(f'+{"-"*length}+')
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-
-
-def print_with_box_down(message, length):
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-    print(f'+{"-"*length}+')
-
-
-def start_menu():
-    print_with_box_down('1 -> Log in', 27)
-    print_with_box_down('2 -> Create a new account', 27)
-    print_with_box_down('3 -> Exit', 27)
-
-
 def library_start():
-    start_menu()
+    start_list()
     while True:
         for _ in range(3):
             try:
@@ -61,7 +50,7 @@ def library_start():
         if choice == 1:
             login()
         elif choice == 2:
-            pass
+            create_account()
         elif choice == 3:
             message = ("Thank you for using our Library. " +
                        "We hope to see you again soon!")
@@ -81,36 +70,41 @@ def login():
             if check:
                 if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
-                    librarian_menu()
+                    librarian_list()
                 else:
                     user = User(**check)
-                    user_menu()
+                    user_list()
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
-            if answer != 'y':
-                start_menu()
+            if answer.lower() != 'y':
+                start_list()
                 break
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
-            if answer != 'y':
-                start_menu()
+            if answer.lower() != 'y':
+                start_list()
                 break
 
 
 def create_account():
     global user
-
-
-def librarian_menu():
-    print('librarian')
-
-
-def user_menu():
-    print('user')
+    while True:
+        try:
+            name = input('Enter your name: ')
+            password = getpass('Enter your password: ')
+            user = User(generate_user_id(), name, password)
+            library.add_new_user(user)
+            user_list()
+        except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                start_list()
+                break
 
 
 if __name__ == "__main__":
