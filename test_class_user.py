@@ -140,15 +140,19 @@ def test_user_get_reservations():
                 ', Return date: ' + str(return_date) +
                 ', Position in queue: ' + '1'
                 )
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_get_reservations_empty():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     assert user.reservations == []
-    assert user.get_reservations() == 'You do not have any reservations at the moment.'
+    info = 'You do not have any reservations at the moment.'
+    assert user.get_reservations() == info
 
 
 def test_user_login_info():
@@ -270,7 +274,7 @@ def test_user_borrow_book():
     user.borrow_book(id2)
     library.update_data()
     return_date = date.today() + timedelta(days=30)
-    assert library.books == [{
+    assert library._books[-1] == {
         "id": id2,
         "title": "1984",
         "author": "George Orwell",
@@ -281,7 +285,7 @@ def test_user_borrow_book():
         "extensions": 3,
         "reservations": [],
         "return_date": str(return_date)
-    }]
+    }
     assert library.users == [user.__dict__()]
     user.return_book(id2)
     library.update_data()
@@ -350,7 +354,7 @@ def test_user_use_extension():
     user.use_extension(id2)
     library.update_data()
     return_date = date.today() + 2 * timedelta(days=30)
-    assert library.books == [{
+    assert library.books[-1] == {
         "id": id2,
         "title": "1984",
         "author": "George Orwell",
@@ -361,7 +365,7 @@ def test_user_use_extension():
         "extensions": 2,
         "reservations": [],
         "return_date": str(return_date)
-    }]
+    }
     user.return_book(id2)
     library.update_data()
     library.remove_user(id)
@@ -394,8 +398,11 @@ def test_user_use_extension_reserved_book():
     library.update_data()
     with pytest.raises(ReservedBookError):
         user.use_extension(id3)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_use_extension_not_enough():
@@ -429,7 +436,8 @@ def test_user_use_extension_wrong_id():
     library.add_new_user(user)
     with pytest.raises(NoBookIDError):
         user.use_extension(id2)
-    write_json('users.json', [])
+    del library._users[-1]
+    write_json('users.json', library.users)
 
 
 def test_user_reserve_book():
@@ -447,7 +455,7 @@ def test_user_reserve_book():
     user2.reserve_book(id3)
     library.update_data()
     return_date = date.today() + timedelta(days=30)
-    assert library.books == [{
+    assert library.books[-1] == {
         "id": id3,
         "title": "1984",
         "author": "George Orwell",
@@ -458,9 +466,12 @@ def test_user_reserve_book():
         "extensions": 3,
         "reservations": [id2],
         "return_date": str(return_date)
-    }]
-    write_json('users.json', [])
-    write_json('books.json', [])
+    }
+    del library._books[-1]
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_reserve_own_book():
@@ -474,8 +485,10 @@ def test_user_reserve_own_book():
     user.borrow_book(id2)
     with pytest.raises(UsersBookError):
         user.reserve_book(id2)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_reserve_not_borrowed_book():
@@ -488,8 +501,10 @@ def test_user_reserve_not_borrowed_book():
     library.add_new_book(book)
     with pytest.raises(NoBookOwnerError):
         user.reserve_book(id2)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_reserve_book_wrong_id():
@@ -499,8 +514,8 @@ def test_user_reserve_book_wrong_id():
     library.add_new_user(user)
     with pytest.raises(NoBookIDError):
         user.reserve_book(1111)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._users[-1]
+    write_json('users.json', library.users)
 
 
 def test_user_cancel_reservation():
@@ -519,7 +534,7 @@ def test_user_cancel_reservation():
     user2.cancel_reservation(id3)
     library.update_data()
     return_date = date.today() + timedelta(days=30)
-    assert library.books == [{
+    assert library.books[-1] == {
         "id": id3,
         "title": "1984",
         "author": "George Orwell",
@@ -530,9 +545,12 @@ def test_user_cancel_reservation():
         "extensions": 3,
         "reservations": [],
         "return_date": str(return_date)
-    }]
-    write_json('users.json', [])
-    write_json('books.json', [])
+    }
+    del library._books[-1]
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_cancel_missing_reservation():
@@ -545,8 +563,10 @@ def test_user_cancel_missing_reservation():
     library.add_new_book(book)
     with pytest.raises(NotReservedError):
         user.cancel_reservation(id2)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_cancel_reservation_wrong_id():
@@ -556,8 +576,8 @@ def test_user_cancel_reservation_wrong_id():
     library.add_new_user(user)
     with pytest.raises(NoBookIDError):
         user.cancel_reservation(1111)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._users[-1]
+    write_json('users.json', library.users)
 
 
 def test_user_return_book():
@@ -571,7 +591,7 @@ def test_user_return_book():
     user.borrow_book(id2)
     user.return_book(id2)
     library.update_data()
-    assert library.books == [{
+    assert library.books[-1] == {
         "id": id2,
         "title": "1984",
         "author": "George Orwell",
@@ -582,10 +602,12 @@ def test_user_return_book():
         "extensions": 0,
         "reservations": [],
         "return_date": None
-    }]
+    }
     assert library.users == [user.__dict__()]
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_return_not_borrowed_book():
@@ -610,8 +632,10 @@ def test_user_return_missing_book():
     library.update_data()
     with pytest.raises(NotUsersBookError):
         user.return_book(11111)
-    write_json('users.json', [])
-    write_json('books.json', [])
+    del library._books[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
 
 
 def test_user_return_reserved_book():
@@ -630,7 +654,7 @@ def test_user_return_reserved_book():
     user.return_book(id3)
     library.update_data()
     return_date = date.today() + timedelta(days=30)
-    assert library.books == [{
+    assert library.books[-1] == {
         "id": id3,
         "title": "1984",
         "author": "George Orwell",
@@ -641,15 +665,17 @@ def test_user_return_reserved_book():
         "extensions": 3,
         "reservations": [],
         "return_date": str(return_date)
-    }]
-    assert library.users == [
-        user.__dict__(), {
+    }
+    assert library.users[-1] == {
             "id": id2,
             "name": "Adam Nowak",
             "password": "haslo123",
             "borrowed_books": [id3],
             "reservations": [],
             "borrowing_history": [id3]
-        }]
-    write_json('users.json', [])
-    write_json('books.json', [])
+        }
+    del library._books[-1]
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('books.json', library.books)
