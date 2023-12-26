@@ -162,7 +162,7 @@ class Book:
                 ', Title: ' + self.title +
                 ', Author: ' + self.author +
                 ', Return date: ' + str(self.return_date) +
-                ', Position in queue: ' + str(self.reservations.index(id))
+                ', Position in queue: ' + str(self.reservations.index(id) + 1)
                 )
 
     def __dict__(self):

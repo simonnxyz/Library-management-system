@@ -144,9 +144,9 @@ class User:
                 for book_info in read_json('books.json'):
                     if book_info["id"] == book_id:
                         book = Book(**book_info)
-                        books.append(book.reservation_info())
+                        books.append(book.reservation_info(self.id))
             reservations = '\n'.join(books)
-            return f'Your history:\n{reservations}'
+            return f'Your reservations:\n{reservations}'
 
     def borrow_book(self, book_id):
         books = read_json('books.json')

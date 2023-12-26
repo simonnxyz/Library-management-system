@@ -117,6 +117,40 @@ def test_user_get_hisotry_empty():
     assert user.get_history() == 'You have not borrowed any books yet.'
 
 
+def test_user_get_reservations():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_user_id()
+    user2 = User(id2, 'Adam Nowak', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_user(user2)
+    id3 = generate_book_id()
+    book = Book(id3, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    library.add_new_book(book)
+    user.borrow_book(id3)
+    user2.reserve_book(id3)
+    return_date = date.today() + timedelta(days=30)
+    assert user2.reservations == [id3]
+    assert user2.get_reservations() == (
+                'Your reservations:\n' +
+                'ID: ' + str(id3) +
+                ', Title: ' + '1984' +
+                ', Author: ' + 'George Orwell' +
+                ', Return date: ' + str(return_date) +
+                ', Position in queue: ' + '1'
+                )
+    write_json('users.json', [])
+    write_json('books.json', [])
+
+
+def test_user_get_reservations_empty():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    assert user.reservations == []
+    assert user.get_reservations() == 'You do not have any reservations at the moment.'
+
+
 def test_user_login_info():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
