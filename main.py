@@ -142,7 +142,29 @@ def user_interface():
         break
 
 
-
+def book_options_interface():
+    user_book_options()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    pass
+                elif choice == 2:
+                    create_account()
+                elif choice == 3:
+                    user_interface()
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
+        break
 
 
 def search_interface():
