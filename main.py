@@ -9,6 +9,7 @@ from generate_id import (
 )
 from errors import (
     WrongPasswordError,
+    WrongIDError,
 )
 
 library = Library()
@@ -17,7 +18,9 @@ librarian = None
 
 
 def main():
-    print('Welcome to the Library!')
+    print('+' + '-'*25 + '+')
+    print('  Welcome to the Library!  ')
+    print('+' + '-'*25 + '+')
     library_start()
 
 
@@ -31,39 +34,42 @@ def start_menu():
 def library_start():
     start_menu()
     while True:
-        choice = int(input('Enter your choice: '))
-        if choice == 1:
-            login()
-        elif choice == 2:
-            pass
-        elif choice == 3:
-            pass
-        elif choice == 4:
-            print("Thank you for using the Library. " +
-                  "We hope to see you again soon!")
+        try:
+            choice = int(input('Enter your choice: '))
             break
-        else:
+        except ValueError:
             print('Wrong number, try again.')
+    if choice == 1:
+        login()
+    elif choice == 2:
+        pass
+    elif choice == 3:
+        pass
+    elif choice == 4:
+        print("Thank you for using the Library. " +
+              "We hope to see you again soon!")
+        quit()
+    else:
+        print('Wrong number, try again.')
 
 
 def login():
     global user, librarian
     while True:
         try:
-            id = input('Enter your ID: ')
+            id = int(input('Enter your ID: '))
             password = getpass('Enter your password: ')
             check = library.login_role_check(id, password)
             if check:
-                if str(check.get("id")).startswith('1'):
+                if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
                     librarian_menu()
                 else:
                     user = User(**check)
                     user_menu()
             else:
-                print("User with the given ID not found.")
-                raise WrongPasswordError
-        except WrongPasswordError as e:
+                raise WrongIDError
+        except (WrongPasswordError, WrongIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer == 'y':
@@ -71,6 +77,10 @@ def login():
             else:
                 start_menu()
                 break
+        except ValueError:
+            print('Incorrect ID.')
+            start_menu()
+            break
 
 
 def librarian_menu():

@@ -142,4 +142,10 @@ class NotReservedError(Exception):
 
 
 class WrongPasswordError(Exception):
-    pass
+    def __str__(self):
+        return 'Incorrect password.'
+
+
+class WrongIDError(Exception):
+    def __str__(self):
+        return 'User with the given ID not found.'
