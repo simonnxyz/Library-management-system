@@ -18,39 +18,46 @@ librarian = None
 
 
 def main():
-    print('+' + '-'*25 + '+')
-    print('  Welcome to the Library!  ')
-    print('+' + '-'*25 + '+')
+    print('+' + '-'*27 + '+')
+    print('|  Welcome to the Library!  |')
     library_start()
 
 
 def start_menu():
-    print('1 - Log in')
-    print('2 - Create a new user account')
-    print('3 - Create a new librarian account')
-    print('4 - Exit')
+    print('+' + '-'*27 + '+')
+    print('| 1 -> Log in' + ' '*15 + '|')
+    print('+' + '-'*27 + '+')
+    print('| 2 -> Create a new account |')
+    print('+' + '-'*27 + '+')
+    print('| 3 -> Exit' + ' '*17 + '|')
+    print('+' + '-'*27 + '+')
 
 
 def library_start():
     start_menu()
     while True:
-        try:
-            choice = int(input('Enter your choice: '))
-            break
-        except ValueError:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                break
+            except ValueError:
+                print('Invalid input. Please enter a number.')
+        else:
+            print('You have exceeded the maximum number ' +
+                  'of attempts. Please try again later.')
+            quit()
+        if choice == 1:
+            login()
+        elif choice == 2:
+            pass
+        elif choice == 3:
+            print('+' + '-'*65 + '+')
+            print("| Thank you for using our Library. " +
+                  "We hope to see you again soon! |")
+            print('+' + '-'*65 + '+')
+            quit()
+        else:
             print('Wrong number, try again.')
-    if choice == 1:
-        login()
-    elif choice == 2:
-        pass
-    elif choice == 3:
-        pass
-    elif choice == 4:
-        print("Thank you for using the Library. " +
-              "We hope to see you again soon!")
-        quit()
-    else:
-        print('Wrong number, try again.')
 
 
 def login():
@@ -79,8 +86,12 @@ def login():
                 break
         except ValueError:
             print('Incorrect ID.')
-            start_menu()
-            break
+            answer = input('Do you want to try again? [y/n] ')
+            if answer == 'y':
+                pass
+            else:
+                start_menu()
+                break
 
 
 def librarian_menu():
