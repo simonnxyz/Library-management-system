@@ -24,6 +24,9 @@ from errors import (
     EmptyNameError,
     EmptyPasswordError,
     ShortPasswordError,
+    UsersBookError,
+    BorrowedBookError,
+    NoBookIDError,
 )
 
 library = Library()
@@ -73,25 +76,21 @@ def login():
                 if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
                     librarian_options()
-                    break
                 else:
                     user = User(**check)
                     user_interface()
-                    break
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_options()
-                break
+                library_start()
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_options()
-                break
+                library_start()
 
 
 def create_account():
@@ -107,8 +106,7 @@ def create_account():
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                start_options()
-                break
+                library_start()
 
 
 def user_interface():
@@ -120,16 +118,14 @@ def user_interface():
                 if choice == 1:
                     print(library.available_books_info())
                     book_options_interface()
-                    break
                 elif choice == 2:
-                    search_interface()
+                    pass
                 elif choice == 3:
-                    search_interface()
+                    pass
                 elif choice == 4:
-                    search_interface()
+                    pass
                 elif choice == 5:
-                    start_options()
-                    break
+                    library_start()
                 else:
                     raise ValueError
             except ValueError:
@@ -149,12 +145,11 @@ def book_options_interface():
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    pass
+                    borrow_book()
                 elif choice == 2:
-                    create_account()
+                    pass
                 elif choice == 3:
                     user_interface()
-                    break
                 else:
                     raise ValueError
             except ValueError:
@@ -164,7 +159,25 @@ def book_options_interface():
                        'of attempts. Please try again later.')
             print_with_box(message, len(message) + 2)
             quit()
-        break
+
+
+def borrow_book():
+    global user
+    while True:
+        try:
+            id = int(input('Enter book ID: '))
+            user.borrow_book(id)
+            book_options_interface()
+        except (UsersBookError, BorrowedBookError, NoBookIDError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                book_options_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                book_options_interface()
 
 
 def search_interface():

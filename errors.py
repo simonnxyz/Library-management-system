@@ -148,4 +148,4 @@ class WrongPasswordError(Exception):
 
 class WrongIDError(Exception):
     def __str__(self):
-        return 'User with the given ID not found.'
+        return 'The given ID not found.'

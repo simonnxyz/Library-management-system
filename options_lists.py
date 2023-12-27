@@ -43,7 +43,10 @@ def user_book_options():
 
 
 def users_books_options():
-    pass
+    print_with_box('1 -> Return a book', 19)
+    print_with_box_down('2 -> Use extension', 19)
+    print_with_box_down('3 -> Cancel reservation', 19)
+    print_with_box_down('4 -> Go back', 19)
 
 
 def librarian_options():
