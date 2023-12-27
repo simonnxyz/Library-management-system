@@ -28,6 +28,8 @@ from errors import (
     BorrowedBookError,
     NoBookIDError,
     NoBookOwnerError,
+    NoKeywordError,
+    KeywordNotFoundError,
 )
 
 library = Library()
@@ -139,7 +141,54 @@ def user_interface():
         break
 
 
+def search_book_interface():
+    filters_list()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    search_keyword()
+                elif choice == 2:
+                    library.available_genres()
+                    search_genre()
+                elif choice == 3:
+                    pass
+                elif choice == 4:
+                    pass
+                elif choice == 5:
+                    user_interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
 
+
+def search_keyword():
+    global library
+    while True:
+        try:
+            keyword = input('Enter a keyword: ')
+            print(library.search_book_by_keyword(keyword))
+        except (NoKeywordError, KeywordNotFoundError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+
+
+def search_genre():
+    global library
 
 
 def book_options_interface():
