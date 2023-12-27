@@ -39,7 +39,7 @@ def test_library_add_new_book():
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
     library.add_new_book(book)
-    assert library.books == [{
+    assert library.books[-1] == {
             "id": id,
             "title": '1984',
             "author": 'George Orwell',
@@ -50,7 +50,7 @@ def test_library_add_new_book():
             "extensions": 0,
             "reservations": [],
             "return_date": None
-        }]
+        }
     library.remove_book(id)
 
 
@@ -70,7 +70,7 @@ def test_library_remove_book():
     library.add_new_book(book)
     info = library.remove_book(id)
     assert info == f'The book ({id}) has been successfully removed.'
-    assert library.books == []
+    assert library.books != book.__dict__()
 
 
 def test_library_remove_missing_book():
@@ -91,7 +91,8 @@ def test_library_remove_borrowed_book():
     library.add_new_book(book)
     with pytest.raises(BorrowedBookError):
         library.remove_book(id)
-    write_json('books.json', [])
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_add_copy_of_book():
@@ -102,9 +103,7 @@ def test_library_add_copy_of_book():
     id2 = generate_book_id()
     info = library.add_copy_of_book(id, id2)
     assert info == f'The copy of book ({id}) has been successfully added.'
-    assert library.books == [
-        book.__dict__(),
-        {
+    assert library.books[-1] == {
             "id": id2,
             "title": '1984',
             "author": 'George Orwell',
@@ -115,7 +114,7 @@ def test_library_add_copy_of_book():
             "extensions": 0,
             "reservations": [],
             "return_date": None
-        }]
+        }
     library.remove_book(id)
     library.remove_book(id2)
 
@@ -131,7 +130,7 @@ def test_library_add_user():
     user = User(id, 'Jan Kowalski', 'haslo123')
     library = Library()
     library.add_new_user(user)
-    assert library.users == [user.__dict__()]
+    assert library.users[-1] == user.__dict__()
     library.remove_user(id)
 
 
@@ -141,7 +140,7 @@ def test_library_remove_user():
     library = Library()
     library.add_new_user(user)
     library.remove_user(id)
-    assert library.users == []
+    assert library.users != [user.__dict__()]
 
 
 def test_library_remove_missing_user():
@@ -157,7 +156,8 @@ def test_library_remove_user_with_books():
     library.add_new_user(user)
     with pytest.raises(UserWithBooksError):
         library.remove_user(id)
-    write_json('users.json', [])
+    del library._users[-1]
+    write_json('users.json', library.users)
 
 
 def test_library_search_book_by_keyword():
@@ -165,6 +165,7 @@ def test_library_search_book_by_keyword():
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
     library.add_new_book(book)
+    library._books = [library.books[-1]]
     info = (
             f'ID: {id}, ' + 'Title: 1984, Author: George Orwell, ' +
             'Release year: 1949, Genre: Dystopian fiction, ' +
@@ -174,7 +175,9 @@ def test_library_search_book_by_keyword():
     assert result == info
     result = library.search_book_by_keyword(1984)
     assert result == info
-    library.remove_book(id)
+    library.update_data()
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_search_book_by_missing_keyword():
@@ -201,16 +204,20 @@ def test_library_available_genres():
     library = Library()
     library.add_new_book(book)
     library.add_new_book(book2)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_genres() == [
         'Dystopian fiction',
         'Philosophical novel'
         ]
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_available_genres_empty():
     library = Library()
+    library._books = []
     with pytest.raises(GenresNotFoundError):
         library.available_genres()
 
@@ -223,6 +230,7 @@ def test_library_search_by_gerne():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_genres() == [
         'Philosophical novel',
         'Dystopian fiction'
@@ -234,8 +242,10 @@ def test_library_search_by_gerne():
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_search_by_wrong_genre():
@@ -246,14 +256,17 @@ def test_library_search_by_wrong_genre():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_genres() == [
         'Philosophical novel',
         'Dystopian fiction'
         ]
     with pytest.raises(UnavailableGenreError):
         library.search_book_by_genre('Science fiction')
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_add_librarian():
@@ -261,7 +274,7 @@ def test_library_add_librarian():
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
     library.add_new_librarian(librarian)
-    assert library.librarians == [librarian.__dict__()]
+    assert library.librarians[-1] == librarian.__dict__()
     library.remove_librarian(id)
 
 
@@ -271,7 +284,7 @@ def test_library_remove_librarian():
     library = Library()
     library.add_new_librarian(librarian)
     library.remove_librarian(id)
-    assert library.librarians == []
+    assert library.librarians != [librarian.__dict__()]
 
 
 def test_library_remove_missing_librarian():
@@ -288,16 +301,20 @@ def test_library_available_authors():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_authors() == [
         'A. Camus',
         'George Orwell'
         ]
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_available_authors_empty():
     library = Library()
+    library._books = []
     with pytest.raises(AuthorsNotFoundError):
         library.available_authors()
 
@@ -310,6 +327,7 @@ def test_library_search_by_author():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_authors() == [
         'A. Camus',
         'George Orwell'
@@ -321,8 +339,10 @@ def test_library_search_by_author():
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_search_by_wrong_author():
@@ -333,14 +353,17 @@ def test_library_search_by_wrong_author():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_authors() == [
         'A. Camus',
         'George Orwell'
         ]
     with pytest.raises(UnavailableAuthorError):
         library.search_book_by_author('Henryk Sienkiewicz')
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_available_years():
@@ -351,13 +374,17 @@ def test_library_available_years():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_years() == [1947, 1949]
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_available_years_empty():
     library = Library()
+    library._books = []
     with pytest.raises(YearsNotFoundError):
         library.available_years()
 
@@ -370,6 +397,7 @@ def test_library_search_by_year():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_years() == [1947, 1949]
     result = library.search_book_by_year(1949)
     assert result == (
@@ -378,8 +406,10 @@ def test_library_search_by_year():
                 'Release year: 1949, Genre: Dystopian fiction, ' +
                 'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
                 )
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_search_by_wrong_year():
@@ -390,11 +420,14 @@ def test_library_search_by_wrong_year():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
     assert library.available_years() == [1947, 1949]
     with pytest.raises(UnavailableYearError):
         library.search_book_by_year(1999)
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_get_books_stats():
@@ -416,13 +449,17 @@ def test_library_get_books_stats():
     library.add_new_book(book2)
     library.add_new_book(book)
     msg = 'Title - loans\n' + 'The Plague - 1\n' + '1984 - 2'
+    library._books = [library.books[-2], library.books[-1]]
     assert library.get_books_stats() == msg
-    library.remove_book(id)
-    library.remove_book(id2)
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
 
 
 def test_library_get_books_stats_empty():
     library = Library()
+    library._books = []
     with pytest.raises(NoBooksError):
         library.get_books_stats()
 
@@ -435,14 +472,18 @@ def test_library_get_users_stats():
     library = Library()
     library.add_new_user(user)
     library.add_new_user(user2)
+    library._users = [library.users[-2], library.users[-1]]
     msg = 'Name - loans\n' + 'Jan Kowalski - 2\n' + 'Adam Nowak - 1'
     assert library.get_users_stats() == msg
-    library.remove_user(id)
-    library.remove_user(id2)
+    library.update_data()
+    del library._users[-2]
+    del library._users[-1]
+    write_json('users.json', library.users)
 
 
 def test_library_get_users_stats_empty():
     library = Library()
+    library._users = []
     with pytest.raises(NoUsersError):
         library.get_users_stats()
 

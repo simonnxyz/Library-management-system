@@ -259,7 +259,7 @@ def test_user_dict_update():
     library.add_new_user(user)
     user.history_append(1111)
     library.update_data()
-    assert library.users == [user.__dict__()]
+    assert library.users[-1] == user.__dict__()
     library.remove_user(id)
 
 
@@ -286,7 +286,7 @@ def test_user_borrow_book():
         "reservations": [],
         "return_date": str(return_date)
     }
-    assert library.users == [user.__dict__()]
+    assert library.users[-1] == user.__dict__()
     user.return_book(id2)
     library.update_data()
     library.remove_user(id)
@@ -603,7 +603,7 @@ def test_user_return_book():
         "reservations": [],
         "return_date": None
     }
-    assert library.users == [user.__dict__()]
+    assert library.users[-1] == user.__dict__()
     del library._books[-1]
     del library._users[-1]
     write_json('users.json', library.users)

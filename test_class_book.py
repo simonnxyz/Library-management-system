@@ -98,7 +98,7 @@ def test_book_dict_update():
     library.add_new_book(book)
     book.history_append(1111)
     library.update_data()
-    assert library.books == [book.__dict__()]
+    assert library.books[-1] == book.__dict__()
     library.remove_book(id)
 
 
