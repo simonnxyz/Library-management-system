@@ -27,6 +27,7 @@ from errors import (
     UsersBookError,
     BorrowedBookError,
     NoBookIDError,
+    NoBookOwnerError,
 )
 
 library = Library()
@@ -138,6 +139,9 @@ def user_interface():
         break
 
 
+
+
+
 def book_options_interface():
     user_book_options()
     while True:
@@ -147,7 +151,7 @@ def book_options_interface():
                 if choice == 1:
                     borrow_book()
                 elif choice == 2:
-                    pass
+                    reserve_book()
                 elif choice == 3:
                     user_interface()
                 else:
@@ -169,6 +173,25 @@ def borrow_book():
             user.borrow_book(id)
             book_options_interface()
         except (UsersBookError, BorrowedBookError, NoBookIDError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                book_options_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                book_options_interface()
+
+
+def reserve_book():
+    global user
+    while True:
+        try:
+            id = int(input('Enter book ID: '))
+            user.reserve_book(id)
+            book_options_interface()
+        except (UsersBookError, NoBookOwnerError, NoBookIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
