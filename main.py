@@ -428,6 +428,39 @@ def librarian_interface():
 
 def library_books_librarian_interface():
     librarians_books_options()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    add_book()
+                elif choice == 2:
+                    add_book_copy()
+                elif choice == 3:
+                    remove_book()
+                elif choice == 4:
+                    user_interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
+
+
+def add_book():
+    pass
+
+
+def add_book_copy():
+    pass
+
+
+def remove_book():
+    pass
 
 
 def search_book_librarian_interface():
