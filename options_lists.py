@@ -36,7 +36,7 @@ def filters_list():
     print_with_box_down('5 -> Go Back', 19)
 
 
-def user_book_options():
+def library_books_options():
     print_with_box('1 -> Borrow a book', 21)
     print_with_box_down('2 -> Reserve a book', 21)
     print_with_box_down('3 -> Go back', 21)
