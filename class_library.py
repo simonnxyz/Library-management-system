@@ -99,6 +99,7 @@ class Library:
                 if str(keyword).lower() in str(value).lower():
                     book = Book(**book_info)
                     searches.append(str(book))
+                    break
         if not searches:
             raise KeywordNotFoundError
         return '\n'.join(searches)

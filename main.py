@@ -30,6 +30,9 @@ from errors import (
     NoBookOwnerError,
     NoKeywordError,
     KeywordNotFoundError,
+    GenresNotFoundError,
+    UnavailableGenreError,
+    YearsNotFoundError,
 )
 
 library = Library()
@@ -122,7 +125,7 @@ def user_interface():
                     print(library.available_books_info())
                     book_options_interface()
                 elif choice == 2:
-                    pass
+                    search_book_interface()
                 elif choice == 3:
                     pass
                 elif choice == 4:
@@ -149,11 +152,31 @@ def search_book_interface():
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
                     search_keyword()
+                    book_options_interface()
                 elif choice == 2:
-                    library.available_genres()
-                    search_genre()
+                    try:
+                        print('\n'.join(library.available_genres()))
+                        search_genre()
+                        book_options_interface()
+                    except GenresNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            user_interface()
+                        else:
+                            search_book_interface()
                 elif choice == 3:
-                    pass
+                    try:
+                        print('\n'.join(library.available_years()))
+                        search_year()
+                        book_options_interface()
+                    except YearsNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            user_interface()
+                        else:
+                            search_book_interface()
                 elif choice == 4:
                     pass
                 elif choice == 5:
@@ -175,6 +198,7 @@ def search_keyword():
         try:
             keyword = input('Enter a keyword: ')
             print(library.search_book_by_keyword(keyword))
+            break
         except (NoKeywordError, KeywordNotFoundError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
@@ -189,6 +213,21 @@ def search_keyword():
 
 def search_genre():
     global library
+    while True:
+        try:
+            genre = input('Enter a genre: ')
+            print(library.search_book_by_genre(genre))
+            break
+        except UnavailableGenreError as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
 
 
 def book_options_interface():
@@ -220,17 +259,18 @@ def borrow_book():
         try:
             id = int(input('Enter book ID: '))
             user.borrow_book(id)
-            book_options_interface()
+            library.update_data()
+            user_interface()
         except (UsersBookError, BorrowedBookError, NoBookIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                book_options_interface()
+                user_interface()
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                book_options_interface()
+                user_interface()
 
 
 def reserve_book():
@@ -239,21 +279,18 @@ def reserve_book():
         try:
             id = int(input('Enter book ID: '))
             user.reserve_book(id)
-            book_options_interface()
+            library.update_data()
+            user_interface()
         except (UsersBookError, NoBookOwnerError, NoBookIDError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                book_options_interface()
+                user_interface()
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                book_options_interface()
-
-
-def search_interface():
-    filters_list()
+                user_interface()
 
 
 def librarian_interface():
