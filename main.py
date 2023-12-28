@@ -17,6 +17,8 @@ from options_lists import (
     library_books_options,
     users_books_options,
     librarian_options,
+    librarians_books_options,
+    librarians_users_options,
 )
 from errors import (
     WrongPasswordError,
@@ -87,7 +89,7 @@ def login():
             if check:
                 if str(check["id"]).startswith('1'):
                     librarian = Librarian(**check)
-                    librarian_options()
+                    librarian_interface()
                 else:
                     user = User(**check)
                     user_interface()
@@ -129,9 +131,9 @@ def user_interface():
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
                     print(library.available_books_info())
-                    library_books_interface()
+                    library_books_user_interface()
                 elif choice == 2:
-                    search_book_interface()
+                    search_book_user_interface()
                 elif choice == 3:
                     print(user.get_borrowed_books())
                     print(user.get_history())
@@ -153,51 +155,51 @@ def user_interface():
         break
 
 
-def search_book_interface():
+def search_book_user_interface():
     filters_list()
     while True:
         for _ in range(3):
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    search_keyword()
-                    library_books_interface()
+                    search_keyword(search_book_user_interface)
+                    library_books_user_interface()
                 elif choice == 2:
                     try:
                         print('\n'.join(library.available_genres()))
-                        search_genre()
-                        library_books_interface()
+                        search_genre(search_book_user_interface)
+                        library_books_user_interface()
                     except GenresNotFoundError as e:
                         print(e)
                         answer = input('Do you want to try again? [y/n] ')
                         if answer.lower() != 'y':
                             user_interface()
                         else:
-                            search_book_interface()
+                            search_book_user_interface()
                 elif choice == 3:
                     try:
                         print('\n'.join(library.available_authors()))
-                        search_author()
-                        library_books_interface()
+                        search_author(search_book_user_interface)
+                        library_books_user_interface()
                     except AuthorsNotFoundError as e:
                         print(e)
                         answer = input('Do you want to try again? [y/n] ')
                         if answer.lower() != 'y':
                             user_interface()
                         else:
-                            search_book_interface()
+                            search_book_user_interface()
                 elif choice == 4:
                     try:
                         print('\n'.join(library.available_years()))
-                        search_year()
-                        library_books_interface()
+                        search_year(search_book_user_interface)
+                        library_books_user_interface()
                     except YearsNotFoundError as e:
                         print(e)
                         answer = input('Do you want to try again? [y/n] ')
                         if answer.lower() != 'y':
                             user_interface()
                         else:
-                            search_book_interface()
+                            search_book_user_interface()
                 elif choice == 5:
                     user_interface()
                 else:
@@ -211,7 +213,7 @@ def search_book_interface():
             quit()
 
 
-def search_by(option, errors):
+def search_by(option, errors, search_interface):
     while True:
         try:
             result = option()
@@ -221,47 +223,59 @@ def search_by(option, errors):
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                search_book_interface()
+                search_interface()
         except ValueError:
             print('Incorrect input.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
-                search_book_interface()
+                search_interface()
 
 
-def search_keyword():
+def search_keyword(search_interface):
     def keyword():
         global library
         keyword = input('Enter the keyword: ')
         return library.search_book_by_keyword(keyword)
-    search_by(keyword, (NoKeywordError, KeywordNotFoundError))
+    search_by(
+        keyword,
+        (NoKeywordError, KeywordNotFoundError),
+        search_interface)
 
 
-def search_genre():
+def search_genre(search_interface):
     def genre():
         global library
         genre = input('Enter the genre: ')
         return library.search_book_by_genre(genre)
-    search_by(genre, UnavailableGenreError)
+    search_by(
+        genre,
+        UnavailableGenreError,
+        search_interface)
 
 
-def search_author():
+def search_author(search_interface):
     def author():
         global library
         author = input('Enter the author: ')
         return library.search_book_by_author(author)
-    search_by(author, UnavailableAuthorError)
+    search_by(
+        author,
+        UnavailableAuthorError,
+        search_interface)
 
 
-def search_year():
+def search_year(search_interface):
     def year():
         global library
         year = input('Enter the year: ')
         return library.search_book_by_year(year)
-    search_by(year, UnavailableYearError)
+    search_by(
+        year,
+        UnavailableYearError,
+        search_interface)
 
 
-def library_books_interface():
+def library_books_user_interface():
     library_books_options()
     while True:
         for _ in range(3):
@@ -313,7 +327,7 @@ def borrow_book():
     user_operation(
         user.borrow_book,
         (UsersBookError, BorrowedBookError, NoBookIDError),
-        library_books_interface
+        library_books_user_interface
     )
 
 
@@ -321,7 +335,7 @@ def reserve_book():
     user_operation(
         user.reserve_book,
         (UsersBookError, NoBookOwnerError, NoBookIDError),
-        library_books_interface
+        library_books_user_interface
     )
 
 
@@ -384,7 +398,40 @@ def get_stats():
 
 
 def librarian_interface():
-    librarian_options()
+    while True:
+        librarian_options()
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    print(library.available_books_info())
+                    library_books_librarian_interface()
+                elif choice == 2:
+                    pass
+                elif choice == 3:
+                    pass
+                elif choice == 4:
+                    get_stats()
+                elif choice == 5:
+                    library_start()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
+        break
+
+
+def library_books_librarian_interface():
+    librarians_books_options()
+
+
+def search_book_librarian_interface():
+    pass
 
 
 if __name__ == "__main__":
