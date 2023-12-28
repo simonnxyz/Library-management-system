@@ -33,6 +33,9 @@ from errors import (
     GenresNotFoundError,
     UnavailableGenreError,
     YearsNotFoundError,
+    UnavailableYearError,
+    AuthorsNotFoundError,
+    UnavailableAuthorError,
 )
 
 library = Library()
@@ -167,6 +170,18 @@ def search_book_interface():
                             search_book_interface()
                 elif choice == 3:
                     try:
+                        print('\n'.join(library.available_authors()))
+                        search_author()
+                        book_options_interface()
+                    except AuthorsNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            user_interface()
+                        else:
+                            search_book_interface()
+                elif choice == 4:
+                    try:
                         print('\n'.join(library.available_years()))
                         search_year()
                         book_options_interface()
@@ -177,8 +192,6 @@ def search_book_interface():
                             user_interface()
                         else:
                             search_book_interface()
-                elif choice == 4:
-                    pass
                 elif choice == 5:
                     user_interface()
                 else:
@@ -219,6 +232,25 @@ def search_genre():
             print(library.search_book_by_genre(genre))
             break
         except UnavailableGenreError as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+
+
+def search_year():
+    global library
+    while True:
+        try:
+            year = input('Enter a year: ')
+            print(library.search_book_by_year(year))
+            break
+        except UnavailableYearError as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':

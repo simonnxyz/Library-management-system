@@ -137,7 +137,7 @@ class Library:
         return '\n'.join(searches)
 
     def available_years(self):
-        years = [book_info["release_year"] for book_info in self.books]
+        years = [str(book_info["release_year"]) for book_info in self.books]
         if not years:
             raise YearsNotFoundError
         return years
@@ -147,7 +147,7 @@ class Library:
             raise UnavailableYearError
         searches = []
         for book_info in self.books:
-            if chosen_year == book_info["release_year"]:
+            if chosen_year == str(book_info["release_year"]):
                 book = Book(**book_info)
                 searches.append(str(book))
         return '\n'.join(searches)

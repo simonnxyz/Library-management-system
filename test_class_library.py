@@ -375,7 +375,7 @@ def test_library_available_years():
     library.add_new_book(book2)
     library.add_new_book(book)
     library._books = [library.books[-2], library.books[-1]]
-    assert library.available_years() == [1947, 1949]
+    assert library.available_years() == ['1947', '1949']
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -398,8 +398,8 @@ def test_library_search_by_year():
     library.add_new_book(book2)
     library.add_new_book(book)
     library._books = [library.books[-2], library.books[-1]]
-    assert library.available_years() == [1947, 1949]
-    result = library.search_book_by_year(1949)
+    assert library.available_years() == ['1947', '1949']
+    result = library.search_book_by_year('1949')
     assert result == (
                 'ID: ' + str(id) + ', '
                 'Title: 1984, Author: George Orwell, ' +
@@ -421,9 +421,9 @@ def test_library_search_by_wrong_year():
     library.add_new_book(book2)
     library.add_new_book(book)
     library._books = [library.books[-2], library.books[-1]]
-    assert library.available_years() == [1947, 1949]
+    assert library.available_years() == ['1947', '1949']
     with pytest.raises(UnavailableYearError):
-        library.search_book_by_year(1999)
+        library.search_book_by_year('1999')
     library.update_data()
     del library._books[-2]
     del library._books[-1]
