@@ -50,4 +50,25 @@ def users_books_options():
 
 
 def librarian_options():
-    print('librarian')
+    print_with_box('1 -> Library books', 31)
+    print_with_box_down('2 -> Search a book', 31)
+    print_with_box_down('3 -> Library users/librarians', 31)
+    print_with_box_down('4 -> Search a user/librarian', 31)
+    print_with_box_down('4 -> Check stats', 31)
+    print_with_box_down('5 -> Log out', 31)
+
+
+def librarians_books_options():
+    print_with_box('1 -> Add a new book', 25)
+    print_with_box_down('2 -> Add a copy of book', 25)
+    print_with_box_down('3 -> Remove the book', 25)
+    print_with_box_down('4 -> Go back', 25)
+
+
+def librarians_users_options():
+    print_with_box('1 -> Add a new user', 27)
+    print_with_box('1 -> Add a new librarian', 27)
+    print_with_box_down('2 -> Remove the user', 27)
+    print_with_box_down('2 -> Remove the librarian', 27)
+    print_with_box_down('3 -> Remove the book', 27)
+    print_with_box_down('4 -> Go back', 27)

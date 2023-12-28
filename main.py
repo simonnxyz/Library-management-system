@@ -138,7 +138,7 @@ def user_interface():
                     print(user.get_reservations())
                     users_books_interface()
                 elif choice == 4:
-                    pass
+                    get_stats()
                 elif choice == 5:
                     library_start()
                 else:
@@ -377,6 +377,10 @@ def cancel_reservation():
         (NotUsersBookError, NoBookIDError),
         users_books_interface
     )
+
+
+def get_stats():
+    pass
 
 
 def librarian_interface():
