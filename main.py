@@ -41,6 +41,8 @@ from errors import (
     NotUsersBookError,
     ReservedBookError,
     NotEnoughExtensionsError,
+    UserWithBooksError,
+    NoLibrarianIDError,
 )
 
 library = Library()
@@ -451,16 +453,77 @@ def library_books_librarian_interface():
             quit()
 
 
+def librarian_id_operation(operation, errors, interface, obj_id):
+    global librarian
+    while True:
+        try:
+            id = int(input(f'Enter {obj_id} ID: '))
+            operation(id)
+            library.update_data()
+            librarian_interface()
+        except errors as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
+            else:
+                interface()
+
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
+            else:
+                interface()
+
+
 def add_book():
     pass
 
 
-def add_book_copy():
+def add_user():
     pass
+
+
+def add_librarian():
+    pass
+
+
+def add_book_copy():
+    librarian_id_operation(
+        library.add_copy_of_book,
+        NoBookIDError,
+        library_books_librarian_interface,
+        'book'
+    )
 
 
 def remove_book():
-    pass
+    librarian_id_operation(
+        library.remove_book,
+        (BorrowedBookError, NoBookIDError),
+        library_books_librarian_interface,
+        'book'
+    )
+
+
+def remove_user():
+    librarian_id_operation(
+        library.remove_user,
+        (UserWithBooksError, NoBookIDError),
+        library_books_librarian_interface,
+        'user'
+    )
+
+
+def remove_librarian():
+    librarian_id_operation(
+        library.remove_librarian,
+        (NoLibrarianIDError, NoBookIDError),
+        library_books_librarian_interface,
+        'librarian'
+    )
 
 
 def search_book_librarian_interface():

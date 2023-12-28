@@ -70,5 +70,4 @@ def librarians_users_options():
     print_with_box('2 -> Add a new librarian', 27)
     print_with_box_down('3 -> Remove the user', 27)
     print_with_box_down('4 -> Remove the librarian', 27)
-    print_with_box_down('5 -> Remove the book', 27)
-    print_with_box_down('6 -> Go back', 27)
+    print_with_box_down('5 -> Go back', 27)
