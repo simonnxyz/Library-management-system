@@ -205,80 +205,54 @@ def search_book_interface():
             quit()
 
 
-def search_keyword():
-    global library
+def search_by(option, errors):
     while True:
         try:
-            keyword = input('Enter the keyword: ')
-            print(library.search_book_by_keyword(keyword))
+            result = option()
+            print(result)
             break
-        except (NoKeywordError, KeywordNotFoundError) as e:
+        except errors as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
                 search_book_interface()
         except ValueError:
-            print('Incorrect ID.')
+            print('Incorrect input.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
                 search_book_interface()
+
+
+def search_keyword():
+    def keyword():
+        global library
+        keyword = input('Enter the keyword: ')
+        return library.search_book_by_keyword(keyword)
+    search_by(keyword, (NoKeywordError, KeywordNotFoundError))
 
 
 def search_genre():
-    global library
-    while True:
-        try:
-            genre = input('Enter the genre: ')
-            print(library.search_book_by_genre(genre))
-            break
-        except UnavailableGenreError as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
-        except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
+    def genre():
+        global library
+        genre = input('Enter the genre: ')
+        return library.search_book_by_genre(genre)
+    search_by(genre, UnavailableGenreError)
 
 
 def search_author():
-    global library
-    while True:
-        try:
-            author = input('Enter the author: ')
-            print(library.search_book_by_author(author))
-            break
-        except UnavailableAuthorError as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
-        except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
+    def author():
+        global library
+        author = input('Enter the author: ')
+        return library.search_book_by_author(author)
+    search_by(author, UnavailableAuthorError)
 
 
 def search_year():
-    global library
-    while True:
-        try:
-            year = input('Enter the year: ')
-            print(library.search_book_by_year(year))
-            break
-        except UnavailableYearError as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
-        except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_book_interface()
+    def year():
+        global library
+        year = input('Enter the year: ')
+        return library.search_book_by_year(year)
+    search_by(year, UnavailableYearError)
 
 
 def book_options_interface():
