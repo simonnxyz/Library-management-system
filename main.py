@@ -371,14 +371,14 @@ def return_book():
             if answer.lower() != 'y':
                 user_interface()
             else:
-                library_books_interface()
+                users_books_interface()
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
                 user_interface()
             else:
-                library_books_interface()
+                users_books_interface()
 
 
 def use_extension():
@@ -400,18 +400,38 @@ def use_extension():
             if answer.lower() != 'y':
                 user_interface()
             else:
-                library_books_interface()
+                users_books_interface()
         except ValueError:
             print('Incorrect ID.')
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
                 user_interface()
             else:
-                library_books_interface()
+                users_books_interface()
 
 
 def cancel_reservation():
-    pass
+    global user
+    while True:
+        try:
+            id = int(input('Enter book ID: '))
+            user.return_book(id)
+            library.update_data()
+            user_interface()
+        except (NotUsersBookError, NoBookIDError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                users_books_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                users_books_interface()
 
 
 def librarian_interface():
