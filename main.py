@@ -209,7 +209,7 @@ def search_keyword():
     global library
     while True:
         try:
-            keyword = input('Enter a keyword: ')
+            keyword = input('Enter the keyword: ')
             print(library.search_book_by_keyword(keyword))
             break
         except (NoKeywordError, KeywordNotFoundError) as e:
@@ -228,10 +228,29 @@ def search_genre():
     global library
     while True:
         try:
-            genre = input('Enter a genre: ')
+            genre = input('Enter the genre: ')
             print(library.search_book_by_genre(genre))
             break
         except UnavailableGenreError as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                search_book_interface()
+
+
+def search_author():
+    global library
+    while True:
+        try:
+            author = input('Enter the author: ')
+            print(library.search_book_by_author(author))
+            break
+        except UnavailableAuthorError as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
             if answer.lower() != 'y':
@@ -247,7 +266,7 @@ def search_year():
     global library
     while True:
         try:
-            year = input('Enter a year: ')
+            year = input('Enter the year: ')
             print(library.search_book_by_year(year))
             break
         except UnavailableYearError as e:
