@@ -130,7 +130,7 @@ def user_interface():
                 elif choice == 2:
                     search_book_interface()
                 elif choice == 3:
-                    pass
+                    users_books_interface()
                 elif choice == 4:
                     pass
                 elif choice == 5:
@@ -324,6 +324,43 @@ def reserve_book():
                 user_interface()
             else:
                 library_books_interface()
+
+
+def users_books_interface():
+    users_books_options()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    return_book()
+                elif choice == 2:
+                    use_extension()
+                elif choice == 3:
+                    cancel_reservation()
+                elif choice == 4:
+                    user_interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
+
+
+def return_book():
+    pass
+
+
+def use_extension():
+    pass
+
+
+def cancel_reservation():
+    pass
 
 
 def librarian_interface():
