@@ -453,12 +453,15 @@ def library_books_librarian_interface():
             quit()
 
 
-def librarian_id_operation(operation, errors, interface, obj_id):
+def librarian_id_operation(operation, errors, interface, obj_id, new_id=None):
     global librarian
     while True:
         try:
             id = int(input(f'Enter {obj_id} ID: '))
-            operation(id)
+            if new_id:
+                operation(id, new_id)
+            else:
+                operation(id)
             library.update_data()
             librarian_interface()
         except errors as e:
@@ -495,7 +498,8 @@ def add_book_copy():
         library.add_copy_of_book,
         NoBookIDError,
         library_books_librarian_interface,
-        'book'
+        'book',
+        generate_book_id()
     )
 
 
