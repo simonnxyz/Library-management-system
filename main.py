@@ -36,6 +36,7 @@ from errors import (
     UnavailableYearError,
     AuthorsNotFoundError,
     UnavailableAuthorError,
+    NotUsersBookError,
 )
 
 library = Library()
@@ -130,6 +131,9 @@ def user_interface():
                 elif choice == 2:
                     search_book_interface()
                 elif choice == 3:
+                    print(user.get_borrowed_books())
+                    print(user.get_history())
+                    print(user.get_reservations())
                     users_books_interface()
                 elif choice == 4:
                     pass
@@ -352,7 +356,27 @@ def users_books_interface():
 
 
 def return_book():
-    pass
+    global user
+    while True:
+        try:
+            id = int(input('Enter book ID: '))
+            user.return_book(id)
+            library.update_data()
+            user_interface()
+        except (NotUsersBookError, NoBookIDError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                library_books_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                library_books_interface()
 
 
 def use_extension():
