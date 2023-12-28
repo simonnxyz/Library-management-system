@@ -1,8 +1,16 @@
 [
     {
+        "id": 3458,
+        "name": "Jan Kowalski",
+        "password": "haslo123",
+        "borrowed_books": [],
+        "reservations": [],
+        "borrowing_history": []
+    },
+    {
         "id": 9659,
-        "name": "test",
-        "password": "test123",
+        "name": "Zofia Adamska",
+        "password": "haslo123",
         "borrowed_books": [],
         "reservations": [],
         "borrowing_history": []

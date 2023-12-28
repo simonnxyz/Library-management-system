@@ -22,5 +22,17 @@
         "extensions": 0,
         "reservations": [],
         "return_date": null
+    },
+    {
+        "id": 2138,
+        "title": "The Witcher. The Last Wish",
+        "author": "Andrzej Sapkowski",
+        "release_year": 1993,
+        "genre": "Fantasy fiction",
+        "loan_history": [],
+        "current_owner": null,
+        "extensions": 0,
+        "reservations": [],
+        "return_date": null
     }
 ]
