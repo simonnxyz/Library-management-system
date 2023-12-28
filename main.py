@@ -37,6 +37,8 @@ from errors import (
     AuthorsNotFoundError,
     UnavailableAuthorError,
     NotUsersBookError,
+    ReservedBookError,
+    NotEnoughExtensionsError,
 )
 
 library = Library()
@@ -380,7 +382,32 @@ def return_book():
 
 
 def use_extension():
-    pass
+    global user
+    while True:
+        try:
+            id = int(input('Enter book ID: '))
+            user.use_extension(id)
+            library.update_data()
+            user_interface()
+        except (
+            NotUsersBookError,
+            ReservedBookError,
+            NotEnoughExtensionsError,
+            NoBookIDError
+        ) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                library_books_interface()
+        except ValueError:
+            print('Incorrect ID.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                user_interface()
+            else:
+                library_books_interface()
 
 
 def cancel_reservation():

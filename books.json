@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "id": 7303,
+        "title": "1984",
+        "author": "George Orwell",
+        "release_year": 1949,
+        "genre": "Dystopian fiction",
+        "loan_history": [],
+        "current_owner": null,
+        "extensions": 0,
+        "reservations": [],
+        "return_date": null
+    },
+    {
+        "id": 1626,
+        "title": "The Plague",
+        "author": "Albert Camus",
+        "release_year": 1947,
+        "genre": "Philosophical novel",
+        "loan_history": [],
+        "current_owner": null,
+        "extensions": 0,
+        "reservations": [],
+        "return_date": null
+    }
+]
