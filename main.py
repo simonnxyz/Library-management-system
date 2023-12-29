@@ -43,6 +43,10 @@ from errors import (
     NotEnoughExtensionsError,
     UserWithBooksError,
     NoLibrarianIDError,
+    EmptyTitleError,
+    NoAuthorError,
+    NoReleaseYearError,
+    NoGenreError,
 )
 
 library = Library()
@@ -413,8 +417,10 @@ def librarian_interface():
                 elif choice == 3:
                     pass
                 elif choice == 4:
-                    get_stats()
+                    pass
                 elif choice == 5:
+                    get_stats()
+                elif choice == 6:
                     library_start()
                 else:
                     raise ValueError
@@ -482,7 +488,25 @@ def librarian_id_operation(operation, errors, interface, obj_id, new_id=None):
 
 
 def add_book():
-    pass
+    while True:
+        try:
+            title = input('Enter the title: ')
+            author = input('Enter the author: ')
+            release_year = input('Enter the release year: ')
+            genre = input('Enter the genre: ')
+            book = Book(generate_book_id(), title, author, release_year, genre)
+            library.add_new_book(book)
+            librarian_interface()
+        except (
+            EmptyTitleError,
+            NoAuthorError,
+            NoReleaseYearError,
+            NoGenreError
+        ) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
 
 
 def add_user():
