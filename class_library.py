@@ -18,6 +18,7 @@ from errors import (
     NoBooksError,
     NoUsersError,
     WrongPasswordError,
+    RemoveYourselfError,
 )
 
 
@@ -174,14 +175,17 @@ class Library:
         self._librarians.append(new_librarian.__dict__())
         write_json('librarians.json', self.librarians)
 
-    def remove_librarian(self, librarian_id: int):
+    def remove_librarian(self, remove_id: int, librarian_id: int):
+        # dodac testy
+        if librarian_id == remove_id:
+            raise RemoveYourselfError
         updated_librarians = []
         for librarian_info in self.librarians:
             id = librarian_info["id"]
-            if id != librarian_id:
+            if id != remove_id:
                 updated_librarians.append(librarian_info)
         if updated_librarians == self.librarians:
-            raise NoLibrarianIDError(librarian_id)
+            raise NoLibrarianIDError(remove_id)
         self._librarians = updated_librarians
         write_json('librarians.json', self.librarians)
 
@@ -210,3 +214,18 @@ class Library:
             book = Book(**book_info)
             info.append(str(book))
         return '\n'.join(info)
+
+    def search_user(self, keyword):
+        if not keyword:
+            raise NoKeywordError
+        searches = []
+        for user_info in self.users:
+            values = list(user_info["id"], user_info["name"])
+            for value in values:
+                if str(keyword).lower() in str(value).lower():
+                    user = User(**user_info)
+                    searches.append(str(user))
+                    break
+        if not searches:
+            raise KeywordNotFoundError
+        return '\n'.join(searches)

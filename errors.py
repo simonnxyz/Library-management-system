@@ -149,3 +149,8 @@ class WrongPasswordError(Exception):
 class WrongIDError(Exception):
     def __str__(self):
         return 'The given ID not found.'
+
+
+class RemoveYourselfError(Exception):
+    def __str__(self):
+        return 'You cannot remove yourself.'
