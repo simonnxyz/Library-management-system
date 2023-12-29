@@ -220,11 +220,18 @@ class Library:
             raise NoKeywordError
         searches = []
         for user_info in self.users:
-            values = list(user_info["id"], user_info["name"])
+            values = (user_info["id"], user_info["name"])
             for value in values:
                 if str(keyword).lower() in str(value).lower():
                     user = User(**user_info)
-                    searches.append(str(user))
+                    searches.append(user.search_info())
+                    break
+        for librarian_info in self.librarians:
+            values = (librarian_info["id"], librarian_info["name"])
+            for value in values:
+                if str(keyword).lower() in str(value).lower():
+                    lib = Librarian(**librarian_info)
+                    searches.append(str(lib.search_info()))
                     break
         if not searches:
             raise KeywordNotFoundError
