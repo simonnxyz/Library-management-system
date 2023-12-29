@@ -245,7 +245,8 @@ def search_keyword(search_interface):
     search_by(
         keyword,
         (NoKeywordError, KeywordNotFoundError),
-        search_interface)
+        search_interface
+    )
 
 
 def search_genre(search_interface):
@@ -256,7 +257,8 @@ def search_genre(search_interface):
     search_by(
         genre,
         UnavailableGenreError,
-        search_interface)
+        search_interface
+    )
 
 
 def search_author(search_interface):
@@ -267,7 +269,8 @@ def search_author(search_interface):
     search_by(
         author,
         UnavailableAuthorError,
-        search_interface)
+        search_interface
+    )
 
 
 def search_year(search_interface):
@@ -278,7 +281,8 @@ def search_year(search_interface):
     search_by(
         year,
         UnavailableYearError,
-        search_interface)
+        search_interface
+    )
 
 
 def library_books_user_interface():
@@ -413,7 +417,7 @@ def librarian_interface():
                     print(library.available_books_info())
                     library_books_librarian_interface()
                 elif choice == 2:
-                    pass
+                    search_book_librarian_interface()
                 elif choice == 3:
                     pass
                 elif choice == 4:
@@ -447,7 +451,7 @@ def library_books_librarian_interface():
                 elif choice == 3:
                     remove_book()
                 elif choice == 4:
-                    user_interface()
+                    librarian_interface()
                 else:
                     raise ValueError
             except ValueError:
@@ -519,7 +523,7 @@ def add_user(is_librarian=False):
                 library.add_new_librarian(lib)
             else:
                 user = User(generate_user_id(), name, password)
-                library.add_new_user(user)     
+                library.add_new_user(user)
             librarian_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             print(e)
@@ -566,7 +570,61 @@ def remove_librarian():
 
 
 def search_book_librarian_interface():
-    pass
+    filters_list()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    search_keyword(search_book_librarian_interface)
+                    library_books_librarian_interface()
+                elif choice == 2:
+                    try:
+                        print('\n'.join(library.available_genres()))
+                        search_genre(search_book_librarian_interface)
+                        library_books_librarian_interface()
+                    except GenresNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            librarian_interface()
+                        else:
+                            search_book_librarian_interface()
+                elif choice == 3:
+                    try:
+                        print('\n'.join(library.available_authors()))
+                        search_author(search_book_librarian_interface)
+                        library_books_librarian_interface()
+                    except AuthorsNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            librarian_interface()
+                        else:
+                            search_book_librarian_interface()
+                elif choice == 4:
+                    try:
+                        print('\n'.join(library.available_years()))
+                        search_year(search_book_librarian_interface)
+                        library_books_librarian_interface()
+                    except YearsNotFoundError as e:
+                        print(e)
+                        answer = input('Do you want to try again? [y/n] ')
+                        if answer.lower() != 'y':
+                            librarian_interface()
+                        else:
+                            search_book_librarian_interface()
+                elif choice == 5:
+                    librarian_interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
 
 
 if __name__ == "__main__":
