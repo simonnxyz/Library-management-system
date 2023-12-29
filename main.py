@@ -47,6 +47,7 @@ from errors import (
     NoAuthorError,
     NoReleaseYearError,
     NoGenreError,
+    RemoveYourselfError,
 )
 
 library = Library()
@@ -419,7 +420,8 @@ def librarian_interface():
                 elif choice == 2:
                     search_book_librarian_interface()
                 elif choice == 3:
-                    pass
+                    print(library.users_librarians())
+                    library_users_librarian_interface()
                 elif choice == 4:
                     pass
                 elif choice == 5:
@@ -463,13 +465,22 @@ def library_books_librarian_interface():
             quit()
 
 
-def librarian_id_operation(operation, errors, interface, obj_id, new_id=None):
+def librarian_id_operation(
+        operation,
+        errors,
+        interface,
+        obj_id,
+        new_id=None,
+        librarian_id=None
+        ):
     global librarian
     while True:
         try:
             id = int(input(f'Enter {obj_id} ID: '))
             if new_id:
                 operation(id, new_id)
+            elif librarian_id:
+                operation(id, librarian_id)
             else:
                 operation(id)
             library.update_data()
@@ -563,9 +574,11 @@ def remove_user():
 def remove_librarian():
     librarian_id_operation(
         library.remove_librarian,
-        (NoLibrarianIDError, NoBookIDError),
+        (NoLibrarianIDError, NoBookIDError, RemoveYourselfError),
         library_books_librarian_interface,
-        'librarian'
+        'librarian',
+        new_id=None,
+        librarian_id=librarian.id
     )
 
 
@@ -626,6 +639,32 @@ def search_book_librarian_interface():
             print_with_box(message, len(message) + 2)
             quit()
 
+
+def library_users_librarian_interface():
+    librarians_users_options()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    add_user()
+                elif choice == 2:
+                    add_user(is_librarian=True)
+                elif choice == 3:
+                    remove_user()
+                elif choice == 4:
+                    remove_librarian()
+                elif choice == 5:
+                    librarian_interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
 
 if __name__ == "__main__":
     main()
