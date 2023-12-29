@@ -233,6 +233,17 @@ class User:
             raise NoBookIDError(book_id)
         self.borrowed_remove(book_id)
 
+    def search_info(self):
+        # dodac testy
+        return (
+                'ID: ' + str(self.id) +
+                ', Name: ' + self.name +
+                ', Password: ' + self.password +
+                ', Borrowed books: ' + ', '.join(self.borrowed_books) +
+                ', Reservations: ' + ', '.join(self.reservations) +
+                ', Borrowing history: ' + ', '.join(self.borrowing_history)
+                )
+
     def __str__(self):
         """
         Returns a welcome message with the user's name and ID.
@@ -281,3 +292,11 @@ class Librarian(User):
             "name": self.name,
             "password": self.password,
         }
+
+    def search_info(self):
+        # dodac testy
+        return (
+                'ID: ' + str(self.id) +
+                ', Name: ' + self.name +
+                ', Password: ' + self.password
+                )
