@@ -243,7 +243,7 @@ class Library:
             for value in values:
                 if str(keyword).lower() in str(value).lower():
                     lib = Librarian(**librarian_info)
-                    searches.append(str(lib.search_info()))
+                    searches.append(lib.search_info())
                     break
         if not searches:
             raise KeywordNotFoundError

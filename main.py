@@ -423,7 +423,8 @@ def librarian_interface():
                     print(library.users_librarians())
                     library_users_librarian_interface()
                 elif choice == 4:
-                    pass
+                    search_users_librarian()
+                    library_users_librarian_interface()
                 elif choice == 5:
                     get_stats()
                 elif choice == 6:
@@ -665,6 +666,26 @@ def library_users_librarian_interface():
                        'of attempts. Please try again later.')
             print_with_box(message, len(message) + 2)
             quit()
+
+
+def search_users_librarian():
+    global library
+    while True:
+        try:
+            keyword = input('Enter the keyword (or ID): ')
+            print(library.search_user(keyword))
+            break
+        except (NoKeywordError, KeywordNotFoundError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
+        except ValueError:
+            print('Incorrect input.')
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
+
 
 if __name__ == "__main__":
     main()
