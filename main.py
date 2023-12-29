@@ -509,12 +509,23 @@ def add_book():
                 librarian_interface()
 
 
-def add_user():
-    pass
-
-
-def add_librarian():
-    pass
+def add_user(is_librarian=False):
+    while True:
+        try:
+            name = input('Enter the name: ')
+            password = getpass('Enter the password: ')
+            if is_librarian:
+                lib = Librarian(generate_librarian_id(), name, password)
+                library.add_new_librarian(lib)
+            else:
+                user = User(generate_user_id(), name, password)
+                library.add_new_user(user)     
+            librarian_interface()
+        except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
+            print(e)
+            answer = input('Do you want to try again? [y/n] ')
+            if answer.lower() != 'y':
+                librarian_interface()
 
 
 def add_book_copy():
