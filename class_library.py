@@ -215,7 +215,19 @@ class Library:
             info.append(str(book))
         return '\n'.join(info)
 
+    def users_librarians(self):
+        # dodac testy
+        users_librarians = []
+        for user_info in self.users:
+            user = User(**user_info)
+            users_librarians.append(user.search_info())
+        for librarian_info in self.librarians:
+            librarian = Librarian(**librarian_info)
+            users_librarians.append(librarian.search_info())
+        return '\n'.join(users_librarians)
+
     def search_user(self, keyword):
+        # dodac testy
         if not keyword:
             raise NoKeywordError
         searches = []
