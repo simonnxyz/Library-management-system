@@ -53,8 +53,8 @@ from errors import (
 )
 
 library = Library()
-user = None
-librarian = None
+current_user = None
+current_librarian = None
 
 
 def main():
@@ -89,7 +89,7 @@ def library_start():
 
 
 def login():
-    global user, librarian
+    global current_user, current_librarian
     while True:
         try:
             id = int(input('Enter your ID: '))
@@ -97,10 +97,10 @@ def login():
             check = library.login_role_check(id, password)
             if check:
                 if str(check["id"]).startswith('1'):
-                    librarian = Librarian(**check)
+                    current_librarian = Librarian(**check)
                     librarian_interface()
                 else:
-                    user = User(**check)
+                    current_user = User(**check)
                     user_interface()
             else:
                 raise WrongIDError
@@ -117,13 +117,13 @@ def login():
 
 
 def create_account():
-    global user
+    global current_user
     while True:
         try:
             name = input('Enter your name: ')
             password = getpass('Enter your password: ')
-            user = User(generate_user_id(), name, password)
-            library.add_new_user(user)
+            current_user = User(generate_user_id(), name, password)
+            library.add_new_user(current_user)
             user_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             print(e)
@@ -144,9 +144,9 @@ def user_interface():
                 elif choice == 2:
                     search_book_user_interface()
                 elif choice == 3:
-                    print(user.get_borrowed_books())
-                    print(user.get_history())
-                    print(user.get_reservations())
+                    print(current_user.get_borrowed_books())
+                    print(current_user.get_history())
+                    print(current_user.get_reservations())
                     users_books_interface()
                 elif choice == 4:
                     get_stats(user_interface)
@@ -312,13 +312,12 @@ def library_books_user_interface():
 
 
 def user_operation(operation, errors, interface):
-    global user
     while True:
         try:
             book_id = int(input('Enter book ID: '))
             operation(book_id)
             library.update_data()
-            user_interface()
+            interface()
         except errors as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
@@ -338,7 +337,7 @@ def user_operation(operation, errors, interface):
 
 def borrow_book():
     user_operation(
-        user.borrow_book,
+        current_user.borrow_book,
         (UsersBookError, BorrowedBookError, NoBookIDError),
         library_books_user_interface
     )
@@ -346,7 +345,7 @@ def borrow_book():
 
 def reserve_book():
     user_operation(
-        user.reserve_book,
+        current_user.reserve_book,
         (UsersBookError, NoBookOwnerError, NoBookIDError),
         library_books_user_interface
     )
@@ -379,7 +378,7 @@ def users_books_interface():
 
 def return_book():
     user_operation(
-        user.return_book,
+        current_user.return_book,
         (NotUsersBookError, NoBookIDError),
         users_books_interface
     )
@@ -387,7 +386,7 @@ def return_book():
 
 def use_extension():
     user_operation(
-        user.use_extension,
+        current_user.use_extension,
         (
             NotUsersBookError,
             ReservedBookError,
@@ -400,7 +399,7 @@ def use_extension():
 
 def cancel_reservation():
     user_operation(
-        user.cancel_reservation,
+        current_user.cancel_reservation,
         (NotUsersBookError, NoBookIDError),
         users_books_interface
     )
@@ -524,7 +523,7 @@ def librarian_id_operation(
             else:
                 operation(id)
             library.update_data()
-            librarian_interface()
+            interface()
         except errors as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
@@ -551,7 +550,7 @@ def add_book():
             genre = input('Enter the genre: ')
             book = Book(generate_book_id(), title, author, release_year, genre)
             library.add_new_book(book)
-            librarian_interface()
+            library_books_librarian_interface()
         except (
             EmptyTitleError,
             NoAuthorError,
@@ -570,12 +569,12 @@ def add_user(is_librarian=False):
             name = input('Enter the name: ')
             password = getpass('Enter the password: ')
             if is_librarian:
-                lib = Librarian(generate_librarian_id(), name, password)
-                library.add_new_librarian(lib)
+                librarian = Librarian(generate_librarian_id(), name, password)
+                library.add_new_librarian(librarian)
             else:
                 user = User(generate_user_id(), name, password)
                 library.add_new_user(user)
-            librarian_interface()
+            library_users_librarian_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             print(e)
             answer = input('Do you want to try again? [y/n] ')
@@ -618,7 +617,7 @@ def remove_librarian():
         library_books_librarian_interface,
         'librarian',
         new_id=None,
-        librarian_id=librarian.id
+        librarian_id=current_librarian.id
     )
 
 
@@ -732,5 +731,4 @@ if __name__ == "__main__":
 
 # dodac kolorowy tekst komunikatow
 # dodac komunikaty powitalne, dodania, usuniecia, wypozyczenia, itp.
-# dodac metode zwracajaca wykres slupkowy ze statystykami ksiazek/uzytkownikow
 # dodac docstringi do kazdego pliku
