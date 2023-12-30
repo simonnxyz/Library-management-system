@@ -239,9 +239,11 @@ class User:
                 'ID: ' + str(self.id) +
                 ', Name: ' + self.name +
                 ', Password: ' + self.password +
-                ', Borrowed books: ' + ', '.join(self.borrowed_books) +
-                ', Reservations: ' + ', '.join(self.reservations) +
-                ', Borrowing history: ' + ', '.join(self.borrowing_history)
+                ', Borrowed books: ' +
+                ', '.join(map(str, self.borrowed_books)) +
+                ', Reservations: ' + ', '.join(map(str, self.reservations)) +
+                ', Borrowing history: ' +
+                ', '.join(map(str, self.borrowing_history))
                 )
 
     def __str__(self):

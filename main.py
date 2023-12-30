@@ -62,6 +62,20 @@ def main():
     library_start()
 
 
+def try_again_later():
+    message = ('You have exceeded the maximum number ' +
+               'of attempts. Please try again later.')
+    print_with_box(message, len(message) + 2)
+    quit()
+
+
+def error_message(message, interface):
+    print(message)
+    answer = input('Do you want to try again? [y/n] ')
+    if answer.lower() != 'y':
+        interface()
+
+
 def library_start():
     start_options()
     while True:
@@ -82,10 +96,7 @@ def library_start():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def login():
@@ -105,16 +116,9 @@ def login():
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                library_start()
+            error_message(e, library_start)
         except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                library_start()
-
+            error_message('Incorrect ID', library_start)
 
 def create_account():
     global current_user
@@ -126,10 +130,7 @@ def create_account():
             library.add_new_user(current_user)
             user_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                library_start()
+            error_message(e, library_start)
 
 
 def user_interface():
@@ -157,10 +158,7 @@ def user_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
         break
 
 
@@ -216,10 +214,7 @@ def search_book_user_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def search_by(option, errors, search_interface):
@@ -229,15 +224,9 @@ def search_by(option, errors, search_interface):
             print(result)
             break
         except errors as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_interface()
+            error_message(e, search_interface)
         except ValueError:
-            print('Incorrect input.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                search_interface()
+            error_message('Incorrect input.', search_interface)
 
 
 def search_keyword(search_interface):
@@ -305,10 +294,7 @@ def library_books_user_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def user_operation(operation, errors, interface):
@@ -319,20 +305,12 @@ def user_operation(operation, errors, interface):
             library.update_data()
             interface()
         except errors as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                user_interface()
-            else:
-                interface()
+            error_message(e, user_interface)
+            interface()
 
         except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                user_interface()
-            else:
-                interface()
+            error_message('Incorrect ID.', user_interface)
+            interface()
 
 
 def borrow_book():
@@ -370,10 +348,7 @@ def users_books_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def return_book():
@@ -440,10 +415,7 @@ def get_stats(interface):
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def librarian_interface():
@@ -472,10 +444,7 @@ def librarian_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
         break
 
 
@@ -498,10 +467,7 @@ def library_books_librarian_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def librarian_id_operation(
@@ -525,20 +491,12 @@ def librarian_id_operation(
             library.update_data()
             interface()
         except errors as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
-            else:
-                interface()
+            error_message(e, librarian_interface)
+            interface()
 
         except ValueError:
-            print('Incorrect ID.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
-            else:
-                interface()
+            error_message('Incorrect ID.', librarian_interface)
+            interface()
 
 
 def add_book():
@@ -557,10 +515,7 @@ def add_book():
             NoReleaseYearError,
             NoGenreError
         ) as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
+            error_message(e, librarian_interface)
 
 
 def add_user(is_librarian=False):
@@ -576,10 +531,7 @@ def add_user(is_librarian=False):
                 library.add_new_user(user)
             library_users_librarian_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
+            error_message(e, librarian_interface)
 
 
 def add_book_copy():
@@ -605,7 +557,7 @@ def remove_user():
     librarian_id_operation(
         library.remove_user,
         (UserWithBooksError, NoBookIDError),
-        library_books_librarian_interface,
+        library_users_librarian_interface,
         'user'
     )
 
@@ -614,7 +566,7 @@ def remove_librarian():
     librarian_id_operation(
         library.remove_librarian,
         (NoLibrarianIDError, NoBookIDError, RemoveYourselfError),
-        library_books_librarian_interface,
+        library_users_librarian_interface,
         'librarian',
         new_id=None,
         librarian_id=current_librarian.id
@@ -673,10 +625,7 @@ def search_book_librarian_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def library_users_librarian_interface():
@@ -700,10 +649,7 @@ def library_users_librarian_interface():
             except ValueError:
                 print('Invalid input, try again.')
         else:
-            message = ('You have exceeded the maximum number ' +
-                       'of attempts. Please try again later.')
-            print_with_box(message, len(message) + 2)
-            quit()
+            try_again_later()
 
 
 def search_users_librarian():
@@ -714,15 +660,9 @@ def search_users_librarian():
             print(library.search_user(keyword))
             break
         except (NoKeywordError, KeywordNotFoundError) as e:
-            print(e)
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
+            error_message(e, librarian_interface)
         except ValueError:
-            print('Incorrect input.')
-            answer = input('Do you want to try again? [y/n] ')
-            if answer.lower() != 'y':
-                librarian_interface()
+            error_message('Incorrect input.', librarian_interface)
 
 
 if __name__ == "__main__":
