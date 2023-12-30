@@ -275,7 +275,7 @@ def test_library_add_librarian():
     library = Library()
     library.add_new_librarian(librarian)
     assert library.librarians[-1] == librarian.__dict__()
-    library.remove_librarian(id)
+    library.remove_librarian(id, generate_librarian_id())
 
 
 def test_library_remove_librarian():
@@ -283,14 +283,14 @@ def test_library_remove_librarian():
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
     library = Library()
     library.add_new_librarian(librarian)
-    library.remove_librarian(id)
+    library.remove_librarian(id, generate_librarian_id())
     assert library.librarians != [librarian.__dict__()]
 
 
 def test_library_remove_missing_librarian():
     library = Library()
     with pytest.raises(NoLibrarianIDError):
-        library.remove_librarian(2222)
+        library.remove_librarian(2222, generate_librarian_id())
 
 
 def test_library_available_authors():
@@ -448,9 +448,8 @@ def test_library_get_books_stats():
     library = Library()
     library.add_new_book(book2)
     library.add_new_book(book)
-    msg = 'Title - loans\n' + 'The Plague - 1\n' + '1984 - 2'
     library._books = [library.books[-2], library.books[-1]]
-    assert library.get_books_stats() == msg
+    assert library.get_books_stats() == {'The Plague': 1, '1984': 2}
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -473,8 +472,7 @@ def test_library_get_users_stats():
     library.add_new_user(user)
     library.add_new_user(user2)
     library._users = [library.users[-2], library.users[-1]]
-    msg = 'Name - loans\n' + 'Jan Kowalski - 2\n' + 'Adam Nowak - 1'
-    assert library.get_users_stats() == msg
+    assert library.get_users_stats() == {'Jan Kowalski': 2, 'Adam Nowak': 1}
     library.update_data()
     del library._users[-2]
     del library._users[-1]
@@ -505,4 +503,4 @@ def test_library_login_librarian_check():
     library.add_new_librarian(librarian)
     librarian_login = library.login_role_check(id, librarian.password)
     assert librarian.__dict__() == librarian_login
-    library.remove_librarian(id)
+    library.remove_librarian(id, generate_librarian_id())
