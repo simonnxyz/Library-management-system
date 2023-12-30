@@ -71,3 +71,9 @@ def librarians_users_options():
     print_with_box_down('3 -> Remove the user', 27)
     print_with_box_down('4 -> Remove the librarian', 27)
     print_with_box_down('5 -> Go back', 27)
+
+
+def stats_options():
+    print_with_box('1 -> Books stats', 18)
+    print_with_box_down('2 -> Users stats', 18)
+    print_with_box_down('3 -> Go back', 18)

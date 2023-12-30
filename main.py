@@ -2,6 +2,8 @@ from class_book import Book
 from class_library import Library
 from class_user import User, Librarian
 from getpass import getpass
+from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator as max
 from generate_id import (
     generate_book_id,
     generate_user_id,
@@ -9,7 +11,6 @@ from generate_id import (
 )
 from options_lists import (
     print_with_box,
-    print_with_box_down,
     print_with_box_up,
     start_options,
     user_options,
@@ -19,6 +20,7 @@ from options_lists import (
     librarian_options,
     librarians_books_options,
     librarians_users_options,
+    stats_options,
 )
 from errors import (
     WrongPasswordError,
@@ -147,7 +149,7 @@ def user_interface():
                     print(user.get_reservations())
                     users_books_interface()
                 elif choice == 4:
-                    get_stats()
+                    get_stats(user_interface)
                 elif choice == 5:
                     library_start()
                 else:
@@ -404,8 +406,45 @@ def cancel_reservation():
     )
 
 
-def get_stats():
-    pass
+def get_stats(interface):
+    stats_options()
+    while True:
+        for _ in range(3):
+            try:
+                choice = int(input('Enter your choice: '))
+                if choice == 1:
+                    books = list(library.get_books_stats().keys())
+                    stats = list(library.get_books_stats().values())
+                    plt.barh(books, stats)
+                    plt.xlabel("Titles")
+                    plt.ylabel("Total loans")
+                    plt.title("Books stats")
+                    plt.gca().xaxis.set_major_locator(max(integer=True))
+                    plt.tight_layout()
+                    plt.show()
+                    get_stats(interface)
+                elif choice == 2:
+                    users = list(library.get_users_stats().keys())
+                    stats = list(library.get_users_stats().values())
+                    plt.barh(users, stats)
+                    plt.ylabel("Names")
+                    plt.xlabel("Borrowed books")
+                    plt.title("Users stats")
+                    plt.gca().xaxis.set_major_locator(max(integer=True))
+                    plt.tight_layout()
+                    plt.show()
+                    get_stats(interface)
+                elif choice == 3:
+                    interface()
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid input, try again.')
+        else:
+            message = ('You have exceeded the maximum number ' +
+                       'of attempts. Please try again later.')
+            print_with_box(message, len(message) + 2)
+            quit()
 
 
 def librarian_interface():
@@ -426,7 +465,7 @@ def librarian_interface():
                     search_users_librarian()
                     library_users_librarian_interface()
                 elif choice == 5:
-                    get_stats()
+                    get_stats(librarian_interface)
                 elif choice == 6:
                     library_start()
                 else:
@@ -689,3 +728,9 @@ def search_users_librarian():
 
 if __name__ == "__main__":
     main()
+
+
+# dodac kolorowy tekst komunikatow
+# dodac komunikaty powitalne, dodania, usuniecia, wypozyczenia, itp.
+# dodac metode zwracajaca wykres slupkowy ze statystykami ksiazek/uzytkownikow
+# dodac docstringi do kazdego pliku

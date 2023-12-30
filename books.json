@@ -5,7 +5,10 @@
         "author": "George Orwell",
         "release_year": 1949,
         "genre": "Dystopian fiction",
-        "loan_history": [],
+        "loan_history": [
+            3458,
+            3458
+        ],
         "current_owner": null,
         "extensions": 0,
         "reservations": [],
@@ -17,7 +20,9 @@
         "author": "Albert Camus",
         "release_year": 1947,
         "genre": "Philosophical novel",
-        "loan_history": [],
+        "loan_history": [
+            3458
+        ],
         "current_owner": null,
         "extensions": 0,
         "reservations": [],
@@ -29,10 +34,13 @@
         "author": "Andrzej Sapkowski",
         "release_year": 1993,
         "genre": "Fantasy fiction",
-        "loan_history": [],
-        "current_owner": null,
-        "extensions": 0,
+        "loan_history": [
+            3458,
+            9659
+        ],
+        "current_owner": 9659,
+        "extensions": 3,
         "reservations": [],
-        "return_date": null
+        "return_date": "2024-01-29"
     }
 ]

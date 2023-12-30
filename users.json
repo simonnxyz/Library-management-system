@@ -5,14 +5,23 @@
         "password": "haslo123",
         "borrowed_books": [],
         "reservations": [],
-        "borrowing_history": []
+        "borrowing_history": [
+            7303,
+            1626,
+            7303,
+            2138
+        ]
     },
     {
         "id": 9659,
         "name": "Zofia Adamska",
         "password": "haslo123",
-        "borrowed_books": [],
+        "borrowed_books": [
+            2138
+        ],
         "reservations": [],
-        "borrowing_history": []
+        "borrowing_history": [
+            2138
+        ]
     }
 ]
