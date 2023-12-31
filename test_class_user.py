@@ -679,3 +679,14 @@ def test_user_return_reserved_book():
     del library._users[-1]
     write_json('users.json', library.users)
     write_json('books.json', library.books)
+
+
+def test_user_search_info():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    assert user.search_info() == (
+                'ID: ' + str(id) +
+                ', Name: ' + 'Jan Kowalski' +
+                ', Password: ' + 'haslo123' +
+                ', Borrowed books: ' + ', Reservations: ' +
+                ', Borrowing history: ')

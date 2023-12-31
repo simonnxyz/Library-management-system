@@ -234,7 +234,6 @@ class User:
         self.borrowed_remove(book_id)
 
     def search_info(self):
-        # dodac testy
         return (
                 'ID: ' + str(self.id) +
                 ', Name: ' + self.name +
@@ -296,7 +295,6 @@ class Librarian(User):
         }
 
     def search_info(self):
-        # dodac testy
         return (
                 'ID: ' + str(self.id) +
                 ', Name: ' + self.name +

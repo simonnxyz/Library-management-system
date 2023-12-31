@@ -120,6 +120,7 @@ def login():
         except ValueError:
             error_message('Incorrect ID', library_start)
 
+
 def create_account():
     global current_user
     while True:
@@ -177,36 +178,24 @@ def search_book_user_interface():
                         search_genre(search_book_user_interface)
                         library_books_user_interface()
                     except GenresNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            user_interface()
-                        else:
-                            search_book_user_interface()
+                        error_message(e, user_interface)
+                        search_book_user_interface()
                 elif choice == 3:
                     try:
                         print('\n'.join(library.available_authors()))
                         search_author(search_book_user_interface)
                         library_books_user_interface()
                     except AuthorsNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            user_interface()
-                        else:
-                            search_book_user_interface()
+                        error_message(e, user_interface)
+                        search_book_user_interface()
                 elif choice == 4:
                     try:
                         print('\n'.join(library.available_years()))
                         search_year(search_book_user_interface)
                         library_books_user_interface()
                     except YearsNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            user_interface()
-                        else:
-                            search_book_user_interface()
+                        error_message(e, user_interface)
+                        search_book_user_interface()
                 elif choice == 5:
                     user_interface()
                 else:
@@ -588,36 +577,24 @@ def search_book_librarian_interface():
                         search_genre(search_book_librarian_interface)
                         library_books_librarian_interface()
                     except GenresNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            librarian_interface()
-                        else:
-                            search_book_librarian_interface()
+                        error_message(e, librarian_interface)
+                        search_book_librarian_interface()
                 elif choice == 3:
                     try:
                         print('\n'.join(library.available_authors()))
                         search_author(search_book_librarian_interface)
                         library_books_librarian_interface()
                     except AuthorsNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            librarian_interface()
-                        else:
-                            search_book_librarian_interface()
+                        error_message(e, librarian_interface)
+                        search_book_librarian_interface()
                 elif choice == 4:
                     try:
                         print('\n'.join(library.available_years()))
                         search_year(search_book_librarian_interface)
                         library_books_librarian_interface()
                     except YearsNotFoundError as e:
-                        print(e)
-                        answer = input('Do you want to try again? [y/n] ')
-                        if answer.lower() != 'y':
-                            librarian_interface()
-                        else:
-                            search_book_librarian_interface()
+                        error_message(e, librarian_interface)
+                        search_book_librarian_interface()
                 elif choice == 5:
                     librarian_interface()
                 else:
@@ -669,6 +646,6 @@ if __name__ == "__main__":
     main()
 
 
-# dodac kolorowy tekst komunikatow
+# dodac kolorowy tekst komunikatow z nowa metoda
 # dodac komunikaty powitalne, dodania, usuniecia, wypozyczenia, itp.
 # dodac docstringi do kazdego pliku

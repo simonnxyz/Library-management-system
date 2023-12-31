@@ -138,7 +138,6 @@ class Book:
         self.dict_update()
 
     def borrow_info(self):
-        # dodac testy i uzyc w main
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
@@ -148,7 +147,6 @@ class Book:
                 )
 
     def history_info(self):
-        # dodac testy i uzyc w main
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
@@ -156,7 +154,6 @@ class Book:
                 )
 
     def reservation_info(self, id):
-        # dodac testy i uzyc w main
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +

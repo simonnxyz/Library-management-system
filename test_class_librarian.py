@@ -48,3 +48,12 @@ def test_librarian_dict():
             "name": 'Adam Nowak',
             "password": 'admin123',
         }
+
+
+def test_librarian_search_info():
+    id = generate_librarian_id()
+    librarian = Librarian(id, 'Adam Nowak', 'admin123')
+    assert librarian.search_info() == (
+                'ID: ' + str(id) +
+                ', Name: ' + 'Adam Nowak' +
+                ', Password: ' + 'admin123')

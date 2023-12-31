@@ -221,3 +221,41 @@ def test_book_extend_return_date():
     assert book.return_date == date.today() + timedelta(days=30)
     book.extend_return_date()
     assert book.return_date == date.today() + 2 * timedelta(days=30)
+
+
+def test_book_borrow_info():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.borrow_info() == (
+                'ID: ' + str(id) +
+                ', Title: 1984' +
+                ', Author: George Orwell' +
+                ', Return date: None' + ', Reservations: 0')
+
+
+def test_book_history_info():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    assert book.history_info() == (
+                'ID: ' + str(id) +
+                ', Title: 1984' +
+                ', Author: George Orwell')
+
+
+def test_book_reservation_info():
+    id = generate_book_id()
+    book = Book(
+        id,
+        '1984',
+        'George Orwell',
+        1949,
+        'Dystopian fiction',
+        reservations=[2222]
+        )
+    assert book.reservation_info(2222) == (
+                'ID: ' + str(id) +
+                ', Title: 1984' +
+                ', Author: George Orwell' +
+                ', Return date: None' +
+                ', Position in queue: 1'
+                )
