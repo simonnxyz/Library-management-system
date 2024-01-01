@@ -1,17 +1,7 @@
-def print_with_box(message, length):
-    print(f'+{"-"*length}+')
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-    print(f'+{"-"*length}+')
-
-
-def print_with_box_up(message, length):
-    print(f'+{"-"*length}+')
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-
-
-def print_with_box_down(message, length):
-    print(f'| {message}' + ' '*(length-len(message)-1) + '|')
-    print(f'+{"-"*length}+')
+from print_methods import (
+    print_with_box,
+    print_with_box_down
+)
 
 
 def start_options():
