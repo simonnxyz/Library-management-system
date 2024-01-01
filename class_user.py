@@ -294,12 +294,6 @@ class User:
                 ', '.join(map(str, self.borrowing_history))
                 )
 
-    def __str__(self):
-        """
-        Returns a welcome message with the user's name and ID.
-        """
-        return f'Welcome to our library, {self.name}! Your ID is {self.id}'
-
     def __dict__(self):
         """
         Returns a dictionary representation of the user's attributes.
@@ -329,12 +323,6 @@ class Librarian(User):
             password: str,
             ):
         super().__init__(id, name, password)
-
-    def __str__(self):
-        """
-        Returns a welcome message with the librarian's name and ID.
-        """
-        return f'Welcome, {self.name}! (Librarian) Your ID is {self.id}'
 
     def __dict__(self):
         """

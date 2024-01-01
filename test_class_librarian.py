@@ -33,13 +33,6 @@ def test_librarian_short_password():
         Librarian(generate_librarian_id(), 'Adam Nowak', 'admin')
 
 
-def test_librarian_login_info():
-    id = generate_librarian_id()
-    librarian = Librarian(id, 'Adam Nowak', 'admin123')
-    info = f'Welcome, Adam Nowak! (Librarian) Your ID is {id}'
-    assert str(librarian) == info
-
-
 def test_librarian_dict():
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')

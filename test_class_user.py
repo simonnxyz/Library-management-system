@@ -155,13 +155,6 @@ def test_user_get_reservations_empty():
     assert user.get_reservations() == info
 
 
-def test_user_login_info():
-    id = generate_user_id()
-    user = User(id, 'Jan Kowalski', 'haslo123')
-    info = f'Welcome to our library, Jan Kowalski! Your ID is {id}'
-    assert str(user) == info
-
-
 def test_user_dict():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
