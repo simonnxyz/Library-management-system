@@ -24,6 +24,7 @@ from errors import (
     UnavailableYearError,
     NoBooksError,
     NoUsersError,
+    RemoveYourselfError,
 )
 
 
@@ -140,7 +141,7 @@ def test_library_remove_user():
     library = Library()
     library.add_new_user(user)
     library.remove_user(id)
-    assert library.users != [user.__dict__()]
+    assert user.__dict__() not in library.users
 
 
 def test_library_remove_missing_user():
@@ -284,7 +285,17 @@ def test_library_remove_librarian():
     library = Library()
     library.add_new_librarian(librarian)
     library.remove_librarian(id, generate_librarian_id())
-    assert library.librarians != [librarian.__dict__()]
+    assert librarian.__dict__() not in library.librarians
+
+
+def test_library_remove_librarian_yourself():
+    id = generate_librarian_id()
+    librarian = Librarian(id, 'Adam Nowak', 'admin123')
+    library = Library()
+    library.add_new_librarian(librarian)
+    with pytest.raises(RemoveYourselfError):
+        library.remove_librarian(id, id)
+    library.remove_librarian(id, generate_librarian_id())
 
 
 def test_library_remove_missing_librarian():
@@ -449,7 +460,10 @@ def test_library_get_books_stats():
     library.add_new_book(book2)
     library.add_new_book(book)
     library._books = [library.books[-2], library.books[-1]]
-    assert library.get_books_stats() == {'The Plague': 1, '1984': 2}
+    assert library.get_books_stats() == {
+        f'The Plague ({id2})': 1,
+        f'1984 ({id})': 2
+    }
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -472,7 +486,10 @@ def test_library_get_users_stats():
     library.add_new_user(user)
     library.add_new_user(user2)
     library._users = [library.users[-2], library.users[-1]]
-    assert library.get_users_stats() == {'Jan Kowalski': 2, 'Adam Nowak': 1}
+    assert library.get_users_stats() == {
+        f'Jan Kowalski ({id})': 2,
+        f'Adam Nowak ({id2})': 1
+    }
     library.update_data()
     del library._users[-2]
     del library._users[-1]
@@ -504,3 +521,65 @@ def test_library_login_librarian_check():
     librarian_login = library.login_role_check(id, librarian.password)
     assert librarian.__dict__() == librarian_login
     library.remove_librarian(id, generate_librarian_id())
+
+
+def test_library_available_books_info():
+    id = generate_book_id()
+    book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
+    id2 = generate_book_id()
+    book2 = Book(id2, 'The Plague', 'A. Camus', 1947, 'Philosophical novel')
+    library = Library()
+    library.add_new_book(book2)
+    library.add_new_book(book)
+    library._books = [library.books[-2], library.books[-1]]
+    assert library.available_books_info() == f'{str(book2)}\n{str(book)}'
+    library.update_data()
+    del library._books[-2]
+    del library._books[-1]
+    write_json('books.json', library.books)
+
+
+def test_library_users_librarians():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    id2 = generate_librarian_id()
+    librarian = Librarian(id2, 'Adam Nowak', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    library.add_new_librarian(librarian)
+    library._users = [library.users[-1]]
+    library._librarians = [library.librarians[-1]]
+    result = f'{user.search_info()}\n{librarian.search_info()}'
+    assert library.users_librarians() == result
+    library.update_data()
+    del library._librarians[-1]
+    del library._users[-1]
+    write_json('users.json', library.users)
+    write_json('librarians.json', library.librarians)
+
+
+def test_library_search_user():
+    id = generate_user_id()
+    user = User(id, 'Jan Kowalski', 'haslo123')
+    library = Library()
+    library.add_new_user(user)
+    library._users = [library.users[-1]]
+    assert library.search_user('jan') == user.search_info()
+    assert library.search_user(id) == user.search_info()
+    library.update_data()
+    del library._users[-1]
+    write_json('users.json', library.users)
+
+
+def test_library_search_user_no_keyword():
+    library = Library()
+    library._users = []
+    with pytest.raises(NoKeywordError):
+        library.search_user('')
+
+
+def test_library_search_user_not_found():
+    library = Library()
+    library._users = []
+    with pytest.raises(KeywordNotFoundError):
+        library.search_user('test')

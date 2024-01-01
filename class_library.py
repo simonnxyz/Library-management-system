@@ -176,7 +176,6 @@ class Library:
         write_json('librarians.json', self.librarians)
 
     def remove_librarian(self, remove_id: int, librarian_id: int):
-        # dodac testy
         if librarian_id == remove_id:
             raise RemoveYourselfError
         updated_librarians = []
@@ -195,7 +194,7 @@ class Library:
         stats = {}
         for book_info in self.books:
             book = Book(**book_info)
-            stats[book.title] = len(book.loan_history)
+            stats[f'{book.title} ({book.id})'] = len(book.loan_history)
         return stats
 
     def get_users_stats(self):
@@ -204,11 +203,10 @@ class Library:
         stats = {}
         for user_info in self.users:
             user = User(**user_info)
-            stats[user.name] = len(user.borrowing_history)
+            stats[f'{user.name} ({user.id})'] = len(user.borrowing_history)
         return stats
 
     def available_books_info(self):
-        # dodac testy
         info = []
         for book_info in self.books:
             book = Book(**book_info)
@@ -216,7 +214,6 @@ class Library:
         return '\n'.join(info)
 
     def users_librarians(self):
-        # dodac testy
         users_librarians = []
         for user_info in self.users:
             user = User(**user_info)
@@ -227,7 +224,6 @@ class Library:
         return '\n'.join(users_librarians)
 
     def search_user(self, keyword):
-        # dodac testy
         if not keyword:
             raise NoKeywordError
         searches = []
@@ -242,8 +238,8 @@ class Library:
             values = (librarian_info["id"], librarian_info["name"])
             for value in values:
                 if str(keyword).lower() in str(value).lower():
-                    lib = Librarian(**librarian_info)
-                    searches.append(lib.search_info())
+                    librarian = Librarian(**librarian_info)
+                    searches.append(librarian.search_info())
                     break
         if not searches:
             raise KeywordNotFoundError
