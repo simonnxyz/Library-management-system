@@ -18,7 +18,13 @@ from json_methods import read_json, write_json
 class User:
     """
     User class representing a library reader.
-    ID range: 2000 - 9999.
+    Attributes:
+    - id: The user's ID (ID range: 2000 - 9999).
+    - name: The user's name.
+    - password: The user's password.
+    - borrowed_books: List of book IDs currently borrowed by the user.
+    - reservations: List of book IDs reserved by the user.
+    - borrowing_history: List of book IDs the user has borrowed in the past.
     """
     def __init__(
             self: str,
@@ -66,13 +72,19 @@ class User:
     def borrowing_history(self):
         return self._borrowing_history
 
-    def change_password(self, new_password):
+    def change_password(self, new_password: str):
+        """
+        Changes the user's password.
+        """
         if len(new_password) < 6:
             raise ShortPasswordError
         self._password = new_password
         self.dict_update()
 
     def dict_update(self):
+        """
+        Updates the user's information in the JSON file.
+        """
         users = read_json("users.json")
         for index, user_info in enumerate(users):
             if user_info["id"] == self.id:
@@ -80,23 +92,39 @@ class User:
                 break
         write_json('users.json', users)
 
-    def history_append(self, book_id):
+    def history_append(self, book_id: int):
+        """
+        Appends a book ID to the user's borrowing history.
+        """
         self._borrowing_history.append(book_id)
         self.dict_update()
 
-    def borrowed_append(self, book_id):
+    def borrowed_append(self, book_id: int):
+        """
+        Adds a book ID to the list of books currently borrowed by the user.
+        """
         self._borrowed_books.append(book_id)
         self.dict_update()
 
-    def borrowed_remove(self, book_id):
+    def borrowed_remove(self, book_id: int):
+        """
+        Removes a book ID from the list of books
+        currently borrowed by the user.
+        """
         self._borrowed_books.remove(book_id)
         self.dict_update()
 
-    def reservations_append(self, book_id):
+    def reservations_append(self, book_id: int):
+        """
+        Adds a book ID to the list of reservations made by the user.
+        """
         self._reservations.append(book_id)
         self.dict_update()
 
-    def reservations_remove(self, book_id):
+    def reservations_remove(self, book_id: int):
+        """
+        Removes a book ID from the list of reservations made by the user.
+        """
         self._reservations.remove(book_id)
         self.dict_update()
 
@@ -135,6 +163,9 @@ class User:
             return f'Your history:\n{history}'
 
     def get_reservations(self):
+        """
+        Returns the list of books that the user has reserved.
+        """
         info = 'You do not have any reservations at the moment.'
         if not self.reservations:
             return info
@@ -148,7 +179,10 @@ class User:
             reservations = '\n'.join(books)
             return f'Your reservations:\n{reservations}'
 
-    def borrow_book(self, book_id):
+    def borrow_book(self, book_id: int):
+        """
+        Borrows a book with the given book ID.
+        """
         books = read_json('books.json')
         for book_info in books:
             if book_info["id"] == book_id:
@@ -167,7 +201,10 @@ class User:
         self.history_append(book_id)
         self.borrowed_append(book_id)
 
-    def use_extension(self, book_id):
+    def use_extension(self, book_id: int):
+        """
+        Extends the return date for a borrowed book.
+        """
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
@@ -184,7 +221,10 @@ class User:
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
 
-    def reserve_book(self, book_id):
+    def reserve_book(self, book_id: int):
+        """
+        Reserves a book with the given book ID.
+        """
         books = read_json('books.json')
         for book_info in books:
             if book_info["id"] == book_id:
@@ -199,7 +239,10 @@ class User:
             raise NoBookIDError(book_id)
         self.reservations_append(book.id)
 
-    def cancel_reservation(self, book_id):
+    def cancel_reservation(self, book_id: int):
+        """
+        Cancels a reservation for a book with the given book ID.
+        """
         books = read_json('books.json')
         users = read_json('users.json')
         for book_info in books:
@@ -212,7 +255,10 @@ class User:
         if users == read_json('users.json'):
             raise NoBookIDError(book_id)
 
-    def return_book(self, book_id):
+    def return_book(self, book_id: int):
+        """
+        Returns a borrowed book with the given book ID.
+        """
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
@@ -234,6 +280,9 @@ class User:
         self.borrowed_remove(book_id)
 
     def search_info(self):
+        """
+        Returns a string representation of the user's information.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Name: ' + self.name +
@@ -268,7 +317,10 @@ class User:
 class Librarian(User):
     """
     Librarian class representing a library employee.
-    ID range: 1000 - 1999.
+    Attributes:
+    - id: The librarian's ID (ID range: 1000 - 1999.).
+    - name: The librarian's name.
+    - password: The librarian's password.
     """
     def __init__(
             self,
@@ -280,13 +332,13 @@ class Librarian(User):
 
     def __str__(self):
         """
-        Returns a welcome message with the librarians's name and ID.
+        Returns a welcome message with the librarian's name and ID.
         """
         return f'Welcome, {self.name}! (Librarian) Your ID is {self.id}'
 
     def __dict__(self):
         """
-        Returns a dictionary representation of the librarians's attributes.
+        Returns a dictionary representation of the librarian's attributes.
         """
         return {
             "id": self.id,
@@ -295,6 +347,9 @@ class Librarian(User):
         }
 
     def search_info(self):
+        """
+        Returns a string representation of the librarian's information.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Name: ' + self.name +

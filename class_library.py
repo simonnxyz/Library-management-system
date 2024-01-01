@@ -46,7 +46,7 @@ class Library:
 
     def login_role_check(self, id: int, password: str):
         """
-        Check the login credentials for a user or librarian.
+        Checks the login credentials for a user or librarian.
         """
         for user_info in self.users:
             if user_info["id"] == id:
@@ -61,7 +61,7 @@ class Library:
 
     def update_data(self):
         """
-        Update library data by re-reading information from JSON files.
+        Updates library data by re-reading information from JSON files.
         """
         self._books = read_json('books.json')
         self._users = read_json('users.json')
@@ -69,7 +69,7 @@ class Library:
 
     def add_new_book(self, new_book: Book) -> str:
         """
-        Add a new book to the library.
+        Adds a new book to the library.
         """
         self._books.append(new_book.__dict__())
         write_json('books.json', self.books)
@@ -77,7 +77,7 @@ class Library:
 
     def remove_book(self, book_id: int) -> str:
         """
-        Remove a book from the library.
+        Removes a book from the library.
         """
         updated_books = []
         for book_info in self.books:
@@ -93,7 +93,7 @@ class Library:
 
     def add_copy_of_book(self, book_id: int, new_id: int) -> str:
         """
-        Add a copy of an existing book to the library.
+        Adds a copy of an existing book to the library.
         """
         book_copy = None
         for book_info in self.books:
@@ -111,7 +111,7 @@ class Library:
 
     def search_book_by_keyword(self, keyword: str) -> str:
         """
-        Search for books in the library by a keyword.
+        Searches for books in the library by a keyword.
         """
         if not keyword:
             raise NoKeywordError
@@ -129,7 +129,7 @@ class Library:
 
     def available_genres(self):
         """
-        Get a list of available genres in the library.
+        Returns a list of available genres in the library.
         """
         genres = [book_info["genre"] for book_info in self.books]
         if not genres:
@@ -138,7 +138,7 @@ class Library:
 
     def search_book_by_genre(self, chosen_genre: str) -> str:
         """
-        Search for books in the library by genre.
+        Searches for books in the library by genre.
         """
         if chosen_genre not in self.available_genres():
             raise UnavailableGenreError
@@ -151,7 +151,7 @@ class Library:
 
     def available_authors(self):
         """
-        Get a list of available authors in the library.
+        Returns a list of available authors in the library.
         """
         authors = [book_info["author"] for book_info in self.books]
         if not authors:
@@ -160,7 +160,7 @@ class Library:
 
     def search_book_by_author(self, chosen_author: str) -> str:
         """
-        Search for books in the library by author.
+        Searches for books in the library by author.
         """
         if chosen_author not in self.available_authors():
             raise UnavailableAuthorError
@@ -173,7 +173,7 @@ class Library:
 
     def available_years(self):
         """
-        Get a list of available release years in the library.
+        Returns a list of available release years in the library.
         """
         years = [str(book_info["release_year"]) for book_info in self.books]
         if not years:
@@ -182,7 +182,7 @@ class Library:
 
     def search_book_by_year(self, chosen_year: str) -> str:
         """
-        Search for books in the library by release year.
+        Searches for books in the library by release year.
         """
         if chosen_year not in self.available_years():
             raise UnavailableYearError
@@ -195,14 +195,14 @@ class Library:
 
     def add_new_user(self, new_user: User):
         """
-        Add a new user to the library.
+        Adds a new user to the library.
         """
         self._users.append(new_user.__dict__())
         write_json('users.json', self.users)
 
     def remove_user(self, user_id: int):
         """
-        Remove a user from the library.
+        Removes a user from the library.
         """
         updated_users = []
         for user_info in self.users:
@@ -219,14 +219,14 @@ class Library:
 
     def add_new_librarian(self, new_librarian: Librarian):
         """
-        Add a new librarian to the library.
+        Adds a new librarian to the library.
         """
         self._librarians.append(new_librarian.__dict__())
         write_json('librarians.json', self.librarians)
 
     def remove_librarian(self, remove_id: int, librarian_id: int):
         """
-        Remove a librarian from the library.
+        Removes a librarian from the library.
         """
         if librarian_id == remove_id:
             raise RemoveYourselfError
@@ -242,7 +242,7 @@ class Library:
 
     def get_books_stats(self):
         """
-        Get statistics on the number of times each book has been borrowed.
+        Returns statistics on the number of times each book has been borrowed.
         """
         if not self.books:
             raise NoBooksError
@@ -254,7 +254,7 @@ class Library:
 
     def get_users_stats(self):
         """
-        Get statistics on the number of books borrowed by each user.
+        Returns statistics on the number of books borrowed by each user.
         """
         if not self.users:
             raise NoUsersError
@@ -266,7 +266,7 @@ class Library:
 
     def available_books_info(self) -> str:
         """
-        Get information on all available books in the library.
+        Returns information on all available books in the library.
         """
         info = []
         for book_info in self.books:
@@ -276,7 +276,7 @@ class Library:
 
     def users_librarians(self) -> str:
         """
-        Get information on all users and librarians in the library.
+        Returns information on all users and librarians in the library.
         """
         users_librarians = []
         for user_info in self.users:
@@ -289,7 +289,7 @@ class Library:
 
     def search_user(self, keyword) -> str:
         """
-        Search for users or librarians in the library by a keyword.
+        Searches for users or librarians in the library by a keyword.
         """
         if not keyword:
             raise NoKeywordError
