@@ -12,7 +12,17 @@ from json_methods import read_json, write_json
 class Book:
     """
     Book class representing a book in the library.
-    ID range: 1000 - 9999.
+    Attributes:
+            id: Unique identifier for the book (ID range: 1000 - 9999).
+            title: Title of the book.
+            author: Author of the book.
+            release_year: Release year of the book.
+            genre: Genre of the book.
+            loan_history: List of user IDs who have borrowed the book before.
+            current_owner: Current owner of the book.
+            extensions: Number of remaining extensions for the book.
+            reservations: List of user IDs who have reserved the book.
+            return_date: Date when the book is expected to be returned.
     """
     def __init__(
             self,
@@ -89,6 +99,12 @@ class Book:
         return self._return_date
 
     def dict_update(self):
+        """
+        Update the book's information in the library's JSON database.
+
+        Reads the existing database, finds the book by ID, updates its
+        information, and writes the modified database back to the file.
+        """
         books = read_json("books.json")
         for index, book_info in enumerate(books):
             if book_info["id"] == self.id:
@@ -96,48 +112,78 @@ class Book:
                 break
         write_json('books.json', books)
 
-    def set_extensions(self, new_extensions):
+    def set_extensions(self, new_extensions: int):
+        """
+        Set the number of extensions for the book
+        """
         if new_extensions < 0:
             raise NegativeExtensionsError
         self._extensions = new_extensions
         self.dict_update()
 
     def remove_extension(self):
+        """
+        Remove one extension from the book.
+        """
         if self.extensions < 1:
             raise NegativeExtensionsError
         self._extensions -= 1
         self.dict_update()
 
-    def set_owner(self, new_owner):
+    def set_owner(self, new_owner: int):
+        """
+        Set a new owner for the book.
+        """
         self._current_owner = new_owner
         self.dict_update()
 
-    def add_reservation(self, reservation):
+    def add_reservation(self, reservation: int):
+        """
+        Add a reservation for the book.
+        """
         self._reservations.append(reservation)
         self.dict_update()
 
-    def remove_reservation(self, reservation):
+    def remove_reservation(self, reservation: int):
+        """
+        Remove a reservation for the book.
+        """
         self._reservations.remove(reservation)
         self.dict_update()
 
-    def remove_first_reservation(self):
+    def remove_first_reservation(self) -> int:
+        """
+        Remove the first reservation for the book.
+        """
         removed = self._reservations.pop(0)
         self.dict_update()
         return removed
 
-    def history_append(self, loan):
+    def history_append(self, loan: int):
+        """
+        Append a loan entry to the book's loan history.
+        """
         self._loan_history.append(loan)
         self.dict_update()
 
     def set_return_date(self, default=date.today() + timedelta(days=30)):
+        """
+        Set the return date for the book (default: 30 days from today).
+        """
         self._return_date = (default if default else None)
         self.dict_update()
 
     def extend_return_date(self):
+        """
+        Extend the return date of the book by 30 days.
+        """
         self._return_date += timedelta(days=30)
         self.dict_update()
 
-    def borrow_info(self):
+    def borrow_info(self) -> str:
+        """
+        Get information about the book for a list of borrowed books.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
@@ -146,14 +192,21 @@ class Book:
                 ', Reservations: ' + str(len(self.reservations))
                 )
 
-    def history_info(self):
+    def history_info(self) -> str:
+        """
+        Get information about the book for a list of
+        books that the user has borrowed in the past.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
                 ', Author: ' + self.author
                 )
 
-    def reservation_info(self, id):
+    def reservation_info(self, id: int) -> str:
+        """
+        Get information about the book for a list of reserved books.
+        """
         return (
                 'ID: ' + str(self.id) +
                 ', Title: ' + self.title +
