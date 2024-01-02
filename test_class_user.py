@@ -680,8 +680,10 @@ def test_user_search_info():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123')
     assert user.search_info() == (
-                'ID: ' + str(id) +
-                ', Name: ' + 'Jan Kowalski' +
-                ', Password: ' + 'haslo123' +
-                ', Borrowed books: ' + ', Reservations: ' +
-                ', Borrowing history: ')
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) +
+                ', ' + '\033[1m' + 'Name: ' + '\033[0m' + 'Jan Kowalski' +
+                ', ' + '\033[1m' + 'Password: ' + '\033[0m' + 'haslo123' +
+                ', ' + '\033[1m' + 'Borrowed books: ' + '\033[0m' +
+                ', ' + '\033[1m' + 'Reservations: ' + '\033[0m' +
+                ', ' + '\033[1m' + 'Borrowing history: ' + '\033[0m'
+    )

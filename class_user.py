@@ -13,6 +13,7 @@ from errors import (
 )
 from class_book import Book
 from json_methods import read_json, write_json
+from print_methods import bold
 
 
 class User:
@@ -284,13 +285,14 @@ class User:
         Returns a string representation of the user's information.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Name: ' + self.name +
-                ', Password: ' + self.password +
-                ', Borrowed books: ' +
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Name: ') + self.name +
+                ', ' + bold('Password: ') + self.password +
+                ', ' + bold('Borrowed books: ') +
                 ', '.join(map(str, self.borrowed_books)) +
-                ', Reservations: ' + ', '.join(map(str, self.reservations)) +
-                ', Borrowing history: ' +
+                ', ' + bold('Reservations: ') +
+                ', '.join(map(str, self.reservations)) +
+                ', ' + bold('Borrowing history: ') +
                 ', '.join(map(str, self.borrowing_history))
                 )
 
@@ -339,7 +341,7 @@ class Librarian(User):
         Returns a string representation of the librarian's information.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Name: ' + self.name +
-                ', Password: ' + self.password
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Name: ') + self.name +
+                ', ' + bold('Password: ') + self.password
                 )
