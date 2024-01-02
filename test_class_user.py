@@ -65,6 +65,7 @@ def test_user_get_borrowed_books():
     user.borrow_book(id2)
     library.update_data()
     book._return_date = date.today() + timedelta(days=30)
+    book._extensions = 3
     assert user.borrowed_books == [id2]
     assert user.get_borrowed_books() == [book.borrow_info()]
     user.return_book(id2)

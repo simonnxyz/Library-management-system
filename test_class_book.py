@@ -234,6 +234,7 @@ def test_book_borrow_info():
                                   '1984',
                                   'George Orwell',
                                   0,
+                                  0,
                                   None]
 
 
