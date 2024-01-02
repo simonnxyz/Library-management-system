@@ -261,7 +261,7 @@ class User:
         if users == read_json('users.json'):
             raise NoBookIDError(book_id)
         return ('You have successfully canceled' +
-                f"the reservation for the book '{title}'.")
+                f" the reservation for the book '{title}'.")
 
     def return_book(self, book_id: int):
         """

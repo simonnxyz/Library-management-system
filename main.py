@@ -65,11 +65,17 @@ current_librarian = None
 
 
 def main():
+    """
+    Entry point of the library management system.
+    """
     print_with_box_up(' '*9 + 'Library' + ' '*9, 27)
     library_start()
 
 
 def try_again_later():
+    """
+    Prints a message for exceeding the maximum number of attempts.
+    """
     message = ('You have exceeded the maximum number ' +
                'of attempts. Please try again later.')
     print_with_box(message, len(message) + 2)
@@ -77,6 +83,9 @@ def try_again_later():
 
 
 def error_message(message, interface):
+    """
+    Prints an error message and prompts the user to try again.
+    """
     print(red(f'! {message}'))
     answer = input('Do you want to try again? [' +
                    green('y') + '/' + red('n') + '] ')
@@ -85,6 +94,9 @@ def error_message(message, interface):
 
 
 def books_table():
+    """
+    Prints a table with information about available books.
+    """
     result = PrettyTable()
     result.field_names = ["ID",
                           "Title",
@@ -98,10 +110,13 @@ def books_table():
                           "Return date"]
     rows = library.available_books_info()
     result.add_rows(rows)
-    return result
+    print(result)
 
 
 def users_librarians_table(users, librarians):
+    """
+    Prints tables with information about users and librarians.
+    """
     if not users:
         print('Users: ' + red('None'))
     else:
@@ -126,6 +141,10 @@ def users_librarians_table(users, librarians):
 
 
 def users_books_table():
+    """
+    Prints tables with information about a user's borrowed books,
+    borrowing history, and reservations.
+    """
     if not current_user.borrowed_books:
         print('Borrowed books: ' + red('None'))
     else:
@@ -164,6 +183,9 @@ def users_books_table():
 
 
 def library_start():
+    """
+    Displays start options and handles user input.
+    """
     start_options()
     while True:
         for _ in range(3):
@@ -187,6 +209,10 @@ def library_start():
 
 
 def login():
+    """
+    Handles user login, validates credentials, and directs
+    to user or librarian interface.
+    """
     global current_user, current_librarian
     while True:
         try:
@@ -213,6 +239,9 @@ def login():
 
 
 def create_account():
+    """
+    Handles the creation of a new user account.
+    """
     global current_user
     while True:
         try:
@@ -230,13 +259,16 @@ def create_account():
 
 
 def user_interface():
+    """
+    Displays user interface options and handles user input.
+    """
     while True:
         user_options()
         for _ in range(3):
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    print(books_table())
+                    books_table()
                     library_books_user_interface()
                 elif choice == 2:
                     search_book_user_interface()
@@ -257,6 +289,9 @@ def user_interface():
 
 
 def search_book_user_interface():
+    """
+    Displays search options for users and handles user input.
+    """
     filters_list()
     while True:
         for _ in range(3):
@@ -300,6 +335,9 @@ def search_book_user_interface():
 
 
 def search_by(option, errors, search_interface):
+    """
+    Helper function to perform a search operation.
+    """
     while True:
         try:
             result = option()
@@ -312,6 +350,9 @@ def search_by(option, errors, search_interface):
 
 
 def search_keyword(search_interface):
+    """
+    Searches for books based on a keyword provided by the user.
+    """
     def keyword():
         global library
         keyword = input('Enter the keyword: ')
@@ -337,6 +378,9 @@ def search_keyword(search_interface):
 
 
 def search_genre(search_interface):
+    """
+    Searches for books based on a genre provided by the user.
+    """
     def genre():
         global library
         genre = input('Enter the genre: ')
@@ -362,6 +406,9 @@ def search_genre(search_interface):
 
 
 def search_author(search_interface):
+    """
+    Searches for books based on an author provided by the user.
+    """
     def author():
         global library
         author = input('Enter the author: ')
@@ -387,6 +434,9 @@ def search_author(search_interface):
 
 
 def search_year(search_interface):
+    """
+    Searches for books based on a release year provided by the user.
+    """
     def year():
         global library
         year = input('Enter the year: ')
@@ -412,6 +462,9 @@ def search_year(search_interface):
 
 
 def library_books_user_interface():
+    """
+    Displays book options for users and handles user input.
+    """
     library_books_options()
     while True:
         for _ in range(3):
@@ -431,13 +484,17 @@ def library_books_user_interface():
             try_again_later()
 
 
-def user_operation(operation, errors, interface):
+def user_operation(operation, errors, interface, table):
+    """
+    Generic function to perform user operations like borrowing, returning, etc.
+    """
     while True:
         try:
             book_id = int(input('Enter book ID: '))
             message = operation(book_id)
-            print(green(str(message)))
             library.update_data()
+            table()
+            print(green(str(message)))
             interface()
         except errors as e:
             error_message(e, user_interface)
@@ -449,22 +506,32 @@ def user_operation(operation, errors, interface):
 
 
 def borrow_book():
+    """
+    Handles the borrowing of a book by a user.
+    """
     user_operation(
         current_user.borrow_book,
         (UsersBookError, BorrowedBookError, NoBookIDError),
-        library_books_user_interface
+        library_books_user_interface, books_table
     )
 
 
 def reserve_book():
+    """
+    Handles the reservation of a book by a user.
+    """
     user_operation(
         current_user.reserve_book,
         (UsersBookError, NoBookOwnerError, NoBookIDError),
-        library_books_user_interface
+        library_books_user_interface, books_table
     )
 
 
 def users_books_interface():
+    """
+    Displays options for users regarding their books,
+    reservations, etc., and handles user input.
+    """
     users_books_options()
     while True:
         for _ in range(3):
@@ -487,14 +554,20 @@ def users_books_interface():
 
 
 def return_book():
+    """
+    Handles the return of a book by a user.
+    """
     user_operation(
         current_user.return_book,
         (NotUsersBookError, NoBookIDError),
-        users_books_interface
+        users_books_interface, users_books_table
     )
 
 
 def use_extension():
+    """
+    Handles the extension of a book loan by a user.
+    """
     user_operation(
         current_user.use_extension,
         (
@@ -503,19 +576,27 @@ def use_extension():
             NotEnoughExtensionsError,
             NoBookIDError
         ),
-        users_books_interface
+        users_books_interface,
+        users_books_table
     )
 
 
 def cancel_reservation():
+    """
+    Handles the cancellation of a book reservation by a user.
+    """
     user_operation(
         current_user.cancel_reservation,
         (NotUsersBookError, NoBookIDError, NotReservedError),
-        users_books_interface
+        users_books_interface, users_books_table
     )
 
 
 def get_stats(interface):
+    """
+    Displays statistics options and handles user
+    input to generate and display statistics.
+    """
     stats_options()
     while True:
         for _ in range(3):
@@ -554,13 +635,16 @@ def get_stats(interface):
 
 
 def librarian_interface():
+    """
+    Displays librarian interface options and handles user input.
+    """
     while True:
         librarian_options()
         for _ in range(3):
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    print(books_table())
+                    books_table()
                     library_books_librarian_interface()
                 elif choice == 2:
                     search_book_librarian_interface()
@@ -585,6 +669,9 @@ def librarian_interface():
 
 
 def library_books_librarian_interface():
+    """
+    Displays books options for librarians and handles user input.
+    """
     librarians_books_options()
     while True:
         for _ in range(3):
@@ -611,9 +698,14 @@ def librarian_id_operation(
         errors,
         interface,
         obj_id,
+        table=books_table,
         new_id=None,
-        librarian_id=None
+        librarian_id=None,
         ):
+    """
+    Generic function to perform librarian operations
+    like adding, removing, etc.
+    """
     global librarian
     while True:
         try:
@@ -624,8 +716,13 @@ def librarian_id_operation(
                 message = operation(id, librarian_id)
             else:
                 message = operation(id)
-            print(green(str(message)))
             library.update_data()
+            if table == users_librarians_table:
+                users, librarians = library.users_librarians()
+                table(users, librarians)
+            else:
+                table()
+            print(green(str(message)))
             interface()
         except errors as e:
             error_message(e, librarian_interface)
@@ -636,6 +733,9 @@ def librarian_id_operation(
 
 
 def add_book():
+    """
+    Handles the addition of a new book by a librarian.
+    """
     while True:
         try:
             title = input('Enter the title: ')
@@ -644,6 +744,7 @@ def add_book():
             genre = input('Enter the genre: ')
             book = Book(generate_book_id(), title, author, release_year, genre)
             message = library.add_new_book(book)
+            books_table()
             print(green(str(message)))
             library_books_librarian_interface()
         except (
@@ -656,6 +757,9 @@ def add_book():
 
 
 def add_user(is_librarian=False):
+    """
+    Handles the addition of a new user or librarian by a librarian.
+    """
     while True:
         try:
             name = input('Enter the name: ')
@@ -663,10 +767,14 @@ def add_user(is_librarian=False):
             if is_librarian:
                 librarian = Librarian(generate_librarian_id(), name, password)
                 message = library.add_new_librarian(librarian)
+                users, librarians = library.users_librarians()
+                users_librarians_table(users, librarians)
                 print(green(str(message)))
             else:
                 user = User(generate_user_id(), name, password)
                 message = library.add_new_user(user)
+                users, librarians = library.users_librarians()
+                users_librarians_table(users, librarians)
                 print(green(str(message)))
             library_users_librarian_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
@@ -674,45 +782,62 @@ def add_user(is_librarian=False):
 
 
 def add_book_copy():
+    """
+    Handles the addition of a new copy of a book by a librarian.
+    """
     librarian_id_operation(
         library.add_copy_of_book,
         NoBookIDError,
         library_books_librarian_interface,
         'book',
-        generate_book_id()
+        new_id=generate_book_id(),
     )
 
 
 def remove_book():
+    """
+    Handles the removal of a book by a librarian.
+    """
     librarian_id_operation(
         library.remove_book,
         (BorrowedBookError, NoBookIDError),
         library_books_librarian_interface,
-        'book'
+        'book',
     )
 
 
 def remove_user():
+    """
+    Handles the removal of a user by a librarian.
+    """
     librarian_id_operation(
         library.remove_user,
         (UserWithBooksError, NoUserIDError),
         library_users_librarian_interface,
-        'user'
+        'user',
+        table=users_librarians_table
     )
 
 
 def remove_librarian():
+    """
+    Handles the removal of a librarian by a librarian.
+    """
     librarian_id_operation(
         library.remove_librarian,
         (NoLibrarianIDError, RemoveYourselfError),
         library_users_librarian_interface,
         'librarian',
         new_id=None,
-        librarian_id=current_librarian.id
+        librarian_id=current_librarian.id,
+        table=users_librarians_table
     )
 
 
 def search_book_librarian_interface():
+    """
+    Displays search options for librarians and handles user input.
+    """
     filters_list()
     while True:
         for _ in range(3):
@@ -756,6 +881,10 @@ def search_book_librarian_interface():
 
 
 def library_users_librarian_interface():
+    """
+    Displays options for librarians regarding
+    library users and handles user input.
+    """
     librarians_users_options()
     while True:
         for _ in range(3):
@@ -780,6 +909,10 @@ def library_users_librarian_interface():
 
 
 def search_users_librarian():
+    """
+    Searches for users or librarians based on
+    a keyword or ID provided by the librarian.
+    """
     global library
     while True:
         try:
