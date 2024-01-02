@@ -167,16 +167,16 @@ def test_library_search_book_by_keyword():
     library = Library()
     library.add_new_book(book)
     library._books = [library.books[-1]]
-    info = (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
-                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
-                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    info = [[id,
+             '1984',
+             'George Orwell',
+             1949,
+             'Dystopian fiction',
+             None,
+             None,
+             0,
+             None,
+             None]]
     result = library.search_book_by_keyword('George')
     assert result == info
     result = library.search_book_by_keyword(1984)
@@ -242,16 +242,16 @@ def test_library_search_by_gerne():
         'Dystopian fiction'
         ]
     result = library.search_book_by_genre('Dystopian fiction')
-    assert result == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
-                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
-                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    assert result == [[id,
+                       '1984',
+                       'George Orwell',
+                       1949,
+                       'Dystopian fiction',
+                       None,
+                       None,
+                       0,
+                       None,
+                       None]]
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -353,16 +353,16 @@ def test_library_search_by_author():
         'George Orwell'
         ]
     result = library.search_book_by_author('George Orwell')
-    assert result == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
-                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
-                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    assert result == [[id,
+                       '1984',
+                       'George Orwell',
+                       1949,
+                       'Dystopian fiction',
+                       None,
+                       None,
+                       0,
+                       None,
+                       None]]
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -424,16 +424,16 @@ def test_library_search_by_year():
     library._books = [library.books[-2], library.books[-1]]
     assert library.available_years() == ['1947', '1949']
     result = library.search_book_by_year('1949')
-    assert result == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
-                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
-                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    assert result == [[id,
+                       '1984',
+                       'George Orwell',
+                       1949,
+                       'Dystopian fiction',
+                       None,
+                       None,
+                       0,
+                       None,
+                       None]]
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -549,7 +549,8 @@ def test_library_available_books_info():
     library.add_new_book(book2)
     library.add_new_book(book)
     library._books = [library.books[-2], library.books[-1]]
-    assert library.available_books_info() == f'{str(book2)}\n{str(book)}'
+    assert library.available_books_info() == [book2.list_info(),
+                                              book.list_info()]
     library.update_data()
     del library._books[-2]
     del library._books[-1]

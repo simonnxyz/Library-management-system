@@ -80,19 +80,19 @@ def test_book_dict():
         }
 
 
-def test_book_str():
+def test_book_list_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
-    assert str(book) == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
-                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
-                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-                )
+    assert book.list_info() == [id,
+                                '1984',
+                                'George Orwell',
+                                1949,
+                                'Dystopian fiction',
+                                None,
+                                None,
+                                0,
+                                None,
+                                None]
 
 
 def test_book_dict_update():
@@ -230,23 +230,20 @@ def test_book_extend_return_date():
 def test_book_borrow_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
-    assert book.borrow_info() == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    assert book.borrow_info() == [id,
+                                  '1984',
+                                  'George Orwell',
+                                  0,
+                                  None]
+
 
 
 def test_book_history_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
-    assert book.history_info() == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell'
-    )
+    assert book.history_info() == [id,
+                                  '1984',
+                                  'George Orwell']
 
 
 def test_book_reservation_info():
@@ -259,10 +256,8 @@ def test_book_reservation_info():
         'Dystopian fiction',
         reservations=[2222]
         )
-    assert book.reservation_info(2222) == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
-                '\033[1m' + 'Position in queue: ' + '\033[0m' + '1'
-    )
+    assert book.reservation_info(2222) == [id,
+                                           '1984',
+                                           'George Orwell',
+                                           1,
+                                           None]

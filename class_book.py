@@ -185,37 +185,33 @@ class Book:
         """
         Returns information about the book for a list of borrowed books.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Title: ') + self.title +
-                ', ' + bold('Author: ') + self.author +
-                ', ' + bold('Return date: ') + str(self.return_date) +
-                ', ' + bold('Reservations: ') + str(len(self.reservations))
-                )
+        return [self.id,
+                self.title,
+                self.author,
+                len(self.reservations),
+                self.return_date
+                ]
 
     def history_info(self) -> str:
         """
         Returns information about the book for a list of
         books that the user has borrowed in the past.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Title: ') + self.title +
-                ', ' + bold('Author: ') + self.author
-                )
+        return [self.id,
+                self.title,
+                self.author,
+                ]
 
     def reservation_info(self, id: int) -> str:
         """
         Returns information about the book for a list of reserved books.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Title: ') + self.title +
-                ', ' + bold('Author: ') + self.author +
-                ', ' + bold('Return date: ') + str(self.return_date) +
-                ', ' + bold('Position in queue: ') +
-                str(self.reservations.index(id) + 1)
-                )
+        return [self.id,
+                self.title,
+                self.author,
+                self.reservations.index(id) + 1,
+                self.return_date
+                ]
 
     def __dict__(self):
         """
@@ -235,17 +231,20 @@ class Book:
             "return_date": self.return_date
         }
 
-    def __str__(self):
+    def list_info(self):
         """
-        Returns a string representation of the book's basic information.
+        Returns a list representation of the book's basic information.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Title: ') + self.title +
-                ', ' + bold('Author: ') + self.author +
-                ', ' + bold('Release year: ') + str(self.release_year) +
-                ', ' + bold('Genre: ') + self.genre +
-                ', ' + bold('Owner: ') + str(self.current_owner) +
-                ', ' + bold('Return date: ') + str(self.return_date) +
-                ', ' + bold('Reservations: ') + str(len(self.reservations))
-                )
+        history = ', '.join(map(str, self.loan_history)) if self.loan_history else None
+        reservations = ', '.join(map(str, self.reservations)) if self.reservations else None
+        return [self.id,
+                self.title,
+                self.author,
+                self.release_year,
+                self.genre,
+                history,
+                self.current_owner,
+                self.extensions,
+                reservations,
+                self.return_date
+                ]

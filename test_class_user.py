@@ -64,17 +64,9 @@ def test_user_get_borrowed_books():
     library.add_new_book(book)
     user.borrow_book(id2)
     library.update_data()
-    return_date = date.today() + timedelta(days=30)
+    book._return_date = date.today() + timedelta(days=30)
     assert user.borrowed_books == [id2]
-    assert user.get_borrowed_books() == (
-                'You have borrowed:\n' +
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id2) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' +
-                f'{str(return_date)}, ' +
-                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
-    )
+    assert user.get_borrowed_books() == [book.borrow_info()]
     user.return_book(id2)
     library.update_data()
     library.remove_book(id2)
@@ -100,12 +92,7 @@ def test_user_get_hisotry():
     user.borrow_book(id2)
     user.return_book(id2)
     assert user.borrowing_history == [id2]
-    assert user.get_history() == (
-                'Your history:\n' +
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id2) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell'
-    )
+    assert user.get_history() == [book.history_info()]
     library.update_data()
     library.remove_book(id2)
     library.remove_user(id)
@@ -131,17 +118,10 @@ def test_user_get_reservations():
     library.add_new_book(book)
     user.borrow_book(id3)
     user2.reserve_book(id3)
-    return_date = date.today() + timedelta(days=30)
+    book._return_date = date.today() + timedelta(days=30)
+    book._reservations = [user2.id]
     assert user2.reservations == [id3]
-    assert user2.get_reservations() == (
-                'Your reservations:\n' +
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id3) + ', '
-                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
-                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
-                '\033[1m' + 'Return date: ' + '\033[0m' +
-                f'{str(return_date)}, ' +
-                '\033[1m' + 'Position in queue: ' + '\033[0m' + '1'
-    )
+    assert user2.get_reservations() == [book.reservation_info(user2.id)]
     del library._books[-1]
     del library._users[-2]
     del library._users[-1]

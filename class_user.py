@@ -143,8 +143,7 @@ class User:
                     if book_info["id"] == book_id:
                         book = Book(**book_info)
                         books.append(book.borrow_info())
-            borrowed = '\n'.join(books)
-            return f'You have borrowed:\n{borrowed}'
+            return books
 
     def get_history(self):
         """
@@ -160,8 +159,7 @@ class User:
                     if book_info["id"] == book_id:
                         book = Book(**book_info)
                         books.append(book.history_info())
-            history = '\n'.join(books)
-            return f'Your history:\n{history}'
+            return books
 
     def get_reservations(self):
         """
@@ -177,8 +175,7 @@ class User:
                     if book_info["id"] == book_id:
                         book = Book(**book_info)
                         books.append(book.reservation_info(self.id))
-            reservations = '\n'.join(books)
-            return f'Your reservations:\n{reservations}'
+            return books
 
     def borrow_book(self, book_id: int):
         """

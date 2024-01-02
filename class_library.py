@@ -121,11 +121,11 @@ class Library:
             for value in values:
                 if str(keyword).lower() in str(value).lower():
                     book = Book(**book_info)
-                    searches.append(str(book))
+                    searches.append(book.list_info())
                     break
         if not searches:
             raise KeywordNotFoundError
-        return '\n'.join(searches)
+        return searches
 
     def available_genres(self):
         """
@@ -146,8 +146,8 @@ class Library:
         for book_info in self.books:
             if chosen_genre == book_info["genre"]:
                 book = Book(**book_info)
-                searches.append(str(book))
-        return '\n'.join(searches)
+                searches.append(book.list_info())
+        return searches
 
     def available_authors(self):
         """
@@ -168,8 +168,8 @@ class Library:
         for book_info in self.books:
             if chosen_author == book_info["author"]:
                 book = Book(**book_info)
-                searches.append(str(book))
-        return '\n'.join(searches)
+                searches.append(book.list_info())
+        return searches
 
     def available_years(self):
         """
@@ -190,8 +190,8 @@ class Library:
         for book_info in self.books:
             if chosen_year == str(book_info["release_year"]):
                 book = Book(**book_info)
-                searches.append(str(book))
-        return '\n'.join(searches)
+                searches.append(book.list_info())
+        return searches
 
     def add_new_user(self, new_user: User):
         """
@@ -271,8 +271,8 @@ class Library:
         info = []
         for book_info in self.books:
             book = Book(**book_info)
-            info.append(str(book))
-        return '\n'.join(info)
+            info.append(book.list_info())
+        return info
 
     def users_librarians(self) -> str:
         """
