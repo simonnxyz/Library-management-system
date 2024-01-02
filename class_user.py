@@ -281,17 +281,19 @@ class User:
         """
         Returns a string representation of the user's information.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Name: ') + self.name +
-                ', ' + bold('Password: ') + self.password +
-                ', ' + bold('Borrowed books: ') +
-                ', '.join(map(str, self.borrowed_books)) +
-                ', ' + bold('Reservations: ') +
-                ', '.join(map(str, self.reservations)) +
-                ', ' + bold('Borrowing history: ') +
-                ', '.join(map(str, self.borrowing_history))
-                )
+        list = ', '.join(map(str, self.borrowed_books))
+        borrowed = list if self.borrowed_books else None
+        list2 = ', '.join(map(str, self.reservations))
+        reservations = list2 if self.reservations else None
+        list3 = ', '.join(map(str, self.borrowing_history))
+        history = list3 if self.borrowing_history else None
+        return [self.id,
+                self.name,
+                self.password,
+                borrowed,
+                reservations,
+                history
+                ]
 
     def __dict__(self):
         """
@@ -337,8 +339,7 @@ class Librarian(User):
         """
         Returns a string representation of the librarian's information.
         """
-        return (
-                bold('ID: ') + str(self.id) +
-                ', ' + bold('Name: ') + self.name +
-                ', ' + bold('Password: ') + self.password
-                )
+        return [self.id,
+                self.name,
+                self.password,
+                ]

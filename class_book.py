@@ -7,7 +7,6 @@ from errors import (
 )
 from datetime import date, timedelta, datetime
 from json_methods import read_json, write_json
-from print_methods import bold
 
 
 class Book:
@@ -235,8 +234,10 @@ class Book:
         """
         Returns a list representation of the book's basic information.
         """
-        history = ', '.join(map(str, self.loan_history)) if self.loan_history else None
-        reservations = ', '.join(map(str, self.reservations)) if self.reservations else None
+        list = ', '.join(map(str, self.loan_history))
+        history = list if self.loan_history else None
+        list2 = ', '.join(map(str, self.reservations))
+        reservations = list2 if self.reservations else None
         return [self.id,
                 self.title,
                 self.author,

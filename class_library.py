@@ -278,14 +278,15 @@ class Library:
         """
         Returns information on all users and librarians in the library.
         """
-        users_librarians = []
+        users = []
+        librarians = []
         for user_info in self.users:
             user = User(**user_info)
-            users_librarians.append(user.search_info())
+            users.append(user.search_info())
         for librarian_info in self.librarians:
             librarian = Librarian(**librarian_info)
-            users_librarians.append(librarian.search_info())
-        return '\n'.join(users_librarians)
+            librarians.append(librarian.search_info())
+        return (users, librarians)
 
     def search_user(self, keyword) -> str:
         """
@@ -293,21 +294,22 @@ class Library:
         """
         if not keyword:
             raise NoKeywordError
-        searches = []
+        users = []
+        librarians = []
         for user_info in self.users:
             values = (user_info["id"], user_info["name"])
             for value in values:
                 if str(keyword).lower() in str(value).lower():
                     user = User(**user_info)
-                    searches.append(user.search_info())
+                    users.append(user.search_info())
                     break
         for librarian_info in self.librarians:
             values = (librarian_info["id"], librarian_info["name"])
             for value in values:
                 if str(keyword).lower() in str(value).lower():
                     librarian = Librarian(**librarian_info)
-                    searches.append(librarian.search_info())
+                    librarians.append(librarian.search_info())
                     break
-        if not searches:
+        if not users and not librarians:
             raise KeywordNotFoundError
-        return '\n'.join(searches)
+        return (users, librarians)

@@ -567,7 +567,7 @@ def test_library_users_librarians():
     library.add_new_librarian(librarian)
     library._users = [library.users[-1]]
     library._librarians = [library.librarians[-1]]
-    result = f'{user.search_info()}\n{librarian.search_info()}'
+    result = ([user.search_info()], [librarian.search_info()])
     assert library.users_librarians() == result
     library.update_data()
     del library._librarians[-1]
@@ -582,8 +582,8 @@ def test_library_search_user():
     library = Library()
     library.add_new_user(user)
     library._users = [library.users[-1]]
-    assert library.search_user('jan') == user.search_info()
-    assert library.search_user(id) == user.search_info()
+    assert library.search_user('jan') == ([user.search_info()], [])
+    assert library.search_user(id) == ([user.search_info()], [])
     library.update_data()
     del library._users[-1]
     write_json('users.json', library.users)

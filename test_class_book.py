@@ -237,13 +237,12 @@ def test_book_borrow_info():
                                   None]
 
 
-
 def test_book_history_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.history_info() == [id,
-                                  '1984',
-                                  'George Orwell']
+                                   '1984',
+                                   'George Orwell']
 
 
 def test_book_reservation_info():

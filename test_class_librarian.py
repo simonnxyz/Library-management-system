@@ -46,8 +46,4 @@ def test_librarian_dict():
 def test_librarian_search_info():
     id = generate_librarian_id()
     librarian = Librarian(id, 'Adam Nowak', 'admin123')
-    assert librarian.search_info() == (
-                '\033[1m' + 'ID: ' + '\033[0m' + str(id) +
-                ', ' + '\033[1m' + 'Name: ' + '\033[0m' + 'Adam Nowak' +
-                ', ' + '\033[1m' + 'Password: ' + '\033[0m' + 'admin123'
-    )
+    assert librarian.search_info() == [id, 'Adam Nowak', 'admin123']
