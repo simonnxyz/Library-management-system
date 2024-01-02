@@ -60,7 +60,7 @@ def test_library_add_new_book_message():
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     library = Library()
     msg = library.add_new_book(book)
-    assert msg == f'The book ({id}) has been successfully added.'
+    assert msg == f'The book {id} has been successfully added.'
     library.remove_book(id)
 
 
@@ -70,7 +70,7 @@ def test_library_remove_book():
     library = Library()
     library.add_new_book(book)
     info = library.remove_book(id)
-    assert info == f'The book ({id}) has been successfully removed.'
+    assert info == f'The book {id} has been successfully removed.'
     assert library.books != book.__dict__()
 
 
@@ -103,7 +103,7 @@ def test_library_add_copy_of_book():
     library.add_new_book(book)
     id2 = generate_book_id()
     info = library.add_copy_of_book(id, id2)
-    assert info == f'The copy of book ({id}) has been successfully added.'
+    assert info == f'The copy of book {id} has been successfully added.'
     assert library.books[-1] == {
             "id": id2,
             "title": '1984',

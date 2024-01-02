@@ -75,7 +75,7 @@ def try_again_later():
 
 
 def error_message(message, interface):
-    print(red('! ') + str(message))
+    print(red(f'! {message}'))
     answer = input('Do you want to try again? [' +
                    green('y') + '/' + red('n') + '] ')
     if answer.lower() != 'y':
@@ -100,7 +100,7 @@ def library_start():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -174,21 +174,20 @@ def user_interface():
                     search_book_user_interface()
                 elif choice == 3:
                     if not current_user.borrowed_books:
-                        print('Borrowed books:\n' +
-                              'You do not have any books at the moment.')
+                        print('Borrowed books: ' + red('None'))
                     else:
                         borrowed = PrettyTable()
                         borrowed.field_names = ["ID",
                                                 "Title",
                                                 "Author",
+                                                "Extensions",
                                                 "Reservations",
                                                 "Return date"]
                         rows = current_user.get_borrowed_books()
                         borrowed.add_rows(rows)
                         print('Borrowed books:\n' + borrowed.get_string())
                     if not current_user.borrowing_history:
-                        print('Borrowing history:\n' +
-                              'You have not borrowed any books yet.')
+                        print('Borrowing history: ' + red('None'))
                     else:
                         history = PrettyTable()
                         history.field_names = ["ID",
@@ -198,8 +197,7 @@ def user_interface():
                         history.add_rows(rows)
                         print('Borrowing history:\n' + history.get_string())
                     if not current_user.reservations:
-                        inf = 'You do not have any reservations at the moment.'
-                        print('Reservations:\n' + inf)
+                        print('Reservations: ' + red('None'))
                     else:
                         reservations = PrettyTable()
                         reservations.field_names = ["ID",
@@ -218,7 +216,7 @@ def user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
         break
@@ -262,7 +260,7 @@ def search_book_user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -394,7 +392,7 @@ def library_books_user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -403,7 +401,8 @@ def user_operation(operation, errors, interface):
     while True:
         try:
             book_id = int(input('Enter book ID: '))
-            operation(book_id)
+            message = operation(book_id)
+            print(green(message))
             library.update_data()
             interface()
         except errors as e:
@@ -448,7 +447,7 @@ def users_books_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -515,7 +514,7 @@ def get_stats(interface):
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -547,8 +546,7 @@ def librarian_interface():
                 elif choice == 3:
                     users, librarians = library.users_librarians()
                     if not users:
-                        print('Users:\n' +
-                              'Users not found.')
+                        print('Users: ' + red('None'))
                     else:
                         users_table = PrettyTable()
                         users_table.field_names = ["ID",
@@ -560,8 +558,7 @@ def librarian_interface():
                         users_table.add_rows(users)
                         print('Users:\n' + users_table.get_string())
                     if not librarians:
-                        print('Librarians:\n' +
-                              'Librarians not found.')
+                        print('Librarians: ' + red('None'))
                     else:
                         librarians_table = PrettyTable()
                         librarians_table.field_names = ["ID",
@@ -580,7 +577,7 @@ def librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
         break
@@ -603,7 +600,7 @@ def library_books_librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print(red('! ') + 'Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -621,17 +618,17 @@ def librarian_id_operation(
         try:
             id = int(input(f'Enter {obj_id} ID: '))
             if new_id:
-                operation(id, new_id)
+                message = operation(id, new_id)
             elif librarian_id:
-                operation(id, librarian_id)
+                message = operation(id, librarian_id)
             else:
-                operation(id)
+                message = operation(id)
+            print(green(str(message)))
             library.update_data()
             interface()
         except errors as e:
             error_message(e, librarian_interface)
             interface()
-
         except ValueError:
             error_message('Incorrect ID.', librarian_interface)
             interface()
@@ -645,7 +642,8 @@ def add_book():
             release_year = input('Enter the release year: ')
             genre = input('Enter the genre: ')
             book = Book(generate_book_id(), title, author, release_year, genre)
-            library.add_new_book(book)
+            message = library.add_new_book(book)
+            print(green(str(message)))
             library_books_librarian_interface()
         except (
             EmptyTitleError,
@@ -663,10 +661,12 @@ def add_user(is_librarian=False):
             password = getpass('Enter the password: ')
             if is_librarian:
                 librarian = Librarian(generate_librarian_id(), name, password)
-                library.add_new_librarian(librarian)
+                message = library.add_new_librarian(librarian)
+                print(green(str(message)))
             else:
                 user = User(generate_user_id(), name, password)
-                library.add_new_user(user)
+                message = library.add_new_user(user)
+                print(green(str(message)))
             library_users_librarian_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             error_message(e, librarian_interface)
@@ -749,7 +749,7 @@ def search_book_librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -773,7 +773,7 @@ def library_users_librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! Invalid input, try again.'))
         else:
             try_again_later()
 
@@ -785,8 +785,7 @@ def search_users_librarian():
             keyword = input('Enter the keyword (or ID): ')
             users, librarians = library.search_user(keyword)
             if not users:
-                print('Users:\n' +
-                      'No users found matching the provided keyword.')
+                print('Users: ' + red('None'))
             else:
                 users_table = PrettyTable()
                 users_table.field_names = ["ID",
@@ -798,8 +797,7 @@ def search_users_librarian():
                 users_table.add_rows(users)
                 print('Users:\n' + users_table.get_string())
             if not librarians:
-                print('Librarians:\n' +
-                      'No librarians found matching the provided keyword.')
+                print('Librarians: ' + red('None'))
             else:
                 librarians_table = PrettyTable()
                 librarians_table.field_names = ["ID",
