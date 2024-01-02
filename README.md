@@ -20,17 +20,13 @@ Aplikacja biblioteki to system zarządzania biblioteką, który umożliwia prac�
 
 Aby aplikacja działała poprawnie, zainstaluj wymagane biblioteki, korzystając z pliku requirements.txt. Wykonaj polecenie:
 
-'''bash
-echo "pip install -r requirements.txt"
-'''
+> pip install -r requirements.txt
 
 ## 3. Uruchamianie aplikacji
 
 Uruchom aplikację, wykonując polecenie:
 
-'''bash
-echo "python3 main.py"
-'''
+> python3 main.py
 
 ## 4. Przykładowe dane
 
