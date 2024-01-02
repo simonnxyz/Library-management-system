@@ -84,6 +84,48 @@ def error_message(message, interface):
         interface()
 
 
+def books_table():
+    result = PrettyTable()
+    result.field_names = ["ID",
+                          "Title",
+                          "Author",
+                          "Release Year",
+                          "Genre",
+                          "Loan history",
+                          "Current owner",
+                          "Extensions",
+                          "Reservations",
+                          "Return date"]
+    rows = library.available_books_info()
+    result.add_rows(rows)
+    return result
+
+
+def users_librarians_table():
+    users, librarians = library.users_librarians()
+    if not users:
+        print('Users: ' + red('None'))
+    else:
+        users_table = PrettyTable()
+        users_table.field_names = ["ID",
+                                   "Name",
+                                   "Password",
+                                   "Borrowed books",
+                                   "Reservations",
+                                   "Borrowing history"]
+        users_table.add_rows(users)
+        print('Users:\n' + users_table.get_string())
+    if not librarians:
+        print('Librarians: ' + red('None'))
+    else:
+        librarians_table = PrettyTable()
+        librarians_table.field_names = ["ID",
+                                        "Name",
+                                        "Password"]
+        librarians_table.add_rows(librarians)
+        print('Librarians:\n' + librarians_table.get_string())
+
+
 def library_start():
     start_options()
     while True:
@@ -157,20 +199,7 @@ def user_interface():
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    result = PrettyTable()
-                    result.field_names = ["ID",
-                                          "Title",
-                                          "Author",
-                                          "Release Year",
-                                          "Genre",
-                                          "Loan history",
-                                          "Current owner",
-                                          "Extensions",
-                                          "Reservations",
-                                          "Return date"]
-                    rows = library.available_books_info()
-                    result.add_rows(rows)
-                    print(result)
+                    print(books_table())
                     library_books_user_interface()
                 elif choice == 2:
                     search_book_user_interface()
@@ -528,46 +557,12 @@ def librarian_interface():
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    result = PrettyTable()
-                    result.field_names = ["ID",
-                                          "Title",
-                                          "Author",
-                                          "Release Year",
-                                          "Genre",
-                                          "Loan history",
-                                          "Current owner",
-                                          "Extensions",
-                                          "Reservations",
-                                          "Return date"]
-                    rows = library.available_books_info()
-                    result.add_rows(rows)
-                    print(result)
+                    print(books_table())
                     library_books_librarian_interface()
                 elif choice == 2:
                     search_book_librarian_interface()
                 elif choice == 3:
-                    users, librarians = library.users_librarians()
-                    if not users:
-                        print('Users: ' + red('None'))
-                    else:
-                        users_table = PrettyTable()
-                        users_table.field_names = ["ID",
-                                                   "Name",
-                                                   "Password",
-                                                   "Borrowed books",
-                                                   "Reservations",
-                                                   "Borrowing history"]
-                        users_table.add_rows(users)
-                        print('Users:\n' + users_table.get_string())
-                    if not librarians:
-                        print('Librarians: ' + red('None'))
-                    else:
-                        librarians_table = PrettyTable()
-                        librarians_table.field_names = ["ID",
-                                                        "Name",
-                                                        "Password"]
-                        librarians_table.add_rows(librarians)
-                        print('Librarians:\n' + librarians_table.get_string())
+                    users_librarians_table()
                     library_users_librarian_interface()
                 elif choice == 4:
                     search_users_librarian()
@@ -785,28 +780,7 @@ def search_users_librarian():
     while True:
         try:
             keyword = input('Enter the keyword (or ID): ')
-            users, librarians = library.search_user(keyword)
-            if not users:
-                print('Users: ' + red('None'))
-            else:
-                users_table = PrettyTable()
-                users_table.field_names = ["ID",
-                                           "Name",
-                                           "Password",
-                                           "Borrowed books",
-                                           "Reservations",
-                                           "Borrowing history"]
-                users_table.add_rows(users)
-                print('Users:\n' + users_table.get_string())
-            if not librarians:
-                print('Librarians: ' + red('None'))
-            else:
-                librarians_table = PrettyTable()
-                librarians_table.field_names = ["ID",
-                                                "Name",
-                                                "Password"]
-                librarians_table.add_rows(librarians)
-                print('Librarians:\n' + librarians_table.get_string())
+            users_librarians_table()
             break
         except (NoKeywordError, KeywordNotFoundError) as e:
             error_message(e, librarian_interface)
