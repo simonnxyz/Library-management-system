@@ -181,6 +181,7 @@ class User:
         Borrows a book with the given book ID.
         """
         books = read_json('books.json')
+        title = None
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
@@ -192,11 +193,13 @@ class User:
                 book.set_extensions(3)
                 book.set_return_date()
                 book.history_append(self.id)
+                title = book.title
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
         self.history_append(book_id)
         self.borrowed_append(book_id)
+        return f"You have successfully borrowed the book '{title}'."
 
     def use_extension(self, book_id: int):
         """
@@ -217,12 +220,14 @@ class User:
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
+        return "You have successfully extended the reservation."
 
     def reserve_book(self, book_id: int):
         """
         Reserves a book with the given book ID.
         """
         books = read_json('books.json')
+        title = None
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
@@ -231,10 +236,12 @@ class User:
                 if not book.current_owner:
                     raise NoBookOwnerError
                 book.add_reservation(self.id)
+                title = book.title
                 break
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
         self.reservations_append(book.id)
+        return f"You have successfully reserved the book '{title}'."
 
     def cancel_reservation(self, book_id: int):
         """
@@ -242,6 +249,7 @@ class User:
         """
         books = read_json('books.json')
         users = read_json('users.json')
+        title = None
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
@@ -249,8 +257,11 @@ class User:
                     raise NotReservedError
                 book.remove_reservation(self.id)
                 self.reservations_remove(book.id)
+                title = book.title
         if users == read_json('users.json'):
             raise NoBookIDError(book_id)
+        return ('You have successfully canceled' +
+                f"the reservation for the book '{title}'.")
 
     def return_book(self, book_id: int):
         """
@@ -259,12 +270,14 @@ class User:
         if book_id not in self.borrowed_books:
             raise NotUsersBookError
         books = read_json('books.json')
+        title = None
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
                 book.set_owner(None)
                 book.set_extensions(0)
                 book.set_return_date(None)
+                title = book.title
                 if book.reservations:
                     removed = book.remove_first_reservation()
                     for user_info in read_json('users.json'):
@@ -275,6 +288,7 @@ class User:
         if books == read_json('books.json'):
             raise NoBookIDError(book_id)
         self.borrowed_remove(book_id)
+        return f"You have returned the book {title}. Thank you!"
 
     def search_info(self):
         """

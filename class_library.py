@@ -73,7 +73,7 @@ class Library:
         """
         self._books.append(new_book.__dict__())
         write_json('books.json', self.books)
-        return f'The book ({new_book.id}) has been successfully added.'
+        return f'The book {new_book.id} has been successfully added.'
 
     def remove_book(self, book_id: int) -> str:
         """
@@ -89,7 +89,7 @@ class Library:
             raise NoBookIDError(book_id)
         self._books = updated_books
         write_json('books.json', self.books)
-        return f'The book ({book_id}) has been successfully removed.'
+        return f'The book {book_id} has been successfully removed.'
 
     def add_copy_of_book(self, book_id: int, new_id: int) -> str:
         """
@@ -107,7 +107,7 @@ class Library:
         genre = book_copy["genre"]
         book = Book(new_id, title, author, release_year, genre)
         self.add_new_book(book)
-        return f'The copy of book ({book_id}) has been successfully added.'
+        return f'The copy of book {book_id} has been successfully added.'
 
     def search_book_by_keyword(self, keyword: str) -> str:
         """
@@ -199,6 +199,9 @@ class Library:
         """
         self._users.append(new_user.__dict__())
         write_json('users.json', self.users)
+        name = new_user.name
+        id = new_user.id
+        return f"New user {name} has been added with ID {id}."
 
     def remove_user(self, user_id: int):
         """
@@ -212,10 +215,13 @@ class Library:
                 updated_users.append(user_info)
             elif user_info["id"] == user_id and (borrowed or reserved):
                 raise UserWithBooksError
+            name = user_info["name"]
+            id = user_info["id"]
         if updated_users == self.users:
             raise NoUserIDError(user_id)
         self._users = updated_users
         write_json('users.json', self.users)
+        return f"User {name} has been removed."
 
     def add_new_librarian(self, new_librarian: Librarian):
         """
@@ -223,6 +229,9 @@ class Library:
         """
         self._librarians.append(new_librarian.__dict__())
         write_json('librarians.json', self.librarians)
+        name = new_librarian.name
+        id = new_librarian.id
+        return f"New librarian {name} has been added with ID {id}."
 
     def remove_librarian(self, remove_id: int, librarian_id: int):
         """
@@ -235,10 +244,12 @@ class Library:
             id = librarian_info["id"]
             if id != remove_id:
                 updated_librarians.append(librarian_info)
+            name = librarian_info["name"]
         if updated_librarians == self.librarians:
             raise NoLibrarianIDError(remove_id)
         self._librarians = updated_librarians
         write_json('librarians.json', self.librarians)
+        return f"Librarian {name} has been removed."
 
     def get_books_stats(self):
         """

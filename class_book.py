@@ -187,6 +187,7 @@ class Book:
         return [self.id,
                 self.title,
                 self.author,
+                self.extensions,
                 len(self.reservations),
                 self.return_date
                 ]
