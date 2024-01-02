@@ -101,8 +101,7 @@ def books_table():
     return result
 
 
-def users_librarians_table():
-    users, librarians = library.users_librarians()
+def users_librarians_table(users, librarians):
     if not users:
         print('Users: ' + red('None'))
     else:
@@ -124,6 +123,44 @@ def users_librarians_table():
                                         "Password"]
         librarians_table.add_rows(librarians)
         print('Librarians:\n' + librarians_table.get_string())
+
+
+def users_books_table():
+    if not current_user.borrowed_books:
+        print('Borrowed books: ' + red('None'))
+    else:
+        borrowed = PrettyTable()
+        borrowed.field_names = ["ID",
+                                "Title",
+                                "Author",
+                                "Extensions",
+                                "Reservations",
+                                "Return date"]
+        rows = current_user.get_borrowed_books()
+        borrowed.add_rows(rows)
+        print('Borrowed books:\n' + borrowed.get_string())
+    if not current_user.borrowing_history:
+        print('Borrowing history: ' + red('None'))
+    else:
+        history = PrettyTable()
+        history.field_names = ["ID",
+                               "Title",
+                               "Author"]
+        rows = current_user.get_history()
+        history.add_rows(rows)
+        print('Borrowing history:\n' + history.get_string())
+    if not current_user.reservations:
+        print('Reservations: ' + red('None'))
+    else:
+        reservations = PrettyTable()
+        reservations.field_names = ["ID",
+                                    "Title",
+                                    "Author",
+                                    "Position in queue",
+                                    "Return date"]
+        rows = current_user.get_reservations()
+        reservations.add_rows(rows)
+        print('Reservations:\n' + reservations.get_string())
 
 
 def library_start():
@@ -204,41 +241,7 @@ def user_interface():
                 elif choice == 2:
                     search_book_user_interface()
                 elif choice == 3:
-                    if not current_user.borrowed_books:
-                        print('Borrowed books: ' + red('None'))
-                    else:
-                        borrowed = PrettyTable()
-                        borrowed.field_names = ["ID",
-                                                "Title",
-                                                "Author",
-                                                "Extensions",
-                                                "Reservations",
-                                                "Return date"]
-                        rows = current_user.get_borrowed_books()
-                        borrowed.add_rows(rows)
-                        print('Borrowed books:\n' + borrowed.get_string())
-                    if not current_user.borrowing_history:
-                        print('Borrowing history: ' + red('None'))
-                    else:
-                        history = PrettyTable()
-                        history.field_names = ["ID",
-                                               "Title",
-                                               "Author"]
-                        rows = current_user.get_history()
-                        history.add_rows(rows)
-                        print('Borrowing history:\n' + history.get_string())
-                    if not current_user.reservations:
-                        print('Reservations: ' + red('None'))
-                    else:
-                        reservations = PrettyTable()
-                        reservations.field_names = ["ID",
-                                                    "Title",
-                                                    "Author",
-                                                    "Position in queue",
-                                                    "Return date"]
-                        rows = current_user.get_reservations()
-                        reservations.add_rows(rows)
-                        print('Reservations:\n' + reservations.get_string())
+                    users_books_table()
                     users_books_interface()
                 elif choice == 4:
                     get_stats(user_interface)
@@ -562,7 +565,8 @@ def librarian_interface():
                 elif choice == 2:
                     search_book_librarian_interface()
                 elif choice == 3:
-                    users_librarians_table()
+                    users, librarians = library.users_librarians()
+                    users_librarians_table(users, librarians)
                     library_users_librarian_interface()
                 elif choice == 4:
                     search_users_librarian()
@@ -780,7 +784,8 @@ def search_users_librarian():
     while True:
         try:
             keyword = input('Enter the keyword (or ID): ')
-            users_librarians_table()
+            users, librarians = library.search_user(keyword)
+            users_librarians_table(users, librarians)
             break
         except (NoKeywordError, KeywordNotFoundError) as e:
             error_message(e, librarian_interface)
