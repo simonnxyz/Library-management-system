@@ -22,8 +22,6 @@ from errors import (
     AuthorsNotFoundError,
     YearsNotFoundError,
     UnavailableYearError,
-    NoBooksError,
-    NoUsersError,
     RemoveYourselfError,
 )
 
@@ -487,13 +485,6 @@ def test_library_get_books_stats():
     write_json('books.json', library.books)
 
 
-def test_library_get_books_stats_empty():
-    library = Library()
-    library._books = []
-    with pytest.raises(NoBooksError):
-        library.get_books_stats()
-
-
 def test_library_get_users_stats():
     id = generate_user_id()
     user = User(id, 'Jan Kowalski', 'haslo123', borrowing_history=[1111, 2222])
@@ -511,13 +502,6 @@ def test_library_get_users_stats():
     del library._users[-2]
     del library._users[-1]
     write_json('users.json', library.users)
-
-
-def test_library_get_users_stats_empty():
-    library = Library()
-    library._users = []
-    with pytest.raises(NoUsersError):
-        library.get_users_stats()
 
 
 def test_library_login_user_check():

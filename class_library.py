@@ -1,6 +1,8 @@
 from json_methods import read_json, write_json
 from class_book import Book
 from class_user import User, Librarian
+from datetime import date
+from print_methods import red, green
 from errors import (
     NoBookIDError,
     NoUserIDError,
@@ -56,6 +58,43 @@ class Library:
                 if librarian_info["password"] != password:
                     raise WrongPasswordError
                 return librarian_info
+
+    def return_date_check(self, id: int):
+        """
+        Check the due dates for books borrowed by the user.
+        """
+        for user_info in self.users:
+            if user_info["id"] == id:
+                user = User(**user_info)
+        if not user.borrowed_books:
+            return green('All your borrowed books are within the due date.')
+        approaching_books = []
+        overdue_books = []
+        for book_id in user.borrowed_books:
+            for book_info in self.books:
+                if book_info["id"] == book_id:
+                    book = Book(**book_info)
+                    today = date.today()
+                    diff = book.return_date - today
+                    if 0 < diff.days < 7:
+                        approaching_books.append(book.id)
+                    elif diff.days < 0:
+                        overdue_books.append(book.id)
+        if approaching_books and overdue_books:
+            return (red('The due date for the following books is approaching' +
+                        f": {', '.join(map(str, approaching_books))}. ") +
+                    red('The due date for the following books has passed: ' +
+                        f"{', '.join(map(str, overdue_books))}. " +
+                        'Please return them as soon as possible.'))
+        elif approaching_books:
+            return red('The due date for the following books is approaching:' +
+                       f" {', '.join(map(str, approaching_books))}.")
+        elif overdue_books:
+            return red('The due date for the following books has passed: ' +
+                       f"{', '.join(map(str, overdue_books))}. " +
+                       'Please return them as soon as possible.')
+        else:
+            return green('All your borrowed books are within the due date.')
 
     def update_data(self):
         """

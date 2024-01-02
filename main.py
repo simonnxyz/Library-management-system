@@ -229,6 +229,7 @@ def login():
                     current_user = User(**check)
                     message = f'Welcome to our library, {current_user.name}!'
                     print_with_box(message, len(message) + 2)
+                    print(library.return_date_check(current_user.id))
                     user_interface()
             else:
                 raise WrongIDError
