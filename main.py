@@ -4,14 +4,19 @@ from class_user import User, Librarian
 from getpass import getpass
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator as max
+from prettytable import PrettyTable
 from generate_id import (
     generate_book_id,
     generate_user_id,
     generate_librarian_id
 )
-from options_lists import (
+from print_methods import (
     print_with_box,
     print_with_box_up,
+    red,
+    green
+)
+from options_lists import (
     start_options,
     user_options,
     filters_list,
@@ -58,7 +63,7 @@ current_librarian = None
 
 
 def main():
-    print_with_box_up(' Welcome to the Library! ', 27)
+    print_with_box_up(' '*9 + 'Library' + ' '*9, 27)
     library_start()
 
 
@@ -70,8 +75,9 @@ def try_again_later():
 
 
 def error_message(message, interface):
-    print(message)
-    answer = input('Do you want to try again? [y/n] ')
+    print(red('! ') + str(message))
+    answer = input('Do you want to try again? [' +
+                   green('y') + '/' + red('n') + '] ')
     if answer.lower() != 'y':
         interface()
 
@@ -94,7 +100,7 @@ def library_start():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -109,16 +115,20 @@ def login():
             if check:
                 if str(check["id"]).startswith('1'):
                     current_librarian = Librarian(**check)
+                    message = f'Welcome, {current_librarian.name}!'
+                    print_with_box(message, len(message) + 2)
                     librarian_interface()
                 else:
                     current_user = User(**check)
+                    message = f'Welcome to our library, {current_user.name}!'
+                    print_with_box(message, len(message) + 2)
                     user_interface()
             else:
                 raise WrongIDError
         except (WrongPasswordError, WrongIDError) as e:
             error_message(e, library_start)
         except ValueError:
-            error_message('Incorrect ID', library_start)
+            error_message('Incorrect ID.', library_start)
 
 
 def create_account():
@@ -129,6 +139,10 @@ def create_account():
             password = getpass('Enter your password: ')
             current_user = User(generate_user_id(), name, password)
             library.add_new_user(current_user)
+            id = current_user.id
+            name = current_user.name
+            message = f'Welcome to our library, {name}! Your ID is {id}'
+            print_with_box(message, len(message) + 2)
             user_interface()
         except (EmptyNameError, EmptyPasswordError, ShortPasswordError) as e:
             error_message(e, library_start)
@@ -141,14 +155,61 @@ def user_interface():
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    print(library.available_books_info())
+                    result = PrettyTable()
+                    result.field_names = ["ID",
+                                          "Title",
+                                          "Author",
+                                          "Release Year",
+                                          "Genre",
+                                          "Loan history",
+                                          "Current owner",
+                                          "Extensions",
+                                          "Reservations",
+                                          "Return date"]
+                    rows = library.available_books_info()
+                    result.add_rows(rows)
+                    print(result)
                     library_books_user_interface()
                 elif choice == 2:
                     search_book_user_interface()
                 elif choice == 3:
-                    print(current_user.get_borrowed_books())
-                    print(current_user.get_history())
-                    print(current_user.get_reservations())
+                    if not current_user.borrowed_books:
+                        print('Borrowed books:\n' +
+                              'You do not have any books at the moment.')
+                    else:
+                        borrowed = PrettyTable()
+                        borrowed.field_names = ["ID",
+                                                "Title",
+                                                "Author",
+                                                "Reservations",
+                                                "Return date"]
+                        rows = current_user.get_borrowed_books()
+                        borrowed.add_rows(rows)
+                        print('Borrowed books:\n' + borrowed.get_string())
+                    if not current_user.borrowing_history:
+                        print('Borrowing history:\n' +
+                              'You have not borrowed any books yet.')
+                    else:
+                        history = PrettyTable()
+                        history.field_names = ["ID",
+                                               "Title",
+                                               "Author"]
+                        rows = current_user.get_history()
+                        history.add_rows(rows)
+                        print('Borrowing history:\n' + history.get_string())
+                    if not current_user.reservations:
+                        inf = 'You do not have any reservations at the moment.'
+                        print('Reservations:\n' + inf)
+                    else:
+                        reservations = PrettyTable()
+                        reservations.field_names = ["ID",
+                                                    "Title",
+                                                    "Author",
+                                                    "Position in queue",
+                                                    "Return date"]
+                        rows = current_user.get_reservations()
+                        reservations.add_rows(rows)
+                        print('Reservations:\n' + reservations.get_string())
                     users_books_interface()
                 elif choice == 4:
                     get_stats(user_interface)
@@ -157,7 +218,7 @@ def user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
         break
@@ -201,7 +262,7 @@ def search_book_user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -222,7 +283,20 @@ def search_keyword(search_interface):
     def keyword():
         global library
         keyword = input('Enter the keyword: ')
-        return library.search_book_by_keyword(keyword)
+        result = PrettyTable()
+        result.field_names = ["ID",
+                              "Title",
+                              "Author",
+                              "Release Year",
+                              "Genre",
+                              "Loan history",
+                              "Current owner",
+                              "Extensions",
+                              "Reservations",
+                              "Return date"]
+        rows = library.search_book_by_keyword(keyword)
+        result.add_rows(rows)
+        return result
     search_by(
         keyword,
         (NoKeywordError, KeywordNotFoundError),
@@ -234,7 +308,20 @@ def search_genre(search_interface):
     def genre():
         global library
         genre = input('Enter the genre: ')
-        return library.search_book_by_genre(genre)
+        result = PrettyTable()
+        result.field_names = ["ID",
+                              "Title",
+                              "Author",
+                              "Release Year",
+                              "Genre",
+                              "Loan history",
+                              "Current owner",
+                              "Extensions",
+                              "Reservations",
+                              "Return date"]
+        rows = library.search_book_by_genre(genre)
+        result.add_rows(rows)
+        return result
     search_by(
         genre,
         UnavailableGenreError,
@@ -246,7 +333,20 @@ def search_author(search_interface):
     def author():
         global library
         author = input('Enter the author: ')
-        return library.search_book_by_author(author)
+        result = PrettyTable()
+        result.field_names = ["ID",
+                              "Title",
+                              "Author",
+                              "Release Year",
+                              "Genre",
+                              "Loan history",
+                              "Current owner",
+                              "Extensions",
+                              "Reservations",
+                              "Return date"]
+        rows = library.search_book_by_author(author)
+        result.add_rows(rows)
+        return result
     search_by(
         author,
         UnavailableAuthorError,
@@ -258,7 +358,20 @@ def search_year(search_interface):
     def year():
         global library
         year = input('Enter the year: ')
-        return library.search_book_by_year(year)
+        result = PrettyTable()
+        result.field_names = ["ID",
+                              "Title",
+                              "Author",
+                              "Release Year",
+                              "Genre",
+                              "Loan history",
+                              "Current owner",
+                              "Extensions",
+                              "Reservations",
+                              "Return date"]
+        rows = library.search_book_by_year(year)
+        result.add_rows(rows)
+        return result
     search_by(
         year,
         UnavailableYearError,
@@ -281,7 +394,7 @@ def library_books_user_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -335,7 +448,7 @@ def users_books_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -402,7 +515,7 @@ def get_stats(interface):
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -414,12 +527,48 @@ def librarian_interface():
             try:
                 choice = int(input('Enter your choice: '))
                 if choice == 1:
-                    print(library.available_books_info())
+                    result = PrettyTable()
+                    result.field_names = ["ID",
+                                          "Title",
+                                          "Author",
+                                          "Release Year",
+                                          "Genre",
+                                          "Loan history",
+                                          "Current owner",
+                                          "Extensions",
+                                          "Reservations",
+                                          "Return date"]
+                    rows = library.available_books_info()
+                    result.add_rows(rows)
+                    print(result)
                     library_books_librarian_interface()
                 elif choice == 2:
                     search_book_librarian_interface()
                 elif choice == 3:
-                    print(library.users_librarians())
+                    users, librarians = library.users_librarians()
+                    if not users:
+                        print('Users:\n' +
+                              'Users not found.')
+                    else:
+                        users_table = PrettyTable()
+                        users_table.field_names = ["ID",
+                                                   "Name",
+                                                   "Password",
+                                                   "Borrowed books",
+                                                   "Reservations",
+                                                   "Borrowing history"]
+                        users_table.add_rows(users)
+                        print('Users:\n' + users_table.get_string())
+                    if not librarians:
+                        print('Librarians:\n' +
+                              'Librarians not found.')
+                    else:
+                        librarians_table = PrettyTable()
+                        librarians_table.field_names = ["ID",
+                                                        "Name",
+                                                        "Password"]
+                        librarians_table.add_rows(librarians)
+                        print('Librarians:\n' + librarians_table.get_string())
                     library_users_librarian_interface()
                 elif choice == 4:
                     search_users_librarian()
@@ -431,7 +580,7 @@ def librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
         break
@@ -454,7 +603,7 @@ def library_books_librarian_interface():
                 else:
                     raise ValueError
             except ValueError:
-                print('Invalid input, try again.')
+                print(red('! ') + 'Invalid input, try again.')
         else:
             try_again_later()
 
@@ -634,7 +783,30 @@ def search_users_librarian():
     while True:
         try:
             keyword = input('Enter the keyword (or ID): ')
-            print(library.search_user(keyword))
+            users, librarians = library.search_user(keyword)
+            if not users:
+                print('Users:\n' +
+                      'No users found matching the provided keyword.')
+            else:
+                users_table = PrettyTable()
+                users_table.field_names = ["ID",
+                                           "Name",
+                                           "Password",
+                                           "Borrowed books",
+                                           "Reservations",
+                                           "Borrowing history"]
+                users_table.add_rows(users)
+                print('Users:\n' + users_table.get_string())
+            if not librarians:
+                print('Librarians:\n' +
+                      'No librarians found matching the provided keyword.')
+            else:
+                librarians_table = PrettyTable()
+                librarians_table.field_names = ["ID",
+                                                "Name",
+                                                "Password"]
+                librarians_table.add_rows(librarians)
+                print('Librarians:\n' + librarians_table.get_string())
             break
         except (NoKeywordError, KeywordNotFoundError) as e:
             error_message(e, librarian_interface)
@@ -648,4 +820,3 @@ if __name__ == "__main__":
 
 # dodac kolorowy tekst komunikatow z nowa metoda
 # dodac komunikaty powitalne, dodania, usuniecia, wypozyczenia, itp.
-# dodac docstringi do kazdego pliku
