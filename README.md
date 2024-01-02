@@ -7,24 +7,30 @@ Aplikacja biblioteki to system zarządzania biblioteką, który umożliwia prac�
 - **Bibliotekarz:**
   - Zarządzanie dostępnymi w bibliotece książkami.
   - Zarządzanie użytkownikami.
+  - Wyszukiwanie książek z użyciem filtrów.
   - Przeglądanie statystyk książek i innych użytkowników.
 
 - **Czytelnik:**
   - Wypożyczanie dostępnych książek.
   - Zarządzanie wypożyczeniem.
+  - Wyszukiwanie książek z użyciem filtrów.
   - Przeglądanie statystyk książek i innych użytkowników.
 
 ## 2. Instrukcja instalacji
 
 Aby aplikacja działała poprawnie, zainstaluj wymagane biblioteki, korzystając z pliku requirements.txt. Wykonaj polecenie:
 
+'''
 pip install -r requirements.txt
+'''
 
 ## 3. Uruchamianie aplikacji
 
 Uruchom aplikację, wykonując polecenie:
 
+'''
 python3 main.py
+'''
 
 ## 4. Przykładowe dane
 
