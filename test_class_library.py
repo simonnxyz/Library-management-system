@@ -168,9 +168,14 @@ def test_library_search_book_by_keyword():
     library.add_new_book(book)
     library._books = [library.books[-1]]
     info = (
-            f'ID: {id}, ' + 'Title: 1984, Author: George Orwell, ' +
-            'Release year: 1949, Genre: Dystopian fiction, ' +
-            'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
+                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
+                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
     )
     result = library.search_book_by_keyword('George')
     assert result == info
@@ -238,11 +243,15 @@ def test_library_search_by_gerne():
         ]
     result = library.search_book_by_genre('Dystopian fiction')
     assert result == (
-                'ID: ' + str(id) + ', '
-                'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
+                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
+                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
+    )
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -345,11 +354,15 @@ def test_library_search_by_author():
         ]
     result = library.search_book_by_author('George Orwell')
     assert result == (
-                'ID: ' + str(id) + ', '
-                'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
+                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
+                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
+    )
     library.update_data()
     del library._books[-2]
     del library._books[-1]
@@ -412,11 +425,15 @@ def test_library_search_by_year():
     assert library.available_years() == ['1947', '1949']
     result = library.search_book_by_year('1949')
     assert result == (
-                'ID: ' + str(id) + ', '
-                'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
+                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
+                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
+    )
     library.update_data()
     del library._books[-2]
     del library._books[-1]

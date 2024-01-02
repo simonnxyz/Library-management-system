@@ -84,10 +84,14 @@ def test_book_str():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert str(book) == (
-                'ID: ' + str(id) + ', '
-                'Title: 1984, Author: George Orwell, ' +
-                'Release year: 1949, Genre: Dystopian fiction, ' +
-                'Owner: None, ' + 'Return date: None, ' + 'Reservations: 0'
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Release year: ' + '\033[0m' + '1949, ' +
+                '\033[1m' + 'Genre: ' + '\033[0m' + 'Dystopian fiction, ' +
+                '\033[1m' + 'Owner: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
                 )
 
 
@@ -227,19 +231,22 @@ def test_book_borrow_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.borrow_info() == (
-                'ID: ' + str(id) +
-                ', Title: 1984' +
-                ', Author: George Orwell' +
-                ', Return date: None' + ', Reservations: 0')
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
+    )
 
 
 def test_book_history_info():
     id = generate_book_id()
     book = Book(id, '1984', 'George Orwell', 1949, 'Dystopian fiction')
     assert book.history_info() == (
-                'ID: ' + str(id) +
-                ', Title: 1984' +
-                ', Author: George Orwell')
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell'
+    )
 
 
 def test_book_reservation_info():
@@ -253,9 +260,9 @@ def test_book_reservation_info():
         reservations=[2222]
         )
     assert book.reservation_info(2222) == (
-                'ID: ' + str(id) +
-                ', Title: 1984' +
-                ', Author: George Orwell' +
-                ', Return date: None' +
-                ', Position in queue: 1'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' + 'None, ' +
+                '\033[1m' + 'Position in queue: ' + '\033[0m' + '1'
+    )

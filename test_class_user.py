@@ -68,12 +68,13 @@ def test_user_get_borrowed_books():
     assert user.borrowed_books == [id2]
     assert user.get_borrowed_books() == (
                 'You have borrowed:\n' +
-                'ID: ' + str(id2) +
-                ', Title: ' + '1984' +
-                ', Author: ' + 'George Orwell' +
-                ', Return date: ' + str(return_date) +
-                ', Reservations: 0'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id2) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' +
+                f'{str(return_date)}, ' +
+                '\033[1m' + 'Reservations: ' + '\033[0m' + '0'
+    )
     user.return_book(id2)
     library.update_data()
     library.remove_book(id2)
@@ -101,10 +102,10 @@ def test_user_get_hisotry():
     assert user.borrowing_history == [id2]
     assert user.get_history() == (
                 'Your history:\n' +
-                'ID: ' + str(id2) +
-                ', Title: ' + '1984' +
-                ', Author: ' + 'George Orwell'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id2) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell'
+    )
     library.update_data()
     library.remove_book(id2)
     library.remove_user(id)
@@ -134,12 +135,13 @@ def test_user_get_reservations():
     assert user2.reservations == [id3]
     assert user2.get_reservations() == (
                 'Your reservations:\n' +
-                'ID: ' + str(id3) +
-                ', Title: ' + '1984' +
-                ', Author: ' + 'George Orwell' +
-                ', Return date: ' + str(return_date) +
-                ', Position in queue: ' + '1'
-                )
+                '\033[1m' + 'ID: ' + '\033[0m' + str(id3) + ', '
+                '\033[1m' + 'Title: ' + '\033[0m' + '1984, ' +
+                '\033[1m' + 'Author: ' + '\033[0m' + 'George Orwell, ' +
+                '\033[1m' + 'Return date: ' + '\033[0m' +
+                f'{str(return_date)}, ' +
+                '\033[1m' + 'Position in queue: ' + '\033[0m' + '1'
+    )
     del library._books[-1]
     del library._users[-2]
     del library._users[-1]

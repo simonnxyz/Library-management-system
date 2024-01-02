@@ -7,6 +7,7 @@ from errors import (
 )
 from datetime import date, timedelta, datetime
 from json_methods import read_json, write_json
+from print_methods import bold
 
 
 class Book:
@@ -185,11 +186,11 @@ class Book:
         Returns information about the book for a list of borrowed books.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Title: ' + self.title +
-                ', Author: ' + self.author +
-                ', Return date: ' + str(self.return_date) +
-                ', Reservations: ' + str(len(self.reservations))
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Title: ') + self.title +
+                ', ' + bold('Author: ') + self.author +
+                ', ' + bold('Return date: ') + str(self.return_date) +
+                ', ' + bold('Reservations: ') + str(len(self.reservations))
                 )
 
     def history_info(self) -> str:
@@ -198,9 +199,9 @@ class Book:
         books that the user has borrowed in the past.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Title: ' + self.title +
-                ', Author: ' + self.author
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Title: ') + self.title +
+                ', ' + bold('Author: ') + self.author
                 )
 
     def reservation_info(self, id: int) -> str:
@@ -208,11 +209,12 @@ class Book:
         Returns information about the book for a list of reserved books.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Title: ' + self.title +
-                ', Author: ' + self.author +
-                ', Return date: ' + str(self.return_date) +
-                ', Position in queue: ' + str(self.reservations.index(id) + 1)
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Title: ') + self.title +
+                ', ' + bold('Author: ') + self.author +
+                ', ' + bold('Return date: ') + str(self.return_date) +
+                ', ' + bold('Position in queue: ') +
+                str(self.reservations.index(id) + 1)
                 )
 
     def __dict__(self):
@@ -238,12 +240,12 @@ class Book:
         Returns a string representation of the book's basic information.
         """
         return (
-                'ID: ' + str(self.id) +
-                ', Title: ' + self.title +
-                ', Author: ' + self.author +
-                ', Release year: ' + str(self.release_year) +
-                ', Genre: ' + self.genre +
-                ', Owner: ' + str(self.current_owner) +
-                ', Return date: ' + str(self.return_date) +
-                ', Reservations: ' + str(len(self.reservations))
+                bold('ID: ') + str(self.id) +
+                ', ' + bold('Title: ') + self.title +
+                ', ' + bold('Author: ') + self.author +
+                ', ' + bold('Release year: ') + str(self.release_year) +
+                ', ' + bold('Genre: ') + self.genre +
+                ', ' + bold('Owner: ') + str(self.current_owner) +
+                ', ' + bold('Return date: ') + str(self.return_date) +
+                ', ' + bold('Reservations: ') + str(len(self.reservations))
                 )
