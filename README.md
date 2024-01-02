@@ -18,7 +18,7 @@ Aplikacja biblioteki to system zarządzania biblioteką, który umożliwia prac�
 
 ## 2. Instrukcja instalacji
 
-Aby aplikacja działała poprawnie, zainstaluj wymagane biblioteki, korzystając z pliku requirements.txt. Wykonaj polecenie:
+Aby aplikacja działała poprawnie, należy zainstalować wymagane biblioteki, korzystając z pliku requirements.txt, wykonując polecenie:
 
 > pip install -r requirements.txt
 
@@ -34,7 +34,7 @@ Do plików JSON biblioteki zostały dodane przykładowe dane użytkowników i ks
 
 ### Logowanie jako bibliotekarz
 
-Aby zalogować się jako bibliotekarz, użyj poniższych danych:
+Aby zalogować się jako bibliotekarz, należy użyć poniższych danych:
 
 - **ID:** 1879
 - **Hasło:** admin123

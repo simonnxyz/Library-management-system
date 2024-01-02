@@ -56,7 +56,8 @@ from errors import (
     NoGenreError,
     RemoveYourselfError,
     NoUserIDError,
-    NotReservedError
+    NotReservedError,
+    DoubleReservationBookError
 )
 
 library = Library()
@@ -523,7 +524,10 @@ def reserve_book():
     """
     user_operation(
         current_user.reserve_book,
-        (UsersBookError, NoBookOwnerError, NoBookIDError),
+        (UsersBookError,
+         NoBookOwnerError,
+         NoBookIDError,
+         DoubleReservationBookError),
         library_books_user_interface, books_table
     )
 

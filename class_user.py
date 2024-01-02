@@ -10,6 +10,7 @@ from errors import (
     ReservedBookError,
     NoBookOwnerError,
     NotReservedError,
+    DoubleReservationBookError
 )
 from class_book import Book
 from json_methods import read_json, write_json
@@ -228,6 +229,7 @@ class User:
         """
         books = read_json('books.json')
         title = None
+        found_book = False
         for book_info in books:
             if book_info["id"] == book_id:
                 book = Book(**book_info)
@@ -235,10 +237,13 @@ class User:
                     raise UsersBookError
                 if not book.current_owner:
                     raise NoBookOwnerError
+                if self.id in book.reservations:
+                    raise DoubleReservationBookError
                 book.add_reservation(self.id)
                 title = book.title
+                found_book = True
                 break
-        if books == read_json('books.json'):
+        if not found_book:
             raise NoBookIDError(book_id)
         self.reservations_append(book.id)
         return f"You have successfully reserved the book '{title}'."

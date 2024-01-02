@@ -146,3 +146,8 @@ class WrongIDError(Exception):
 class RemoveYourselfError(Exception):
     def __str__(self):
         return 'You cannot remove yourself.'
+
+
+class DoubleReservationBookError(Exception):
+    def __str__(self):
+        return 'You have already reserved this book.'
