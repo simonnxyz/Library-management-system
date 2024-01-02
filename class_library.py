@@ -15,8 +15,6 @@ from errors import (
     AuthorsNotFoundError,
     YearsNotFoundError,
     UnavailableYearError,
-    NoBooksError,
-    NoUsersError,
     WrongPasswordError,
     RemoveYourselfError,
 )
@@ -216,7 +214,6 @@ class Library:
             elif user_info["id"] == user_id and (borrowed or reserved):
                 raise UserWithBooksError
             name = user_info["name"]
-            id = user_info["id"]
         if updated_users == self.users:
             raise NoUserIDError(user_id)
         self._users = updated_users
@@ -255,8 +252,6 @@ class Library:
         """
         Returns statistics on the number of times each book has been borrowed.
         """
-        if not self.books:
-            raise NoBooksError
         stats = {}
         for book_info in self.books:
             book = Book(**book_info)
@@ -267,8 +262,6 @@ class Library:
         """
         Returns statistics on the number of books borrowed by each user.
         """
-        if not self.users:
-            raise NoUsersError
         stats = {}
         for user_info in self.users:
             user = User(**user_info)

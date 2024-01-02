@@ -45,7 +45,7 @@ class NoUserIDError(Exception):
 
 class BorrowedBookError(Exception):
     def __str__(self):
-        return 'Cannot remove borrowed book.'
+        return 'This book is currently borrowed.'
 
 
 class UserWithBooksError(Exception):
@@ -55,7 +55,7 @@ class UserWithBooksError(Exception):
 
 class KeywordNotFoundError(Exception):
     def __str__(self):
-        return 'No books found matching the provided keyword.'
+        return 'Nothing found matching the provided keyword.'
 
 
 class NoKeywordError(Exception):
@@ -98,23 +98,14 @@ class YearsNotFoundError(Exception):
         return 'No release years found in the list of books.'
 
 
-class NoBooksError(Exception):
-    def __str__(self):
-        return 'Currently our library has no books.'
-
-
-class NoUsersError(Exception):
-    def __str__(self):
-        return 'Currently our library has no users.'
-
-
 class UsersBookError(Exception):
     def __str__(self):
         return 'You are the current owner.'
 
 
 class NegativeExtensionsError(Exception):
-    pass
+    def __str__(self):
+        return 'Used extensions cannot be negative.'
 
 
 class NotUsersBookError(Exception):
@@ -138,7 +129,8 @@ class NoBookOwnerError(Exception):
 
 
 class NotReservedError(Exception):
-    pass
+    def __str__(self):
+        return 'You did not reserve that book'
 
 
 class WrongPasswordError(Exception):

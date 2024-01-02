@@ -55,6 +55,8 @@ from errors import (
     NoReleaseYearError,
     NoGenreError,
     RemoveYourselfError,
+    NoUserIDError,
+    NotReservedError
 )
 
 library = Library()
@@ -402,7 +404,7 @@ def user_operation(operation, errors, interface):
         try:
             book_id = int(input('Enter book ID: '))
             message = operation(book_id)
-            print(green(message))
+            print(green(str(message)))
             library.update_data()
             interface()
         except errors as e:
@@ -476,7 +478,7 @@ def use_extension():
 def cancel_reservation():
     user_operation(
         current_user.cancel_reservation,
-        (NotUsersBookError, NoBookIDError),
+        (NotUsersBookError, NoBookIDError, NotReservedError),
         users_books_interface
     )
 
@@ -694,7 +696,7 @@ def remove_book():
 def remove_user():
     librarian_id_operation(
         library.remove_user,
-        (UserWithBooksError, NoBookIDError),
+        (UserWithBooksError, NoUserIDError),
         library_users_librarian_interface,
         'user'
     )
@@ -703,7 +705,7 @@ def remove_user():
 def remove_librarian():
     librarian_id_operation(
         library.remove_librarian,
-        (NoLibrarianIDError, NoBookIDError, RemoveYourselfError),
+        (NoLibrarianIDError, RemoveYourselfError),
         library_users_librarian_interface,
         'librarian',
         new_id=None,
@@ -814,7 +816,3 @@ def search_users_librarian():
 
 if __name__ == "__main__":
     main()
-
-
-# dodac kolorowy tekst komunikatow z nowa metoda
-# dodac komunikaty powitalne, dodania, usuniecia, wypozyczenia, itp.
