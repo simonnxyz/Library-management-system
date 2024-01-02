@@ -23,5 +23,58 @@
         "borrowing_history": [
             2138
         ]
+    },
+    {
+        "id": 9876,
+        "name": "Anna Kowalska",
+        "password": "haslo123",
+        "borrowed_books": [
+            4631,
+            8765
+        ],
+        "reservations": [
+            2138
+        ],
+        "borrowing_history": [
+            4631,
+            8765
+        ]
+    },
+    {
+        "id": 5432,
+        "name": "Adam Nowak",
+        "password": "haslo123",
+        "borrowed_books": [
+            7890
+        ],
+        "reservations": [
+            2138
+        ],
+        "borrowing_history": [
+            7890
+        ]
+    },
+    {
+        "id": 7567,
+        "name": "Alicja Zawadzka",
+        "password": "haslo123",
+        "borrowed_books": [
+            7303,
+            1626
+        ],
+        "reservations": [],
+        "borrowing_history": [
+            7303,
+            7303,
+            1626
+        ]
+    },
+    {
+        "id": 8965,
+        "name": "Piotr Malinowski",
+        "password": "haslo123",
+        "borrowed_books": [],
+        "reservations": [],
+        "borrowing_history": []
     }
 ]
