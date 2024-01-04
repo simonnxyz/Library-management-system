@@ -172,8 +172,6 @@ def test_library_search_book_by_keyword():
              'Dystopian fiction',
              None,
              None,
-             0,
-             None,
              None]]
     result = library.search_book_by_keyword('George')
     assert result == info
@@ -246,8 +244,6 @@ def test_library_search_by_gerne():
                        1949,
                        'Dystopian fiction',
                        None,
-                       None,
-                       0,
                        None,
                        None]]
     library.update_data()
@@ -358,8 +354,6 @@ def test_library_search_by_author():
                        'Dystopian fiction',
                        None,
                        None,
-                       0,
-                       None,
                        None]]
     library.update_data()
     del library._books[-2]
@@ -428,8 +422,6 @@ def test_library_search_by_year():
                        1949,
                        'Dystopian fiction',
                        None,
-                       None,
-                       0,
                        None,
                        None]]
     library.update_data()

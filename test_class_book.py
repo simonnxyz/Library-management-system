@@ -90,8 +90,6 @@ def test_book_list_info():
                                 'Dystopian fiction',
                                 None,
                                 None,
-                                0,
-                                None,
                                 None]
 
 

@@ -102,12 +102,10 @@ def books_table():
     result.field_names = ["ID",
                           "Title",
                           "Author",
-                          "Release Year",
+                          "Pub. Year",
                           "Genre",
-                          "Loan history",
-                          "Current owner",
-                          "Extensions",
-                          "Reservations",
+                          "Owner",
+                          "Reserv.",
                           "Return date"]
     rows = library.available_books_info()
     result.add_rows(rows)

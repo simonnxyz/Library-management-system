@@ -235,18 +235,14 @@ class Book:
         """
         Returns a list representation of the book's basic information.
         """
-        list = ', '.join(map(str, self.loan_history))
-        history = list if self.loan_history else None
-        list2 = ', '.join(map(str, self.reservations))
-        reservations = list2 if self.reservations else None
+        list = ', '.join(map(str, self.reservations))
+        reservations = list if self.reservations else None
         return [self.id,
                 self.title,
                 self.author,
                 self.release_year,
                 self.genre,
-                history,
                 self.current_owner,
-                self.extensions,
                 reservations,
                 self.return_date
                 ]
