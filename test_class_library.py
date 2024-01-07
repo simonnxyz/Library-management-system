@@ -170,8 +170,8 @@ def test_library_search_book_by_keyword():
              'George Orwell',
              1949,
              'Dystopian fiction',
-             None,
-             None,
+             'Yes',
+             0,
              None]]
     result = library.search_book_by_keyword('George')
     assert result == info
@@ -243,8 +243,8 @@ def test_library_search_by_gerne():
                        'George Orwell',
                        1949,
                        'Dystopian fiction',
-                       None,
-                       None,
+                       'Yes',
+                       0,
                        None]]
     library.update_data()
     del library._books[-2]
@@ -352,8 +352,8 @@ def test_library_search_by_author():
                        'George Orwell',
                        1949,
                        'Dystopian fiction',
-                       None,
-                       None,
+                       'Yes',
+                       0,
                        None]]
     library.update_data()
     del library._books[-2]
@@ -421,8 +421,8 @@ def test_library_search_by_year():
                        'George Orwell',
                        1949,
                        'Dystopian fiction',
-                       None,
-                       None,
+                       'Yes',
+                       0,
                        None]]
     library.update_data()
     del library._books[-2]

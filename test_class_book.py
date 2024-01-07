@@ -88,8 +88,8 @@ def test_book_list_info():
                                 'George Orwell',
                                 1949,
                                 'Dystopian fiction',
-                                None,
-                                None,
+                                'Yes',
+                                0,
                                 None]
 
 
@@ -231,7 +231,6 @@ def test_book_borrow_info():
     assert book.borrow_info() == [id,
                                   '1984',
                                   'George Orwell',
-                                  0,
                                   0,
                                   None]
 

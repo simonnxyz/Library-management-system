@@ -29,7 +29,6 @@
         "name": "Anna Kowalska",
         "password": "haslo123",
         "borrowed_books": [
-            4631,
             8765
         ],
         "reservations": [
@@ -59,10 +58,11 @@
         "name": "Alicja Zawadzka",
         "password": "haslo123",
         "borrowed_books": [
-            7303,
             1626
         ],
-        "reservations": [],
+        "reservations": [
+            7890
+        ],
         "borrowing_history": [
             7303,
             7303,

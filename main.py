@@ -104,7 +104,7 @@ def books_table():
                           "Author",
                           "Pub. Year",
                           "Genre",
-                          "Owner",
+                          "Available",
                           "Reserv.",
                           "Return date"]
     rows = library.available_books_info()
@@ -151,7 +151,6 @@ def users_books_table():
         borrowed.field_names = ["ID",
                                 "Title",
                                 "Author",
-                                "Extensions",
                                 "Reservations",
                                 "Return date"]
         rows = current_user.get_borrowed_books()

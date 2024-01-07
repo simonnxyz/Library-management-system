@@ -188,7 +188,6 @@ class Book:
                 self.title,
                 self.author,
                 self.extensions,
-                len(self.reservations),
                 self.return_date
                 ]
 
@@ -235,14 +234,13 @@ class Book:
         """
         Returns a list representation of the book's basic information.
         """
-        list = ', '.join(map(str, self.reservations))
-        reservations = list if self.reservations else None
+        available = "No" if self.current_owner else "Yes"
         return [self.id,
                 self.title,
                 self.author,
                 self.release_year,
                 self.genre,
-                self.current_owner,
-                reservations,
+                available,
+                len(self.reservations),
                 self.return_date
                 ]

@@ -11,10 +11,10 @@
             7567,
             7567
         ],
-        "current_owner": 7567,
-        "extensions": 3,
+        "current_owner": null,
+        "extensions": 0,
         "reservations": [],
-        "return_date": "2024-02-01"
+        "return_date": null
     },
     {
         "id": 1626,
@@ -74,7 +74,9 @@
         ],
         "current_owner": 5432,
         "extensions": 2,
-        "reservations": [],
+        "reservations": [
+            7567
+        ],
         "return_date": "2024-03-02"
     },
     {
@@ -86,9 +88,9 @@
         "loan_history": [
             9876
         ],
-        "current_owner": 9876,
-        "extensions": 3,
+        "current_owner": null,
+        "extensions": 0,
         "reservations": [],
-        "return_date": "2024-02-01"
+        "return_date": null
     }
 ]
